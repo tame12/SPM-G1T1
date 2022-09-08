@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    Username: <input type="text" name="user_name"><br>
+    Password: <input type="password" name="password"><br>
+    <select name="user" id="">
+        <option value="learner">learner</option>
+        <option value="HR-admin">HR-admin</option>
+        <option value="manager">manager</option>
+    </select><br>
+    <input type="button" value="Login" onclick="handleLogin()">
+
+    <script>
+        function handleLogin() {
+            let user_name = document.getElementsByName("user_name")[0].value;
+            // let password = document.getElementsByName("password")[0].value;
+            let user = document.getElementsByName("user")[0].value;
+
+            if(user == "learner") {
+                window.location.href = "learner.html" + "?user_name=" + user_name;
+            } else if(user == "HR-admin") {
+                window.location.href = "HR-admin.html" + "?user_name=" + user_name;
+            } else if(user == "manager") {
+                window.location.href = "manager.html" + "?user_name=" + user_name;
+            }
+        }
+
+    </script>
+</body>
+
+</html>

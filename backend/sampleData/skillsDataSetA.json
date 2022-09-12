@@ -1,0 +1,34 @@
+[{
+    "Skill_ID": 1,
+    "Skill_Name": "Basic programming 1"
+}, {
+    "Skill_ID": 2,
+    "Skill_Name": "Basic programming 2"
+}, {
+    "Skill_ID": 3,
+    "Skill_Name": "Intermediate programming 1"
+}, {
+    "Skill_ID": 4,
+    "Skill_Name": "Intermediate programming 2"
+}, {
+    "Skill_ID": 5,
+    "Skill_Name": "Modeling 1"
+}, {
+    "Skill_ID": 6,
+    "Skill_Name": "Agile 1"
+}, {
+    "Skill_ID": 7,
+    "Skill_Name": "Critical thinking 1"
+}, {
+    "Skill_ID": 8,
+    "Skill_Name": "Database 1"
+}, {
+    "Skill_ID": 9,
+    "Skill_Name": "Front end 1"
+}, {
+    "Skill_ID": 10,
+    "Skill_Name": "Business process management 1"
+}, {
+    "Skill_ID": 11,
+    "Skill_Name": "Prototyping 1"
+}, {}]

@@ -1,0 +1,78 @@
+[{
+    "Staff_ID": 1,
+    "Staff_FName": "John",
+    "Staff_LName": "Smith",
+    "Dept": "IT",
+    "Email": "john.smith@gmail.com",
+    "Role": 1
+}, {
+    "Staff_ID": 2,
+    "Staff_FName": "Jane",
+    "Staff_LName": "Doe",
+    "Dept": "IT",
+    "Email": "jane.doe@gmail.com",
+    "Role": 1
+}, {
+    "Staff_ID": 3,
+    "Staff_FName": "Maria",
+    "Staff_LName": "Lee",
+    "Dept": "HR",
+    "Email": "maria.lee@gmail.com",
+    "Role": 1
+}, {
+    "Staff_ID": 4,
+    "Staff_FName": "David",
+    "Staff_LName": "Lai",
+    "Dept": "Production",
+    "Email": "david.lai@gmail.com",
+    "Role": 2
+}, {
+    "Staff_ID": 5,
+    "Staff_FName": "Ana",
+    "Staff_LName": "Yee",
+    "Dept": "Operations",
+    "Email": "ana.yee@gmail.com",
+    "Role": 2
+}, {
+    "Staff_ID": 6,
+    "Staff_FName": "Michael",
+    "Staff_LName": "Teo",
+    "Dept": "Operations",
+    "Email": "michael.teo@gmail.com",
+    "Role": 2
+}, {
+    "Staff_ID": 7,
+    "Staff_FName": "Carlos",
+    "Staff_LName": "Tan",
+    "Dept": "Services",
+    "Email": "carlos.tan@gmail.com",
+    "Role": 3
+}, {
+    "Staff_ID": 8,
+    "Staff_FName": "James",
+    "Staff_LName": "Yang",
+    "Dept": "Customer Relations",
+    "Email": "james.yang@gmail.com",
+    "Role": 3
+}, {
+    "Staff_ID": 9,
+    "Staff_FName": "Sandra",
+    "Staff_LName": "Chua",
+    "Dept": "HR",
+    "Email": "sandra.chua@gmail.com",
+    "Role": 3
+}, {
+    "Staff_ID": 10,
+    "Staff_FName": "Sarah",
+    "Staff_LName": "Lim",
+    "Dept": "Accounting",
+    "Email": "sarah.lim@gmail.com",
+    "Role": 2
+}, {
+    "Staff_ID": 11,
+    "Staff_FName": "Mark",
+    "Staff_LName": "Chen",
+    "Dept": "Accounting",
+    "Email": "mark.chen@gmail.com",
+    "Role": 1
+}]

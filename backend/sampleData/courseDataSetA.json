@@ -1,45 +1,45 @@
 [{
-    "Course_ID": "1",
+    "Course_ID": "IS-1",
     "Course_Name": "Information Systems & Innovation",
     "Course_Desc": "case study, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 }, {
-    "Course_ID": "2",
+    "Course_ID": "IS-2",
     "Course_Name": "Business Process Analysis and Solutioning",
     "Course_Desc": "modeling, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 }, {
-    "Course_ID": "3",
+    "Course_ID": "IS-3",
     "Course_Name": "Enterprise Solution Management",
     "Course_Desc": "incident management, problem management, change management, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 }, {
-    "Course_ID": "4",
+    "Course_ID": "IS-4",
     "Course_Name": "Software Project Management",
     "Course_Desc": "agile, scrum, waterfall"
 }, {
-    "Course_ID": "5",
+    "Course_ID": "IS-5",
     "Course_Name": "Digital Business - Technology and Transformation",
     "Course_Desc": "emerging technologies"
 }, {
-    "Course_ID": "6",
+    "Course_ID": "IS-6",
     "Course_Name": "Introduction to Programming",
     "Course_Desc": "basic python"
 }, {
-    "Course_ID": "7",
+    "Course_ID": "IS-7",
     "Course_Name": "Data Management",
     "Course_Desc": "mySQL, ERD"
 }, {
-    "Course_ID": "8",
+    "Course_ID": "IS-8",
     "Course_Name": "Interaction Design and Prototyping",
     "Course_Desc": "Prototyping, product management"
 }, {
-    "Course_ID": "9",
+    "Course_ID": "IS-9",
     "Course_Name": "Web Application Development I",
     "Course_Desc": "php, html"
 }, {
-    "Course_ID": "10",
+    "Course_ID": "IS-10",
     "Course_Name": "Web Application Development II",
     "Course_Desc": "css, javascript, bootstrap, vue.js"
 }, {
-    "Course_ID": "11",
+    "Course_ID": "IS-11",
     "Course_Name": "Enterprise Solution Development",
     "Course_Desc": "Microserivces, API, REST"
 }]

@@ -1,0 +1,82 @@
+-- WARNING: WILL CLEAR AND RECREATE ALL DATA IN ALL TABLES
+
+use `is212_G1T1`;
+
+delete from `is212_G1T1`.`Learning_Journey_Course`;
+delete from `is212_G1T1`.`Learning_Journey`;
+delete from `is212_G1T1`.`Skill_Role`;
+delete from `is212_G1T1`.`Course_Skill`;
+delete from `is212_G1T1`.`Registration`;
+
+delete from `is212_G1T1`.`Course`;
+insert into `is212_G1T1`.`Course` (`Course_ID`, `Course_Name`, `Course_Desc`, `Course_Status`, `Course_Type`, `Course_Category`) values 
+("IS-1","Information Systems & Innovation","case study, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","Active","Internal","Technical"),
+("IS-2","Business Process Analysis and Solutioning","modeling, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","Active","External","Technical"),
+("IS-3","Enterprise Solution Management","incident management, problem management, change management, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","Active","Internal","Technical"),
+("IS-4","Software Project Management","agile, scrum, waterfall","Retired","Internal","Technical"),
+("IS-5","Digital Business - Technology and Transformation","emerging technologies","Active","Internal","Technical"),
+("IS-6","Introduction to Programming","basic python","Active","Internal","Technical"),
+("IS-7","Data Management","mySQL, ERD","Retired","Internal","Technical"),
+("IS-8","Interaction Design and Prototyping","Prototyping, product management","Active","Internal","Technical"),
+("IS-9","Web Application Development I","php, html","Active","Internal","Technical"),
+("IS-10","Web Application Development II","css, javascript, bootstrap, vue.js","Active","External","HR"),
+("IS-11","Enterprise Solution Development","Microserivces, API, REST","Active","Internal","Finance");
+
+delete from `is212_G1T1`.`Skill`;
+insert into `is212_G1T1`.`Skill` (`Skill_ID`, `Skill_Name`, `Skill_Is_Active`) values 
+(1,"Basic programming 1", 1),
+(2,"Basic programming 2", 1),
+(3,"Intermediate programming 1", 1),
+(4,"Intermediate programming 2", 1),
+(5,"Modeling 1", 1),
+(6,"Agile 1", 1),
+(7,"Critical thinking 1", 1),
+(8,"Database 1", 1),
+(9,"Front end 1", 1),
+(10,"Business process management 1", 1),
+(11,"Prototyping 1", 0);
+
+delete from `is212_G1T1`.`Staff`;
+insert into `is212_G1T1`.`Staff` (`Staff_ID`, `Staff_FName`, `Staff_LName`, `Dept`, `Email`, `Position_ID`) values 
+(1,"John","Smith","IT","john.smith@gmail.com",1),
+(2,"Jane","Doe","IT","jane.doe@gmail.com",1),
+(3,"Maria","Lee","HR","maria.lee@gmail.com",1),
+(4,"David","Lai","Production","david.lai@gmail.com",2),
+(5,"Ana","Yee","Operations","ana.yee@gmail.com",2),
+(6,"Michael","Teo","Operations","michael.teo@gmail.com",2),
+(7,"Carlos","Tan","Services","carlos.tan@gmail.com",3),
+(8,"James","Yang","Customer Relations","james.yang@gmail.com",3),
+(9,"Sandra","Chua","HR","sandra.chua@gmail.com",3),
+(10,"Sarah","Lim","Accounting","sarah.lim@gmail.com",2),
+(11,"Mark","Chen","Accounting","mark.chen@gmail.com",1);
+
+delete from `is212_G1T1`.`Role`;
+insert into `is212_G1T1`.`Role` (`Role_ID`, `Role_Name`, `Role_Desc`, `Role_Is_Active`) values 
+(1,"SWE", "Software Engineer", 1),
+(2,"PM", "Project Manager", 1),
+(3,"BA", "Business Analyst", 0);
+
+
+
+delete from `is212_G1T1`.`Registration`;
+insert into `is212_G1T1`.`Registration` (`Reg_ID`, `Course_ID`, `Staff_ID`, `Reg_Status`, `Completion_Status`) values 
+(1,"IS-1",4,"Registered","Completed"),
+(2,"IS-1",5,"Registered","Completed");
+
+delete from `is212_G1T1`.`Course_Skill`;
+insert into `is212_G1T1`.`Course_Skill` (`Course_ID`, `Skill_ID`) values 
+("IS-1",1),
+("IS-1",2);
+
+delete from `is212_G1T1`.`Skill_Role`;
+insert into `is212_G1T1`.`Skill_Role` (`Skill_ID`, `Role_ID`) values 
+(1,1),
+(2,1);
+
+delete from `is212_G1T1`.`Learning_Journey`;
+insert into `is212_G1T1`.`Learning_Journey` (`LJ_ID`, `Staff_ID`, `Role_ID`, `LJ_Number`) values 
+(1,1,1,1);
+
+delete from `is212_G1T1`.`Learning_Journey_Course`;
+insert into `is212_G1T1`.`Learning_Journey_Course` (`LJ_ID`, `Course_ID`) values 
+(1,"IS-1");

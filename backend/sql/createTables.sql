@@ -52,7 +52,7 @@ create table if not exists `is212_G1T1`.`Registration` (
 create table if not exists `is212_G1T1`.`Role` (
     `Role_ID` int auto_increment not null,
     `Role_Name` varchar(50) not null,
-    `Role_Desc` varchar(255) not null,
+    `Role_Desc` varchar(255),
     `Role_Is_Active` bit not null,
     primary key (`Role_ID`)
 ) engine = InnoDB default charset = utf8;

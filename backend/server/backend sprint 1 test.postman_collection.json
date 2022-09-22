@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "17d1a5b5-1116-4a7a-8eaf-b02974e71fa6",
+		"name": "backend sprint 1 test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19186442"
+	},
+	"item": [
+		{
+			"name": "create new role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Role_Desc\": \"Software Engineer\", \r\n    \"Role_ID\": 1, \r\n    \"Role_Is_Active\": 1, \r\n    \"Role_Name\": \"SWE\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/role/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"role",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assign skill to role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Role_ID\":1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/assign_to_role",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assign_to_role"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assign skill to course",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Course_ID\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/assign_to_course",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assign_to_course"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create new skill",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Skill_Is_Active\": 1,\r\n    \"Skill_Name\": \"Basic programming 1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WIP dont use yet",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/skill/assigned_role/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assigned_role",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a skill",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Skill_Is_Active\": 1,\r\n    \"Skill_Name\": \"Basic programming 1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "read all skill",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/skill",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "read all role",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/role",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"role"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

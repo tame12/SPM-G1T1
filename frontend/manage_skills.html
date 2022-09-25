@@ -34,26 +34,27 @@
         <h1>Skills</h1>
         <hr />
 
-        <!-- Modal button -->
+        <!-- Create Skill Modal button -->
         <div class="d-flex flex-row-reverse">
             <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Create New Skill
             </button>
         </div>
 
-        <!-- Modal -->
+        <!-- Create Skill Modal // to be placed in vue template along with other modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <input type="text" id="create_skill_input" class="w-100 modal-input"
-                            placeholder="Skill name" />
+                        <input type="text" id="create_skill_input" class="w-100 modal-input" placeholder="Skill name" />
                     </div>
                     <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
                         <button type="button" class="button button-grey" data-bs-dismiss="modal">
                             Cancel
                         </button>
-                        <button type="button" class="button button-primary" id="create_skill_button">
+                        <!-- not sure if should dismiss after creating, block error/success msg if dont -->
+                        <button type="button" class="button button-primary" data-bs-dismiss="modal"
+                            id="create_skill_button">
                             Create
                         </button>
                     </div>
@@ -63,8 +64,38 @@
 
         <!-- View Skills - to place vue for loop -->
         <div>
-            <div class="gradient-box">Skill 1</div>
-            <div class="gradient-box">Skill 1</div>
+            <!-- skill 1 -->
+            <div class="gradient-box d-flex justify-content-between">
+                <p class="my-auto">Skill 1</p>
+                <div class="my-auto d-flex gap-3">
+                    <!-- Edit skill modal button -->
+                    <img action="edit_skill" role="button" src="images/edit.svg" alt="" data-bs-toggle="modal" data-bs-target="#editModalPopUp">
+                    <img action="delete_skill" role="button" src="images/delete.svg" alt="">
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Edit skill Modal // to be placed in vue template along with other modal-->
+        <div class="modal fade" id="editModalPopUp" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <input type="text" id="edit_skill_input" class="w-100 modal-input" placeholder="Skill name" />
+                    </div>
+                    <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
+                        <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <!-- not sure if should dismiss after creating, block error/success msg if dont -->
+                        <button type="button" class="button button-primary" data-bs-dismiss="modal"
+                            id="create_skill_button">
+                            Save
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Error/ Success bar -->
@@ -76,27 +107,44 @@
 
 <script>
     // create new skill
-    var skill_input_ele = $("#create_skill_input");
-
     $("#create_skill_button").click(function () {
-        skill_input_val = skill_input_ele.val();
+        var skill_input_ele = $("#create_skill_input");
+        var skill_input_val = skill_input_ele.val();
         // console.log(skill_input_val);
 
-        if (skill_input_val == ''){
-            $("#error_success_bar").html(`
-            <div class="p-4 text-white fw-bold bg-danger">Error: cannot leave skill empty</div>
-            `)
-        }
-
         axios
-          .post("http://localhost:456/skill/create", {
-            Skill_Name: skill_input_val,
-          })
-          .then(function (response) {
-            console.log(response);
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+            .post("http://localhost:456/skill/create", {
+                Skill_Name: skill_input_val,
+            })
+            .then(function (response) {
+                console.log(response);
+
+                if (response.data.code == "201") {
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                    `);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+
+                if (error.response.data.code == "400") {
+                    console.log("error");
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
+                    `);
+                }
+            });
     });
+
+    // edit skill - todo, need wait for shaan to do view all skills
+    $("[action='edit_skill']").click(function () {
+        console.log('edit')
+    });
+
+    // delete skill
+    $("[action='delete_skill']").click(function () {
+        console.log('delete')
+    });
+
 </script>

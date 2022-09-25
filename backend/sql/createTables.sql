@@ -16,7 +16,7 @@ create table if not exists `is212_G1T1`.`Staff` (
   `Staff_LName` varchar(50) not null,
   `Dept` varchar(50) not null,
   `Email` varchar(50) not null,
-  `Position_ID` int,
+  `Position_ID` int not null,
   primary key (`Staff_ID`),
   foreign key (`Position_ID`) references `is212_G1T1`.`Position` (`Position_ID`)
 ) engine=InnoDB default charset=utf8;
@@ -25,7 +25,7 @@ create table if not exists `is212_G1T1`.`Course` (
     `Course_ID` varchar(20) not null,
     `Course_Name` varchar(50) not null,
     `Course_Desc` varchar(255),
-    `Course_Status` varchar(15),
+    `Course_Is_Active` bit not null,
     `Course_Type` varchar(10),
     `Course_Category` varchar(50),
     primary key (`Course_ID`)

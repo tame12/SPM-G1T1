@@ -9,18 +9,18 @@ delete from `is212_G1T1`.`Course_Skill`;
 delete from `is212_G1T1`.`Registration`;
 
 delete from `is212_G1T1`.`Course`;
-insert into `is212_G1T1`.`Course` (`Course_ID`, `Course_Name`, `Course_Desc`, `Course_Status`, `Course_Type`, `Course_Category`) values 
-("IS-1","Information Systems & Innovation","case study, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","Active","Internal","Technical"),
-("IS-2","Business Process Analysis and Solutioning","modeling, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","Active","External","Technical"),
-("IS-3","Enterprise Solution Management","incident management, problem management, change management, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.","Active","Internal","Technical"),
-("IS-4","Software Project Management","agile, scrum, waterfall","Retired","Internal","Technical"),
-("IS-5","Digital Business - Technology and Transformation","emerging technologies","Active","Internal","Technical"),
-("IS-6","Introduction to Programming","basic python","Active","Internal","Technical"),
-("IS-7","Data Management","mySQL, ERD","Retired","Internal","Technical"),
-("IS-8","Interaction Design and Prototyping","Prototyping, product management","Active","Internal","Technical"),
-("IS-9","Web Application Development I","php, html","Active","Internal","Technical"),
-("IS-10","Web Application Development II","css, javascript, bootstrap, vue.js","Active","External","HR"),
-("IS-11","Enterprise Solution Development","Microserivces, API, REST","Active","Internal","Finance");
+insert into `is212_G1T1`.`Course` (`Course_ID`, `Course_Name`, `Course_Desc`, `Course_Is_Active`, `Course_Type`, `Course_Category`) values 
+("IS-1","Information Systems & Innovation","case study, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",1,"Internal","Technical"),
+("IS-2","Business Process Analysis and Solutioning","modeling, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",1,"External","Technical"),
+("IS-3","Enterprise Solution Management","incident management, problem management, change management, lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",1,"Internal","Technical"),
+("IS-4","Software Project Management","agile, scrum, waterfall",0,"Internal","Technical"),
+("IS-5","Digital Business - Technology and Transformation","emerging technologies",1,"Internal","Technical"),
+("IS-6","Introduction to Programming","basic python",1,"Internal","Technical"),
+("IS-7","Data Management","mySQL, ERD",0,"Internal","Technical"),
+("IS-8","Interaction Design and Prototyping","Prototyping, product management",1,"Internal","Technical"),
+("IS-9","Web Application Development I","php, html",1,"Internal","Technical"),
+("IS-10","Web Application Development II","css, javascript, bootstrap, vue.js",1,"External","HR"),
+("IS-11","Enterprise Solution Development","Microserivces, API, REST",1,"Internal","Finance");
 
 delete from `is212_G1T1`.`Skill`;
 insert into `is212_G1T1`.`Skill` (`Skill_ID`, `Skill_Name`, `Skill_Is_Active`) values 

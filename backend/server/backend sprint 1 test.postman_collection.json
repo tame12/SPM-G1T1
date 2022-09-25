@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "17d1a5b5-1116-4a7a-8eaf-b02974e71fa6",
-		"name": "backend sprint 1 test",
+		"_postman_id": "68074412-90f4-472a-945d-e4fdb289ca3c",
+		"name": "backend sprint 1 test Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "19186442"
 	},
@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Role_Desc\": \"Software Engineer\", \r\n    \"Role_ID\": 1, \r\n    \"Role_Is_Active\": 1, \r\n    \"Role_Name\": \"SWE\"\r\n}",
+					"raw": "{\r\n    \"Role_Desc\": \"Software Engineer\", \r\n    \"Role_Name\": \"SWEeeee\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -36,42 +36,13 @@
 			"response": []
 		},
 		{
-			"name": "assign skill to role",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Role_ID\":1\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:456/skill/assign_to_role",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "456",
-					"path": [
-						"skill",
-						"assign_to_role"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "assign skill to course",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Course_ID\": 1\r\n}",
+					"raw": "{\r\n    \"Skill_ID\": 4,\r\n    \"Course_ID\": \"IS-10\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -100,7 +71,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Skill_Is_Active\": 1,\r\n    \"Skill_Name\": \"Basic programming 1\"\r\n}",
+					"raw": "{\r\n    \"Skill_Name\": \"Advanced programming 10\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -123,12 +94,21 @@
 			"response": []
 		},
 		{
-			"name": "WIP dont use yet",
+			"name": "assign skill to role",
 			"request": {
-				"method": "GET",
+				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_ID\" : 5,\r\n    \"Role_ID\" : 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:456/skill/assigned_role/1",
+					"raw": "http://localhost:456/skill/assign_to_role",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -136,8 +116,71 @@
 					"port": "456",
 					"path": [
 						"skill",
-						"assigned_role",
-						"1"
+						"assign_to_role"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get roles from many skills",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_IDs\": [1,2,3, 5000]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/assigned_roles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assigned_roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get courses from many skills",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_IDs\": [1,2,50,4]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/assigned_courses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assigned_courses"
 					]
 				}
 			},
@@ -150,7 +193,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Skill_Is_Active\": 1,\r\n    \"Skill_Name\": \"Basic programming 1\"\r\n}",
+					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Skill_Name\": \"Basic programming 39\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -205,6 +248,27 @@
 					"port": "456",
 					"path": [
 						"role"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WIP dont use",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/role/assigned_skill/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"role",
+						"assigned_skill",
+						"1"
 					]
 				}
 			},

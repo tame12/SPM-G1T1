@@ -1,34 +1,57 @@
-<navbar class="d-flex justify-content-around p-3 text-center border-bottom mb-5 shadow-sm p-3 mb-5 bg-body rounded">
-    <a href="" class="vertical-center">Roles</a>
-    <a href="" class="vertical-center">Learning <br> Journey</a>
-    <a href="" class="vertical-center">Manage <br> Roles</a>
-    <a href="manage_skills.html" class="vertical-center">Manage <br> Skills</a>
-    <a href="" class="vertical-center">Manage <br> Courses</a>
+<navbar class="d-flex justify-content-around p-3 text-center border-bottom mb-5 shadow-sm bg-body">
+    <a href="" class="vertical-center" id="roles">Roles</a>
+    <a href="" class="vertical-center" id="learning_journey">Learning <br> Journey</a>
+    <a href="" class="vertical-center" id="manage_roles">Manage <br> Roles</a>
+    <a href="manage_skills.html" class="vertical-center" id="manage_skills">Manage <br> Skills</a>
+    <a href="" class="vertical-center" id="manage_courses">Manage <br> Courses</a>
     <div class="d-flex gap-3">
-        <div class="btn btn-primary profile fw-bold">
-            <!-- to do - custom profile pic here -->
-            J
+        <div class="btn btn-primary profile fw-bold" id="user_logo">
+            <!-- to do - customize -->
+            U
         </div>
-        <div class="vertical-center">
-            <!-- to do - custom email -->
-            jane@yahoo.com
+        <div class="vertical-center" id="username">
+            <!-- to do - custom email or id -->
+            User
         </div>
     </div>
 </navbar>
 
-<!-- HOW TO IMPORT NAVBAR? -->
+<script>
+    var all_cookies = document.cookie.split('; ')
+            .map(cookie => cookie.split('='))
+        all_cookies = Object.fromEntries(all_cookies);
+        console.log(all_cookies)
 
-<!-- 1. Add below code on the top of your page -->
-<!-- <div id="navigation"></div> -->
+        var user_logo = $('#user_logo');
+        var username = $('#username');
+        user_logo.html(all_cookies.username.charAt(0).toUpperCase())
+        username.html(all_cookies.username)
 
-<!-- 2. Add below code in your Javascript <script></script> -->
-<!-- $(function () {
+        if (all_cookies.username == 'User' || all_cookies.username == 'Manager') { // ****to update -> im not sure who can see what
+            $('#manage_roles').remove()
+            $('#manage_skills').remove()
+            $('#manage_courses').remove()
+        }
+</script>
+
+<!-- 
+GUIDE TO IMPORTING THE NAVBAR ON YOUR PAGE
+
+1. Add Jquery CDN in your header tag
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+2. Add Navbar at top of body
+<div id="navigation"></div>
+
+3. Add this code in your Javascript section
+$(function () {
     $("#navigation").load("navbar.html");
-}); -->
+});
 
-<!-- 3. You are done! -->
+4. You are done!
 
-<!-- ***IMPT: Will have CORS error if not running on localhost. -->
-<!-- It should be fixed if you run on localhost. -->
+***ERROR NOTE: Will have CORS error if not running on localhost.
+It should be fixed if you run on localhost.
 
-<!-- If you need an example, you can look at manage_skills.html -->
+If you need an example, you can look at manage_skills.html 
+-->

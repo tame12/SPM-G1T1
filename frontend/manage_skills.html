@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Manage Skills</title>
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -67,9 +67,10 @@
 
         <!-- View Skills - to place vue for loop -->
         <div>
+
             <!-- skill 1 -->
             <div class="gradient-box d-flex justify-content-between">
-                <p class="my-auto">Skill 1</p>
+                <p class="my-auto" data-skill-id="1" data-skill-is-active="1" name="skill">Basic programming 1</p>
                 <div class="my-auto d-flex gap-3">
                     <!-- Edit skill modal button -->
                     <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal"
@@ -110,19 +111,21 @@
 </html>
 
 <script>
+    // load navbar
     $(function () {
         $("#navigation").load("navbar.html");
     });
 
+
+
     // create new skill
     $("#create_skill_button").click(function () {
-        var skill_input_ele = $("#create_skill_input");
-        var skill_input_val = skill_input_ele.val();
-        // console.log(skill_input_val);
+        var create_skill_input = $("#create_skill_input").val();
+        // console.log(create_skill_input);
 
         axios
             .post("http://localhost:456/skill/create", {
-                Skill_Name: skill_input_val,
+                Skill_Name: create_skill_input,
             })
             .then(function (response) {
                 console.log(response);
@@ -145,13 +148,48 @@
             });
     });
 
-    // edit skill - todo, need wait for shaan to do view all skills
-    $("edit_skill_button").click(function () {
-        console.log('edit')
+
+
+    // edit skill - to do
+    $("#edit_skill_button").click(function () {
+        var edit_skill_input = $("#edit_skill_input").val();
+        var edit_skill_id = $('p[name="skill"]').data('skill-id'); //kinda hardcode for now ***need to update after vue is implemented***
+        // console.log(edit_skill_input)
+        // console.log(edit_skill_id)
+
+        axios
+            .put("http://localhost:456/skill/update", {
+                Skill_ID: edit_skill_id,
+                Skill_Name: edit_skill_input,
+            })
+            .then(function (response) {
+                console.log(response);
+
+                if (response.data.code == "201") {
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                    `);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+
+                if (error.response.data.code == "400") {
+                    console.log("error");
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
+                    `);
+                }
+            });
+
+
+
     });
 
+    
+
     // delete skill
-    $("delete_skill_button").click(function () {
+    $("#delete_skill_button").click(function () {
         console.log('delete')
     });
 

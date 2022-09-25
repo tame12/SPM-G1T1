@@ -1,0 +1,22 @@
+Run DB===
+run WAMP/ MAMP
+open phpmyadmin
+
+inport DB===
+import /sql/createTables.sql
+import /sql/insertDataSetA.sql
+can always reimport these 2 files for testing
+
+Flask===
+go to server/flaskServer.py see line 7
+if using MAMP and default settings,  change root to root:root or whatever username:password u set
+if not using default username/ password/ port, change line 7 accordingly
+run server/flaskServer.py
+
+Postman===
+open postman
+import `/server/backend sprint 1 test.postman_collection.json` into postman
+all* HTTP requests should work (excluding the WIP one)
+
+lmk if any HTTP requests are not working
+lmk if theres any additional HTTP requests u want to implement

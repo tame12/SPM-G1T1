@@ -4,7 +4,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root@localhost:3306/is212_g1t1'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://root:password@localhost:3306/is212_g1t1'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
                                            'pool_recycle': 280}
@@ -83,7 +83,7 @@ class SkillRole(db.Model):
                     'roles': [role.to_json() for role in SkillRole.getAssignedRoleBySkillID(skill_id)]
                 })
         return output
-
+    
     # for next sprint
     # def getAssignedSkillByRoleID(role_id):
     #     return Skill.query.join(SkillRole, Skill.Skill_ID == SkillRole.Skill_ID).where(SkillRole.Role_ID == role_id).all()
@@ -117,6 +117,11 @@ class SkillCourse(db.Model):
     # def getAssignedSkillByCourseID(course_id):
     #     return Skill.query.join(SkillCourse, Skill.Skill_ID == SkillCourse.Skill_ID).where(SkillCourse.Course_ID == course_id).all()
 
+# Shaan to be deleted
+# @app.route('/role/role_by_skill/<int:skill_id>',methods=['GET'])
+# def getRoleBySkill(skill_id):
+#     try:
+#         Role = SkillRole.getAssignedRoleBySkillID(skill_id)
 
 @app.route('/role')
 def getAllRole():

@@ -69,7 +69,7 @@
         <div>
 
             <!-- skill 1 -->
-            <div class="gradient-box d-flex justify-content-between">
+            <div id="view-results" class="gradient-box d-flex justify-content-between">
                 <p class="my-auto" data-skill-id="1" data-skill-is-active="1" name="skill">Basic programming 1</p>
                 <div class="my-auto d-flex gap-3">
                     <!-- Edit skill modal button -->
@@ -79,6 +79,7 @@
                 </div>
             </div>
 
+        
 
         </div>
 
@@ -111,6 +112,37 @@
 </html>
 
 <script>
+    // On page load, retrieve the 
+    $(document).ready(function() {
+        // Simulate the retrieval of data from the database
+        $.getJSON(
+            "http://localhost:456/skill",
+            function(data){
+                console.log(data)
+                var response = data.data
+                for (let i=0;i< data.data.length; i++){
+                    var html = `
+                    <div id="${response[i].Skill_ID}" class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)"
+                        <p class="my-auto" data-skill-id="1" data-skill-is-active="1" name="skill">${response[i].Skill_Name}</p>
+                        <div class="my-auto d-flex gap-3">
+                            <!-- Edit skill modal button -->
+                            <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal"
+                                data-bs-target="#editModalPopUp">
+                            <img id="delete_skill_button" role="button" src="images/delete.svg" alt="">
+                        </div>
+                    </div>`
+
+                    $("#view-results").before(html)
+                }
+                
+            }
+        
+        
+        )
+        
+    });
+
+
     // load navbar
     $(function () {
         $("#navigation").load("navbar.html");
@@ -192,5 +224,13 @@
     $("#delete_skill_button").click(function () {
         console.log('delete')
     });
+
+    // view associated roles
+    function viewRoles(e){
+        axios.get(
+            "http://localhost:456/get_assigned_courses_by_ID/" + e.id,
+
+        )
+    }
 
 </script>

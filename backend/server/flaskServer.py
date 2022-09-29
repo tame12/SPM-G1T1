@@ -363,7 +363,7 @@ def getAssignedRoles():
             }), 400
         skill_ids = data['Skill_IDs']
 
-        output = SkillCourse.getAssignedRolesBySkillIDs(skill_ids)
+        output = SkillRole.getAssignedRolesBySkillIDs(skill_ids)
 
         return jsonify({
             "code": 201,

@@ -5,10 +5,12 @@
     <a href="manage_skills.html" class="vertical-center" id="manage_skills">Manage <br> Skills</a>
     <a href="" class="vertical-center" id="manage_courses">Manage <br> Courses</a>
     <div class="d-flex gap-3">
-        <div class="btn btn-primary profile fw-bold" id="user_logo">
-            <!-- to do - customize -->
-            U
-        </div>
+        <a href="index.html">
+            <div class="btn btn-primary profile fw-bold" id="user_logo">
+                <!-- to do - customize -->
+                U
+            </div>
+        </a>
         <div class="vertical-center" id="username">
             <!-- to do - custom email or id -->
             User
@@ -18,20 +20,20 @@
 
 <script>
     var all_cookies = document.cookie.split('; ')
-            .map(cookie => cookie.split('='))
-        all_cookies = Object.fromEntries(all_cookies);
-        console.log(all_cookies)
+        .map(cookie => cookie.split('='))
+    all_cookies = Object.fromEntries(all_cookies);
+    // console.log(all_cookies)
 
-        var user_logo = $('#user_logo');
-        var username = $('#username');
-        user_logo.html(all_cookies.username.charAt(0).toUpperCase())
-        username.html(all_cookies.username)
+    var user_logo = $('#user_logo');
+    var username = $('#username');
+    user_logo.html(all_cookies.username.charAt(0).toUpperCase())
+    username.html(all_cookies.username)
 
-        if (all_cookies.username == 'User' || all_cookies.username == 'Manager') { // ****to update -> im not sure who can see what
-            $('#manage_roles').remove()
-            $('#manage_skills').remove()
-            $('#manage_courses').remove()
-        }
+    if (all_cookies.username == 'User' || all_cookies.username == 'Manager') { // ****to update -> im not sure who can see what
+        $('#manage_roles').remove()
+        $('#manage_skills').remove()
+        $('#manage_courses').remove()
+    }
 </script>
 
 <!-- 

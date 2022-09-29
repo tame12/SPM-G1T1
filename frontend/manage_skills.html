@@ -11,9 +11,6 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
-    <!-- Vue -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
     <!-- axios -->
     <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
@@ -65,88 +62,75 @@
             </div>
         </div>
 
-        <!-- View Skills - to place vue for loop -->
-        <div>
+        <!-- View Skills - populated by js -->
+        <div id="view-results"></div>
 
-            <!-- skill 1 -->
-            <div id="view-results" class="gradient-box d-flex justify-content-between">
-                <p class="my-auto" data-skill-id="1" data-skill-is-active="1" name="skill">Basic programming 1</p>
-                <div class="my-auto d-flex gap-3">
-                    <!-- Edit skill modal button -->
-                    <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal"
-                        data-bs-target="#editModalPopUp">
-                    <img id="delete_skill_button" role="button" src="images/delete.svg" alt="">
-                </div>
-            </div>
 
-        
-
-        </div>
-
-        <!-- Edit skill Modal // to be placed in vue template along with other modal-->
-        <div class="modal fade" id="editModalPopUp" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <input type="text" id="edit_skill_input" class="w-100 modal-input" placeholder="Skill name" />
-                    </div>
-                    <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
-                        <button type="button" class="button button-grey" data-bs-dismiss="modal">
-                            Cancel
-                        </button>
-                        <!-- not sure if should dismiss after creating, block error/success msg if dont -->
-                        <button type="button" class="button button-primary" data-bs-dismiss="modal"
-                            id="edit_skill_button">
-                            Save
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Error/ Success bar -->
-        <div id="error_success_bar"></div>
+        <div id="error_success_bar" class="mb-3"></div>
     </div>
 </body>
 
 </html>
 
 <script>
-    function populate_skills(){
+    function populate_skills() {
         // Simulate the retrieval of data from the database
         $.getJSON(
             "http://localhost:456/skill",
-            function(data){
-                console.log(data)
+            function (data) {
                 var response = data.data
-                for (let i=0;i< data.data.length; i++){
-                    var html = `
+                console.log(response)
+                var html = ''
+                for (let i = 0; i < data.data.length; i++) {
+                    html += `
                     <div id="${response[i].Skill_ID}" class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)"
-                        <p class="my-auto" data-skill-id="${response[i].Skill_ID}" data-skill-is-active="${response[i].Skill_Is_Active}" name="skill">${response[i].Skill_Name}</p>
+                        <p class="my-auto">${response[i].Skill_Name}</p>
                         <div class="my-auto d-flex gap-3">
                             <!-- Edit skill modal button -->
                             <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal"
                                 data-bs-target="#editModalPopUp">
                             <img id="delete_skill_button" role="button" src="images/delete.svg" alt="">
                         </div>
+                    </div>
+                    
+                    <!-- Edit skill Modal // to be placed in vue template along with other modal-->
+                    <div class="modal fade" id="editModalPopUp" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-body">
+                                    <input type="text" id="edit_skill_input" class="w-100 modal-input" placeholder="Skill name" />
+                                </div>
+                                <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
+                                    <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                                        Cancel
+                                    </button>
+                                    <!-- not sure if should dismiss after creating, block error/success msg if dont -->
+                                    <button type="button" class="button button-primary" data-bs-dismiss="modal"
+                                        id="edit_skill_button" data-skill-id="${response[i].Skill_ID}" 
+                                        data-skill-is-active="${response[i].Skill_Is_Active}" 
+                                        data-skill-name="${response[i].Skill_Name}">
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>`
 
-                    $("#view-results").before(html)
+                    $("#view-results").html(html)
                 }
-                
+
             }
-        
-        
+
+
         )
     }
 
-    // On page load, retrieve the 
-    $(document).ready(populate_skills());
-
-
-    // load navbar
+    // load navbar & populate skills
     $(function () {
         $("#navigation").load("navbar.html");
+        populate_skills()
     });
 
 
@@ -167,6 +151,7 @@
                     $("#error_success_bar").html(`
                     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
                     `);
+                    populate_skills();
                 }
             })
             .catch(function (error) {
@@ -178,6 +163,9 @@
                     <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
                     `);
                 }
+            }).then(function () {
+                // always executed
+                $('#error_success_bar')[0].scrollIntoView(false);
             });
     });
 
@@ -186,9 +174,10 @@
     // edit skill - to do
     $("#edit_skill_button").click(function () {
         var edit_skill_input = $("#edit_skill_input").val();
-        var edit_skill_id = $('p[name="skill"]').data('skill-id'); //kinda hardcode for now ***need to update after vue is implemented***
-        // console.log(edit_skill_input)
+        // var edit_skill_id = $('img').data('skill-id'); //kinda hardcode for now ***need to update after vue is implemented***
+        console.log(edit_skill_input)
         // console.log(edit_skill_id)
+        console.log('hello')
 
         axios
             .put("http://localhost:456/skill/update", {
@@ -202,6 +191,7 @@
                     $("#error_success_bar").html(`
                     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
                     `);
+                    populate_skills();
                 }
             })
             .catch(function (error) {
@@ -213,13 +203,16 @@
                     <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
                     `);
                 }
+            }).then(function () {
+                // always executed
+                $('#error_success_bar')[0].scrollIntoView(false);
             });
 
 
 
     });
 
-    
+
 
     // delete skill
     $("#delete_skill_button").click(function () {
@@ -227,10 +220,10 @@
     });
 
     // onclick, I view the assoicaited roles
-    function viewRoles(e){
+    function viewRoles(e) {
         axios.get(
             "http://localhost:456/skill/get_assigned_courses_by_ID/" + e.id
-        ).then(function(response){
+        ).then(function (response) {
             console.log(response)
         })
     }

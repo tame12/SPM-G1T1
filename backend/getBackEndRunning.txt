@@ -8,9 +8,9 @@ import /sql/insertDataSetA.sql
 can always reimport these 2 files for testing
 
 Flask===
-go to server/flaskServer.py see line 7
-if using MAMP and default settings,  change root to root:root or whatever username:password u set
-if not using default username/ password/ port, change line 7 accordingly
+pip install python-dotenv if not done already
+get .env file from me and change it accordingly
+put the file in /backend/.env
 run server/flaskServer.py
 
 Postman===

@@ -351,7 +351,7 @@ def getAssignedRoles():
             }), 400
         skill_ids = data['Skill_IDs']
 
-        output = SkillRole.getAssignedRolesBySkillIDs(skill_ids)
+        output = SkillCourse.getAssignedRolesBySkillIDs(skill_ids)
 
         return jsonify({
             "code": 201,
@@ -361,6 +361,21 @@ def getAssignedRoles():
         return jsonify({
             "code": 500,
             "message": "Unable to get assigned roles from database. Error message: " + str(e)
+        }), 500
+
+@app.route('/skill/get_assigned_courses_by_ID/<int:skill_id>')
+def getAssignedRoleByID(skill_id):
+    try: 
+        data = SkillRole.getAssignedRolesBySkillIDs([skill_id])
+        return jsonify({
+            "code": 201,
+            "message": data
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get assigned role from database. Error message: " + str(e)
         }), 500
 
 # probably need for next sprint

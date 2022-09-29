@@ -225,12 +225,13 @@
         console.log('delete')
     });
 
-    // view associated roles
+    // onclick, I view the assoicaited roles
     function viewRoles(e){
         axios.get(
-            "http://localhost:456/get_assigned_courses_by_ID/" + e.id,
-
-        )
+            "http://localhost:456/skill/get_assigned_courses_by_ID/" + e.id
+        ).then(function(response){
+            console.log(response)
+        })
     }
 
 </script>

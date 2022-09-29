@@ -112,8 +112,7 @@
 </html>
 
 <script>
-    // On page load, retrieve the 
-    $(document).ready(function() {
+    function populate_skills(){
         // Simulate the retrieval of data from the database
         $.getJSON(
             "http://localhost:456/skill",
@@ -123,7 +122,7 @@
                 for (let i=0;i< data.data.length; i++){
                     var html = `
                     <div id="${response[i].Skill_ID}" class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)"
-                        <p class="my-auto" data-skill-id="1" data-skill-is-active="1" name="skill">${response[i].Skill_Name}</p>
+                        <p class="my-auto" data-skill-id="${response[i].Skill_ID}" data-skill-is-active="${response[i].Skill_Is_Active}" name="skill">${response[i].Skill_Name}</p>
                         <div class="my-auto d-flex gap-3">
                             <!-- Edit skill modal button -->
                             <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal"
@@ -139,8 +138,10 @@
         
         
         )
-        
-    });
+    }
+
+    // On page load, retrieve the 
+    $(document).ready(populate_skills());
 
 
     // load navbar

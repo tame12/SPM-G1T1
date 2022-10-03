@@ -282,6 +282,7 @@ def updateSkill():
 def assignSkillToRole():
     try:
         data = request.get_json()
+        print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int,list)):
             return jsonify({
                 "code": 400,

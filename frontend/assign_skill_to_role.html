@@ -67,7 +67,7 @@
         <h6>Skill is currently assigned to the following roles(s):</h6>
         <div id="SearchResults"></div>
 
-
+        <div id="error_success_bar" class="mb-3"></div>
     </div>
 </body>
 
@@ -84,6 +84,7 @@
         $("#SkillName").text(getCookie("targetName"))
         getAssignedRoles()
         populateModal()
+        document.cookie = "selected=''"
     });
 
     function getCookie(name) {
@@ -159,7 +160,7 @@
         else{
             // Add the selected to the cookies
             e.classList.add('selected-box')
-            if (getCookie("selected") == undefined){
+            if (getCookie("selected") == ''){
                 document.cookie = "selected="+e.id
             }
             else{
@@ -175,30 +176,31 @@
     }
 
     function assignSkillToRole(){
-        try {
-            console.log("hello")
-            var selectedRoles = getCookie("selected").split(",")
-            var assignedRoles = getCookie("assignedRoles").split(",")
-            var toBackEnd = selectedRoles.filter(function(value){
-                if (!assignedRoles.includes(value)){
-                    return value
-                }
-            })
-            var targetID = getCookie('targetID')
-
-        } finally{
-            axios.post(
-            "http://localhost:456/assign_to_role",
-            {
-                Skill_ID : 4,
-                Role_ID : 1,
+        console.log("hello")
+        var selectedRoles = getCookie("selected").split(",")
+        var assignedRoles = getCookie("assignedRoles").split(",")
+        var toBackEnd = selectedRoles.filter(function(value){
+            if (!assignedRoles.includes(value)){
+                return parseInt(value)
             }
-            ).response(function(reponse){
-                console.log(response)
-            })
-
+        })
+        var targetID = getCookie('targetID')
+        console.log(targetID)
+        console.log(toBackEnd)
+        axios.post(
+        "http://localhost:456/skill/assign_to_role",
+        {
+            Skill_ID : parseInt(targetID),
+            Role_ID : toBackEnd,
         }
-
-        
+        ).then(function(response){
+            console.log(response)
+            getAssignedRoles()
+            populateModal()
+            document.cookie = "selected=''"
+            $("#error_success_bar").html(`
+                <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+            `);
+        })
     }
 </script>

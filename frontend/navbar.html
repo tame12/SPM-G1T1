@@ -5,7 +5,7 @@
     <a href="manage_skills.html" class="vertical-center" id="manage_skills">Manage <br> Skills</a>
     <a href="" class="vertical-center" id="manage_courses">Manage <br> Courses</a>
     <div class="d-flex gap-3">
-        <a href="index.html">
+        <a href="index.html" class="d-flex flex-column justify-content-center">
             <div class="btn btn-primary profile fw-bold" id="user_logo">
                 <!-- to do - customize -->
                 U
@@ -29,7 +29,7 @@
     user_logo.html(all_cookies.username.charAt(0).toUpperCase())
     username.html(all_cookies.username)
 
-    if (all_cookies.username == 'User' || all_cookies.username == 'Manager') { // ****to update -> im not sure who can see what
+    if (all_cookies.username == 'User' || all_cookies.username == 'Manager') {
         $('#manage_roles').remove()
         $('#manage_skills').remove()
         $('#manage_courses').remove()
@@ -39,8 +39,13 @@
 <!-- 
 GUIDE TO IMPORTING THE NAVBAR ON YOUR PAGE
 
-1. Add Jquery CDN in your header tag
+1. Add Jquery and Bootstrap CDN in your header tag
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+    crossorigin="anonymous"></script>
 
 2. Add Navbar at top of body
 <div id="navigation"></div>

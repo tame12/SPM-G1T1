@@ -45,6 +45,9 @@
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
+                    <div class="px-3 pt-3">
+                        <h1 class="modal-title fs-4" id="exampleModalLabel">Create New Skill</h1>
+                    </div>
                     <div class="modal-body">
                         <input type="text" id="create_skill_input" class="w-100 modal-input" placeholder="Skill name" />
                     </div>
@@ -82,23 +85,27 @@
                 console.log(response)
                 var html = ''
                 for (let i = 0; i < data.data.length; i++) {
+                    // <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}" data-ele="skills" class="gradient-box d-flex justify-content-between">
                     html += `
-                    <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}"class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)"
+                    <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}" class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)" role="button"
                         <p class="my-auto">${response[i].Skill_Name}</p>
                         <div class="my-auto d-flex gap-3">
                             <!-- Edit skill modal button -->
-                            <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal"
-                                data-bs-target="#editModalPopUp">
-                            <img id="delete_skill_button" role="button" src="images/delete.svg" alt="">
+                            <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal" onclick="event.stopPropagation();"
+                                data-bs-target="#editModalPopUp${response[i].Skill_ID}">
+                            <img id="delete_skill_button" role="button" src="images/delete.svg" alt="" onclick="event.stopPropagation();">
                         </div>
                     </div>
                     
                     <!-- Edit skill Modal // to be placed in vue template along with other modal-->
-                    <div class="modal fade" id="editModalPopUp" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
+                    <div class="modal fade" id="editModalPopUp${response[i].Skill_ID}" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
+                                <div class="px-3 pt-3">
+                                    <h1 class="modal-title fs-4" id="exampleModalLabel">Update ${response[i].Skill_Name}</h1>
+                                </div>
                                 <div class="modal-body">
-                                    <input type="text" id="edit_skill_input" class="w-100 modal-input" placeholder="Skill name" />
+                                    <input type="text" data-id="edit_skill_input" class="w-100 modal-input" placeholder="Skill name" />
                                 </div>
                                 <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
                                     <button type="button" class="button button-grey" data-bs-dismiss="modal">
@@ -106,9 +113,8 @@
                                     </button>
                                     <!-- not sure if should dismiss after creating, block error/success msg if dont -->
                                     <button type="button" class="button button-primary" data-bs-dismiss="modal"
-                                        id="edit_skill_button" data-skill-id="${response[i].Skill_ID}" 
-                                        data-skill-is-active="${response[i].Skill_Is_Active}" 
-                                        data-skill-name="${response[i].Skill_Name}">
+                                        data-id="edit_skill_button"
+                                        data-skill-id="${response[i].Skill_ID}">
                                         Save
                                     </button>
                                 </div>
@@ -125,7 +131,9 @@
         )
     }
 
-    // load navbar & populate skills
+
+
+    // on page load, load navbar & populate skills
     $(function () {
         $("#navigation").load("navbar.html");
         populate_skills()
@@ -169,13 +177,13 @@
 
 
 
-    // edit skill - to do
-    $("#edit_skill_button").click(function () {
-        var edit_skill_input = $("#edit_skill_input").val();
-        // var edit_skill_id = $('img').data('skill-id'); //kinda hardcode for now ***need to update after vue is implemented***
-        console.log(edit_skill_input)
+    // edit skill 
+    $(document).on("click", "button[data-id='edit_skill_button']", function (e) {
+        // alert("GO");
+        var edit_skill_input = $(this).closest('.modal-content').find('input').val();
+        var edit_skill_id = $(this).data('skill-id');
+        // console.log(edit_skill_input)
         // console.log(edit_skill_id)
-        console.log('hello')
 
         axios
             .put("http://localhost:456/skill/update", {
@@ -183,7 +191,7 @@
                 Skill_Name: edit_skill_input,
             })
             .then(function (response) {
-                console.log(response);
+                // console.log(response);
 
                 if (response.data.code == "201") {
                     $("#error_success_bar").html(`
@@ -193,7 +201,7 @@
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
 
                 if (error.response.data.code == "400") {
                     console.log("error");
@@ -209,18 +217,21 @@
 
 
 
-    // delete skill
+    // delete skill - future feature
     $("#delete_skill_button").click(function () {
         console.log('delete')
     });
+
+
 
     // onclick, I view the assoicaited roles
     function viewRoles(e) {
         // console.log(e)
         // console.log(e.getAttribute("name"))
+
+
         document.cookie = `targetName=${e.getAttribute("name")}`
         document.cookie = `targetID=${e.id}`
-        window.location.href = "./assign_skill_to_role.html";
+        window.location.href = "assign_skill_to_role.html";
     }
-
 </script>

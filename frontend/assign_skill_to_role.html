@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assign Skill -> Role</title>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <!-- axios -->
+    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+
+    <!-- jQuery cookie -->
+    
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+    <!-- navbar placeholder -->
+    <div id="navigation"></div>
+
+    <!-- Page starts -->
+    <div class="container">
+        <h1 id="SkillName"></h1>
+        <hr />
+        <!-- Create Skill Modal button -->
+        <div class="d-flex flex-row-reverse">
+            <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Assign Skill to New Role
+            </button>
+        </div>
+
+        <!-- Create Skill Modal // to be placed in vue template along with other modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body tester" id="roleViewer">
+                        <div class="gradient-box d-flex justify-content-between">
+                            <p class="my-auto">Hello fuka</p>
+                        </div>
+                        <div class="gradient-box d-flex justify-content-between">
+                            <p class="my-auto">Hello fuka</p>
+                        </div>
+                        <div class="gradient-box d-flex justify-content-between">
+                            <p class="my-auto">Hello fuka</p>
+                        </div>
+                        <div class="gradient-box d-flex justify-content-between">
+                            <p class="my-auto">Hello fuka</p>
+                        </div>
+                        <div class="gradient-box d-flex justify-content-between">
+                            <p class="my-auto">Hello fuka</p>
+                        </div>
+                        
+                    </div>
+                    <!-- buttons here -->
+                    <div class="d-flex flex-row-reverse mb-3 mt-3 me-4 gap-3">
+                        <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <!-- not sure if should dismiss after creating, block error/success msg if dont -->
+                        <button type="button" class="button button-primary" data-bs-dismiss="modal"
+                            id="create_skill_button">
+                            Assign
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <h6>Skill is currently assigned to the following roles(s):</h6>
+        <div id="SearchResults"></div>
+
+
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    // load navbar & populate skills
+    $(function () {
+        $("#navigation").load("navbar.html");
+        allCookies = document.cookie
+        console.log(getCookie("targetID"))
+
+        $("#SkillName").text(getCookie("targetName"))
+        getAssignedRoles()
+    });
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    function populatePage(targetArr){
+        var html = ``
+        if (targetArr.length == 0){
+            html = `No Skills Assigned Yet`
+        }
+        for (let i=0 ; i<targetArr.length ; i++){
+            html += 
+            `
+            <div id="${targetArr[i].Role_ID}" name="${targetArr[i].Role_Desc}"class="gradient-box d-flex justify-content-between">
+                <p class="my-auto">${targetArr[i].Role_Desc}</p>
+            </div>
+                    
+            `
+        }
+
+        $("#SearchResults").html(html)
+    }
+
+    function getAssignedRoles(){
+        axios.get(
+            "http://localhost:456/skill/get_assigned_courses_by_ID/" + getCookie('targetID')
+        ).then(function (response){
+            var targetArr = response.data.message[0].roles;
+            console.log(targetArr)
+            populatePage(targetArr)
+        })
+    }
+
+
+    function populateModal(){
+        axios.get(
+            "http://localhost:456/"
+        )
+    }
+
+    function assignSkillToRole(e){
+        var id = getCookie("targetID")
+        axios.get()
+    }
+
+
+
+    // create new skill
+
+
+
+
+    // edit skill - to do
+
+    // onclick, I view the assoicaited roles
+    // function viewRoles(e) {
+    //     axios.get(
+    //         "http://localhost:456/skill/get_assigned_courses_by_ID/" + e.id
+    //     ).then(function (response) {
+    //         console.log(response)
+    //     })
+    // }
+
+</script>

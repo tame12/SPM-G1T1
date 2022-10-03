@@ -72,3 +72,9 @@ hr {
     border-radius: 0.7em;
     margin: 1.5em 0em;
 }
+
+.tester{
+    height: 20rem;
+    width: 100%;
+    overflow: scroll;
+}

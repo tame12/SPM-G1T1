@@ -65,8 +65,6 @@
         <!-- View Skills - populated by js -->
         <div id="view-results"></div>
 
-
-
         <!-- Error/ Success bar -->
         <div id="error_success_bar" class="mb-3"></div>
     </div>
@@ -85,7 +83,7 @@
                 var html = ''
                 for (let i = 0; i < data.data.length; i++) {
                     html += `
-                    <div id="${response[i].Skill_ID}" class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)"
+                    <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}"class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)"
                         <p class="my-auto">${response[i].Skill_Name}</p>
                         <div class="my-auto d-flex gap-3">
                             <!-- Edit skill modal button -->
@@ -221,11 +219,17 @@
 
     // onclick, I view the assoicaited roles
     function viewRoles(e) {
-        axios.get(
-            "http://localhost:456/skill/get_assigned_courses_by_ID/" + e.id
-        ).then(function (response) {
-            console.log(response)
-        })
+        // console.log(e)
+        // console.log(e.getAttribute("name"))
+        document.cookie = `targetName=${e.getAttribute("name")}`
+        document.cookie = `targetID=${e.id}`
+        window.location.href = "./assign_skill_to_role.html";
+        
+        // axios.get(
+        //     "http://localhost:456/skill/get_assigned_courses_by_ID/" + e.id
+        // ).then(function (response) {
+        //     console.log(response)
+        // })
     }
 
 </script>

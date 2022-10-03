@@ -282,20 +282,36 @@ def updateSkill():
 def assignSkillToRole():
     try:
         data = request.get_json()
-        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], int):
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int,list)):
             return jsonify({
                 "code": 400,
                 "message": "Skill ID and Role ID cannot be empty or non interger"
             }), 400
-        
-        newSkillRole = SkillRole(Skill_ID=data['Skill_ID'], Role_ID=data['Role_ID'])
-        db.session.add(newSkillRole)
-        db.session.commit()
-        return jsonify({
-            "code": 201,
-            "message": "Skill assigned to role successfully.",
-            "data": newSkillRole.to_json()
-        }), 201
+            
+        returnMessage = []
+        if isinstance(data['Role_ID'],int):
+            newSkillRole = SkillRole(Skill_ID=data['Skill_ID'], Role_ID=data['Role_ID'])
+            db.session.add(newSkillRole)
+            db.session.commit()
+            return jsonify({
+                "code": 201,
+                "message": "Skill assigned to role successfully.",
+                "data": newSkillRole.to_json()
+            }), 201
+        # assume that validation is done in the UI
+        elif isinstance(data['Role_ID'],list):
+            for role_id in data['Role_ID']:
+                newSkillRole = SkillRole(Skill_ID=data['Skill_ID'], Role_ID=role_id)
+                db.session.add(newSkillRole)
+                db.session.commit()
+                returnMessage.append(newSkillRole.to_json())
+
+            return jsonify({
+                "code": 201,
+                "message": "Skill assigned to role successfully.",
+                "data": returnMessage
+            }), 201
+
 
     except Exception as e:
         return jsonify({

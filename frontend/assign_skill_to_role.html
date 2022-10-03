@@ -56,7 +56,7 @@
                         </button>
                         <!-- not sure if should dismiss after creating, block error/success msg if dont -->
                         <button type="button" class="button button-primary" data-bs-dismiss="modal"
-                            id="create_skill_button">
+                            id="create_skill_button" onclick="assignSkillToRole()">
                             Assign
                         </button>
                     </div>
@@ -97,7 +97,9 @@
         if (targetArr.length == 0){
             html = `No Skills Assigned Yet`
         }
+        cookieAssignedRoles = ``
         for (let i=0 ; i<targetArr.length ; i++){
+            cookieAssignedRoles+=`,${targetArr[i].Role_ID}`
             html += 
             `
             <div id="${targetArr[i].Role_ID}" name="${targetArr[i].Role_Desc}"class="gradient-box d-flex justify-content-between">
@@ -106,6 +108,7 @@
                     
             `
         }
+        document.cookie = `assignedRoles=${cookieAssignedRoles}`
 
         $("#SearchResults").html(html)
     }
@@ -119,14 +122,12 @@
         })
     }
 
-
     function populateModal(){
         axios.get(
             "http://localhost:456/role"
         ).then(function (response){
             var targetArr = response.data.data
             html = ``
-            console.log(targetArr)
             if (targetArr.length == 0){
                 html+=`No available roles yet. Please activate a role, or add a role`
             }
@@ -144,11 +145,6 @@
         })
     }
 
-    function assignSkillToRole(e){
-        var id = getCookie("targetID")
-        axios.get()
-    }
-
     function select(e){
         if (e.classList.contains('selected-box')){
             e.classList.remove('selected-box')
@@ -164,14 +160,45 @@
             // Add the selected to the cookies
             e.classList.add('selected-box')
             if (getCookie("selected") == undefined){
-                document.cookie = `selected=${e.id}`
+                document.cookie = "selected="+e.id
             }
             else{
-                var list = getCookie("selected")
-                list+=(`,${e.id}`)
-                document.cookie = `selected=${list}`
+                var list = getCookie('selected')
+                list = list.split(",")
+                var filtered = list.filter(function(value,index,arr){
+                    return value != e.id
+                })
+                document.cookie = "selected="+filtered.join(',')+","+e.id
             }
 
         }
+    }
+
+    function assignSkillToRole(){
+        try {
+            console.log("hello")
+            var selectedRoles = getCookie("selected").split(",")
+            var assignedRoles = getCookie("assignedRoles").split(",")
+            var toBackEnd = selectedRoles.filter(function(value){
+                if (!assignedRoles.includes(value)){
+                    return value
+                }
+            })
+            var targetID = getCookie('targetID')
+
+        } finally{
+            axios.post(
+            "http://localhost:456/assign_to_role",
+            {
+                Skill_ID : 4,
+                Role_ID : 1,
+            }
+            ).response(function(reponse){
+                console.log(response)
+            })
+
+        }
+
+        
     }
 </script>

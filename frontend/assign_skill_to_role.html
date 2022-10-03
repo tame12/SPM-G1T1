@@ -47,21 +47,6 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body tester" id="roleViewer">
-                        <div class="gradient-box d-flex justify-content-between">
-                            <p class="my-auto">Hello fuka</p>
-                        </div>
-                        <div class="gradient-box d-flex justify-content-between">
-                            <p class="my-auto">Hello fuka</p>
-                        </div>
-                        <div class="gradient-box d-flex justify-content-between">
-                            <p class="my-auto">Hello fuka</p>
-                        </div>
-                        <div class="gradient-box d-flex justify-content-between">
-                            <p class="my-auto">Hello fuka</p>
-                        </div>
-                        <div class="gradient-box d-flex justify-content-between">
-                            <p class="my-auto">Hello fuka</p>
-                        </div>
                         
                     </div>
                     <!-- buttons here -->
@@ -98,6 +83,7 @@
 
         $("#SkillName").text(getCookie("targetName"))
         getAssignedRoles()
+        populateModal()
     });
 
     function getCookie(name) {
@@ -129,7 +115,6 @@
             "http://localhost:456/skill/get_assigned_courses_by_ID/" + getCookie('targetID')
         ).then(function (response){
             var targetArr = response.data.message[0].roles;
-            console.log(targetArr)
             populatePage(targetArr)
         })
     }
@@ -137,31 +122,31 @@
 
     function populateModal(){
         axios.get(
-            "http://localhost:456/"
-        )
+            "http://localhost:456/role"
+        ).then(function (response){
+            var targetArr = response.data.data
+            html = ``
+            console.log(targetArr)
+            if (targetArr.length == 0){
+                html+=`No available roles yet. Please activate a role, or add a role`
+            }
+            for (let i=0; i<targetArr.length; i++){
+                if (targetArr[i].Role_Is_Active){
+                    html += `
+                    <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Role_ID}>
+                        <p class="my-auto">${targetArr[i].Role_Desc}</p>
+                    </div>
+                    
+                    `
+                }
+            }
+            $("#roleViewer").html(html)
+        })
     }
 
     function assignSkillToRole(e){
         var id = getCookie("targetID")
         axios.get()
     }
-
-
-
-    // create new skill
-
-
-
-
-    // edit skill - to do
-
-    // onclick, I view the assoicaited roles
-    // function viewRoles(e) {
-    //     axios.get(
-    //         "http://localhost:456/skill/get_assigned_courses_by_ID/" + e.id
-    //     ).then(function (response) {
-    //         console.log(response)
-    //     })
-    // }
 
 </script>

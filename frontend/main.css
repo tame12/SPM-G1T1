@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
+/* 
+===================TABLE OF CONTENTS===================
+|| General styles
+|| navbar.html
+|| index.html
+|| manage_skills.html 
+|| assign_skills_to_role.html
+*/
+
+/* || General styles */
 :root {
     --lightblue: #8FBEE0;
     --blue: #006FBF;
@@ -16,18 +26,9 @@ h1,
     font-weight: bold;
 }
 
-.vertical-center {
-    margin: auto 0;
-}
-
-navbar a {
-    text-decoration: none;
-    color: black;
-}
-
-.profile {
-    aspect-ratio: 1;
-    margin: auto;
+hr {
+    border-color: black;
+    opacity: 1;
 }
 
 .button {
@@ -44,11 +45,6 @@ navbar a {
 
 .button-primary {
     background-color: var(--blue);
-}
-
-hr {
-    border-color: black;
-    opacity: 1;
 }
 
 .modal-content {
@@ -73,6 +69,22 @@ hr {
     margin: 1.5em 0em;
 }
 
+/* || navbar.html */
+.vertical-center {
+    margin: auto 0;
+}
+
+navbar a {
+    text-decoration: none;
+    color: black;
+}
+
+.profile {
+    aspect-ratio: 1;
+    margin: auto;
+}
+
+/* || assign_skills_to_role.html */
 .tester{
     height: 20rem;
     width: 100%;

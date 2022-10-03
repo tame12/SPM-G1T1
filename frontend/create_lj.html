@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <!-- axios -->
+    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+    <!-- navbar placeholder -->
+    <div id="navigation"></div>
+    <div class="container">
+        <h1>Role Selected</h1>
+        <hr />
+
+        <p>Role description
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat sed quam in luctus. Morbi faucibus
+            semper massa. Fusce ut auctor sapien, nec malesuada diam. Quisque pretium facilisis ullamcorper. Mauris eget
+            volutpat metus. Pellentesque pellentesque orci sollicitudin congue molestie. Phasellus elementum ut nibh
+            vitae condimentum. Suspendisse elementum lobortis eros, et dignissim felis vestibulum et. Phasellus
+            fermentum sit amet dolor in feugiat. Sed quis libero placerat erat eleifend consequat ultricies viverra
+            nunc. Duis consequat nulla at elit gravida posuere. In sed gravida mauris, vel commodo lectus.
+        </p>
+
+        <!-- skills accordion - to be populated by js -->
+        <div class="accordion pb-3 d-flex flex-column gap-3 fw-bold" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item border-box">
+                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne">
+                        Skill 1
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-headingOne">
+                    <!-- courses - to be populated by js -->
+                    <div class="accordion-body d-flex flex-wrap gap-3">
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border-blue">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                    </div>
+                </div>
+            </div>
+            <!-- placeholder second one - can dlt after coded js -->
+            <div class="accordion-item border-box">
+                <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseTwo">
+                        Accordion Item #1
+                    </button>
+                </h2>
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                    aria-labelledby="panelsStayOpen-headingTwo">
+                    <!-- courses - to be populated by js -->
+                    <div class="accordion-body d-flex flex-wrap gap-3">
+                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Skill button -->
+        <div class="d-flex flex-row-reverse">
+            <button class="button button-primary">
+                Create Learning Journey
+            </button>
+        </div>
+
+        <!-- View Skills - populated by js -->
+        <div id="view-results"></div>
+
+        <!-- Error/ Success bar -->
+        <div id="error_success_bar" class="mb-3"></div>
+    </div>
+
+
+</body>
+
+</html>
+
+<script>
+    $(function () {
+        $("#navigation").load("navbar.html");
+    });
+
+</script>

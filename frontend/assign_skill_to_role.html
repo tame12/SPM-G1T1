@@ -133,7 +133,7 @@
             for (let i=0; i<targetArr.length; i++){
                 if (targetArr[i].Role_Is_Active){
                     html += `
-                    <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Role_ID}>
+                    <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Role_ID} onclick="select(this)">
                         <p class="my-auto">${targetArr[i].Role_Desc}</p>
                     </div>
                     
@@ -149,4 +149,29 @@
         axios.get()
     }
 
+    function select(e){
+        if (e.classList.contains('selected-box')){
+            e.classList.remove('selected-box')
+            var list = getCookie('selected')
+            list = list.split(",")
+            var filtered = list.filter(function(value,index,arr){
+                return value != e.id
+            })
+            document.cookie = "selected="+filtered.join(',')
+            console.log(filtered.join(","))
+        }   
+        else{
+            // Add the selected to the cookies
+            e.classList.add('selected-box')
+            if (getCookie("selected") == undefined){
+                document.cookie = `selected=${e.id}`
+            }
+            else{
+                var list = getCookie("selected")
+                list+=(`,${e.id}`)
+                document.cookie = `selected=${list}`
+            }
+
+        }
+    }
 </script>

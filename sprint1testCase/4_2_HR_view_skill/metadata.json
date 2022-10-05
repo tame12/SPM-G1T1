@@ -1,0 +1,14 @@
+{
+    "log_output": "tc4_2.log",
+
+    "tc4_2_1": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_2_1",
+        "description": "HR view skills successfully",
+        "skills": {
+            "1": "Basic programming 1",
+            "2": "Basic programming 2",
+            "3": "Intermediate programming 1"
+        }
+    }
+}

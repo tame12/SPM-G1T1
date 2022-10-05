@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manage Skills</title>
+    <title>Manage Roles</title>
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -31,17 +31,17 @@
 
     <!-- Page starts -->
     <div class="container">
-        <h1>Existing Roles</h1>
+        <h1>List of Existing Roles</h1>
         <hr />
 
-        <!-- Create Skill Modal button -->
+        <!-- Modal button -->
         <div class="d-flex flex-row-reverse">
             <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Create Role
             </button>
         </div>
 
-        <!-- Create Skill Modal // to be placed in vue template along with other modal -->
+        <!-- Create Role Modal  -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -104,6 +104,7 @@
         )
     }
 
+
     // load navbar and populate roles
     $(function () {
         $('#navigation').load('navbar.html');
@@ -111,9 +112,29 @@
     });
 
     function viewSkills(roleDiv) {
-        console.log("roleDiv:", roleDiv)
-        console.log("Role_ID:", roleDiv.id)
-        console.log("roleDiv.getAttribute('name')", roleDiv.getAttribute("name"))
+        // console.log("roleDiv:", roleDiv)  works
+        // console.log("Role_ID:", roleDiv.id) // works
+        // console.log("roleDiv.getAttribute('name')", roleDiv.getAttribute("name")) // works
+        // var skills = get_assigned_skills(roleDiv.id)
+
+        axios.get(
+            "http://localhost:456/role/assigned_skills/" + roleDiv.id
+        ).then(function (response) {
+            var skillsJSON = response.data.data
+            console.log("skillsJSON: ", skillsJSON)
+            skillnames = []
+            for (let i = 0; i < skillsJSON.length; i++) {
+                skillnames.push(skillsJSON[i].Skill_Name)
+            }
+            console.log("skillnames: ", skillnames) // works!!!!
+            if (skillnames.length == 0) {
+                alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
+            }
+            else {
+                alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: ` + skillnames.join(", "))
+            }
+        })
+
 
         // document.cookie = `targetName=${e.getAttribute("name")}`
         // document.cookie = `targetID=${e.id}`

@@ -26,7 +26,7 @@ def tc4_1_3(i, driver, wait, skill_name):
 
   driver.find_element(By.ID, "create_skill_button").click()
 
-  #red box with text "Skill name cannot be empty."
+  #red box with text "Skill already exists."
   wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#error_success_bar > div"), "Skill already exists."))
 
   logging.info('verified the error') 

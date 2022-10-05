@@ -26,7 +26,7 @@ def tc4_1_4(i, driver, wait, skill_name):
 
   driver.find_element(By.ID, "create_skill_button").click()
 
-  #red box with text "Skill name cannot be empty."
+  #red box with text "kill name too long (max 50 characters)."
   wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#error_success_bar > div"), "Skill name too long (max 50 characters)."))
 
   logging.info('verified the error') 

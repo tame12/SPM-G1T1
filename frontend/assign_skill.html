@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assign Skill</title>
+    <title>Assign Skill -> Role</title>
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -84,8 +84,6 @@
         $("#SkillName").text(getCookie("targetName"))
         getAssignedRoles()
         populateModal()
-        getAssignedCourses()
-        populateModalCourse()
         document.cookie = "selected=''"
     });
 
@@ -116,27 +114,6 @@
         $("#SearchResults").html(html)
     }
 
-    function populatePageCourses(targetArr){
-        var html = ``
-        if (targetArr.length == 0){
-            html = `No Skills Assigned Yet`
-        }
-        cookieAssignedRoles = ``
-        for (let i=0 ; i<targetArr.length ; i++){
-            cookieAssignedRoles+=`,${targetArr[i].Role_ID}`
-            html += 
-            `
-            <div id="${targetArr[i].Role_ID}" name="${targetArr[i].Role_Desc}"class="gradient-box d-flex justify-content-between">
-                <p class="my-auto">${targetArr[i].Role_Desc}</p>
-            </div>
-                    
-            `
-        }
-        document.cookie = `assignedRoles=${cookieAssignedRoles}`
-
-        $("#SearchResults").html(html)
-    }
-
     function getAssignedRoles(){
         axios.get(
             "http://localhost:456/skill/get_assigned_roles_by_ID/" + getCookie('targetID')
@@ -146,44 +123,10 @@
         })
     }
 
-    function getAssignedCourses(){
-        axios.get(
-            "http://localhost:456/skill/get_assigned_courses_by_ID/" + getCookie('targetID')
-        ).then(function (response){
-            console.log("response from getAssignedCourses", response)
-            var targetArr = response.data.message[0].courses;
-            populatePageCourses(targetArr)
-        })
-    }
-
     function populateModal(){
         axios.get(
             "http://localhost:456/role"
         ).then(function (response){
-            var targetArr = response.data.data
-            html = ``
-            if (targetArr.length == 0){
-                html+=`No available roles yet. Please activate a role, or add a role`
-            }
-            for (let i=0; i<targetArr.length; i++){
-                if (targetArr[i].Role_Is_Active){
-                    html += `
-                    <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Role_ID} onclick="select(this)">
-                        <p class="my-auto">${targetArr[i].Role_Desc}</p>
-                    </div>
-                    
-                    `
-                }
-            }
-            $("#roleViewer").html(html)
-        })
-    }
-
-    function populateModalCourse(){
-        axios.get(
-            "http://localhost:456/course"
-        ).then(function (response){
-            console.log("response", response);
             var targetArr = response.data.data
             html = ``
             if (targetArr.length == 0){
@@ -233,7 +176,7 @@
     }
 
     function assignSkillToRole(){
-        console.log("hello, assignSkillToRole")
+        console.log("hello")
         var selectedRoles = getCookie("selected").split(",")
         var assignedRoles = getCookie("assignedRoles").split(",")
         var toBackEnd = selectedRoles.filter(function(value){

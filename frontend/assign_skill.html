@@ -66,11 +66,11 @@
             <br>
             <h6>Skill is currently assigned to the following role(s):</h6>
             <div id="SearchResults"></div>
-        </div>
+        
 
         <div id="courseModal">
             <div class="d-flex flex-row-reverse">
-                <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#availableCourses">
+                <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#availableCourses" onclick="populateCourseModal()">
                     Assign Skill to New Course
                 </button>
             </div>
@@ -116,7 +116,6 @@
 
         $("#SkillName").text(getCookie("targetName"))
         getAssignedRoles()
-        populateCourseModal()
         getAssignedCourses()
         document.cookie = "selected=''"
     });
@@ -183,7 +182,7 @@
             "http://localhost:456/skill/get_assigned_courses_by_ID/" + getCookie('targetID')
         ).then(function (response){
             var targetArr = response.data.message[0].courses;
-            console.log("targetArr: ",targetArr)
+            // console.log("targetArr: ",targetArr)
             populatePageCourses(targetArr)
         })
     }

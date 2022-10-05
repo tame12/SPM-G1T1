@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Roles</title>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <!-- axios -->
+    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+    <!-- navbar placeholder -->
+    <div id="navigation"></div>
+
+    <!-- Page starts -->
+    <div class="container">
+        <h1>List of Existing Roles</h1>
+        <hr />
+
+        <!-- Modal button -->
+        <div class="d-flex flex-row-reverse">
+            <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Create Role
+            </button>
+        </div>
+
+        <!-- Create Role Modal  -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <input type="text" id="create_roleName_input" class="w-100 modal-input" placeholder="Role Name" />
+                        <hr>
+                        <input type="text" id="create_roleDesc_input" class="w-100 modal-input" placeholder="Role Description (Max 50 characters)" style="height:120px" required minlength="0" maxlength="50"/>
+                    </div>
+                    <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
+                        <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <!-- not sure if should dismiss after creating, block error/success msg if dont -->
+                        <button type="button" class="button button-primary" data-bs-dismiss="modal"
+                            id="create_role_button">
+                            Create
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View Roles-->
+        <div id="view-results"></div>
+
+        <!-- Error/ Success bar -->
+        <div id="error_success_bar" class="mb-3"></div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    // Populate roles
+    function populate_roles() {
+        // Simulate the retrieval of data from the database
+        $.getJSON(
+            "http://localhost:456/role",
+            function (data) {
+                var response = data.data
+                console.log(response)
+                var html = ''
+                for (let i = 0; i < data.data.length; i++) {
+                    html += `
+                    <div class="gradient-box d-flex justify-content-between" role="button">
+                        <p class="my-auto">${response[i].Role_Name}</p>
+                        <p class="my-auto">${response[i].Role_Desc}</p>
+
+                        <div class="my-auto d-flex gap-3">
+                            <!-- Role Edit Buttons -->
+                            <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">Skills</button>
+                            <button type="button" class="btn btn-danger">Deactivate</button>
+                            <button type="button" class="btn btn-success">Update</button>
+                        </div>
+                        
+                    </div>`
+
+                    $("#view-results").html(html)
+                }
+            }
+        )
+    }
+
+
+    // load navbar and populate roles
+    $(function () {
+        $('#navigation').load('navbar.html');
+        populate_roles()
+    });
+
+    function viewSkills(roleDiv) {
+        // console.log("roleDiv:", roleDiv)  works
+        // console.log("Role_ID:", roleDiv.id) // works
+        // console.log("roleDiv.getAttribute('name')", roleDiv.getAttribute("name")) // works
+        // var skills = get_assigned_skills(roleDiv.id)
+
+        axios.get(
+            "http://localhost:456/role/assigned_skills/" + roleDiv.id
+        ).then(function (response) {
+            var skillsJSON = response.data.data
+            console.log("skillsJSON: ", skillsJSON)
+            skillnames = []
+            for (let i = 0; i < skillsJSON.length; i++) {
+                skillnames.push(skillsJSON[i].Skill_Name)
+            }
+            console.log("skillnames: ", skillnames) // works!!!!
+            if (skillnames.length == 0) {
+                alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
+            }
+            else {
+                alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: \n\n` + skillnames.join("\n"))
+            }
+        })
+
+
+        // document.cookie = `targetName=${e.getAttribute("name")}`
+        // document.cookie = `targetID=${e.id}`
+        // window.location.href = "assign_skill.html";
+    }
+
+
+</script>

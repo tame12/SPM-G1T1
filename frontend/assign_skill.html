@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assign Skill -> Role</title>
+    <title>Assign Skill</title>
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -176,7 +176,7 @@
     }
 
     function assignSkillToRole(){
-        console.log("hello")
+        console.log("hello, assignSkillToRole")
         var selectedRoles = getCookie("selected").split(",")
         var assignedRoles = getCookie("assignedRoles").split(",")
         var toBackEnd = selectedRoles.filter(function(value){

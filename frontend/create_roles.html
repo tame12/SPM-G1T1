@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Roles</title>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+        <!-- ?????????????????????         -->
+    <script src="js/validationCommon.js"></script>
+
+
+
+    <!-- axios -->
+    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css" />
+    
+</head>
+
+<body>
+    <!-- navbar placeholder -->
+    <div id="navigation"></div>
+
+    <!-- Page starts -->
+    <div class="container">
+        <h1>Enter Role Details</h1>
+        <hr />
+
+        <br>
+        <br>
+
+        <div id="info" class="info container-fluid d-none">
+            <div class="alert alert-success alert-dismissable">
+              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button> Success! You have successfully created a role.
+            </div>
+          </div>
+
+        <form class="form" novalidate onsubmit="return validateForm();">
+            <div class="col-md-12  ">
+
+                <table>
+                    <tr>
+                        <td>
+                            <!-- <label for="role_Name">*Role Name:</label>
+                            <input type="text" id="role_Name" name="role_Name" required
+                            minlength="1" maxlength="50" placeholder="2-50 letters">
+                            <span id="errorroleName" class="error-text"></span>
+                            <br><br> -->
+
+                            <label for="role_Name">*Role Name:</label>
+                            <span>Please enter a valid role name:</span>
+                            <input type="text" id="role_Name" name="role_Name" required
+                            minlength="1" maxlength="50" placeholder="2-50 letters">
+                            <span class="error" aria-live="polite"></span>
+                      
+                            <br><br>
+                    
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <!-- <label for="description">Description:</label>
+                            <input type="text" id="description" name="description">
+                            <span id="errordescription" class="error-text"></span>
+                            <br><br> -->
+
+                            <label for="description">Description:</label>
+                            <input type="text" id="description" name="description">
+                            <br><br>
+
+                        </td>
+                    </tr>
+                </table>
+                
+                <div class="f-buttons ">
+                    <p id="errorsSummary" class="error-text"></p>
+                    <button id="subbut" type="submit" class="button button-primary subbut " style="position: relative;
+                    left: 100px; ">Submit</button>
+                </div>
+                
+            </div>
+  
+
+
+
+        </form>
+
+
+
+        <!-- View Roles - populated by js -->
+        <div id="view-results"></div>
+
+        <!-- Error/ Success bar -->
+        <div id="error_success_bar" class="mb-3"></div>
+    </div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+<script>
+ 
+     // on page load, load navbar 
+    $(function () {
+        $("#navigation").load("navbar.html");
+
+    });
+
+    // create new role
+    $("#subbut").click(function () {
+        var create_skill_input = $("#role_Name").val();
+        // console.log(role_Name);
+
+        axios
+            .post("http://localhost:456/role/create", {
+                Role_Name: role_Name,
+            })
+            .then(function (response) {
+                console.log(response);
+
+                if (response.data.code == "201") {
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                    `);
+                    populate_roles();
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+
+                if (error.response.data.code == "400") {
+                    console.log("error");
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
+                    `);
+                }
+            }).then(function () {
+                // always executed
+                $('#error_success_bar')[0].scrollIntoView(false);
+            });
+    });
+
+
+
+</script>
+
+

@@ -1,0 +1,69 @@
+New Test=====
+tc4_3_1
+1 tests
+HR updates skill successfully
+at time: 10/05/2022 04:48:46 PM
+
+10/05/2022 04:48:48 PM	INFO:	Start of test 1
+10/05/2022 04:48:51 PM	INFO:	before clicking update skill button
+10/05/2022 04:48:52 PM	INFO:	verified the update of skill
+10/05/2022 04:48:52 PM	INFO:	End of test 1
+10/05/2022 04:48:52 PM	INFO:	Time taken for to update skill: 1.0294735431671143
+Test End=====
+
+New Test=====
+tc4_3_2
+1 tests
+HR updates skill with empty name
+at time: 10/05/2022 04:48:54 PM
+
+10/05/2022 04:48:56 PM	INFO:	Start of test 1
+10/05/2022 04:48:59 PM	INFO:	before clicking update skill button
+10/05/2022 04:49:00 PM	INFO:	verified the error
+10/05/2022 04:49:00 PM	INFO:	End of test 1
+10/05/2022 04:49:00 PM	INFO:	Time taken to verify error: 0.46491050720214844
+Test End=====
+
+New Test=====
+tc4_3_3
+1 tests
+HR updates skill with duplicated name
+at time: 10/05/2022 04:49:02 PM
+
+10/05/2022 04:49:04 PM	INFO:	Start of test 1
+10/05/2022 04:49:07 PM	INFO:	before clicking update skill button
+10/05/2022 04:49:07 PM	INFO:	verified the error
+10/05/2022 04:49:07 PM	INFO:	End of test 1
+10/05/2022 04:49:07 PM	INFO:	Time taken to verify error: 0.4335455894470215
+Test End=====
+
+New Test=====
+tc4_3_4
+1 tests
+HR updates skill with skill name of 51 characters
+at time: 10/05/2022 04:49:10 PM
+
+10/05/2022 04:49:12 PM	INFO:	Start of test 1
+10/05/2022 04:49:15 PM	INFO:	before clicking update skill button
+10/05/2022 04:49:25 PM	ERROR:	Test 1 error, continuing with next test
+Traceback (most recent call last):
+  File "C:\Users\Tim Chen\Documents\GitHub\SPM-G1T1\sprint1testCase\4_3_HR_update_skill\tc4_3_4.py", line 77, in manytc4_3_4
+    tc4_3_4(i, driver, wait, skill_name)
+  File "C:\Users\Tim Chen\Documents\GitHub\SPM-G1T1\sprint1testCase\4_3_HR_update_skill\tc4_3_4.py", line 32, in tc4_3_4
+    wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#error_success_bar > div"), "Skill name too long (max 50 characters)."))
+  File "C:\Users\Tim Chen\AppData\Local\Programs\Python\Python38-32\lib\site-packages\selenium\webdriver\support\wait.py", line 87, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+
+10/05/2022 04:49:25 PM	ERROR:	Message: 
+Traceback (most recent call last):
+  File "C:\Users\Tim Chen\Documents\GitHub\SPM-G1T1\sprint1testCase\4_3_HR_update_skill\tc4_3_4.py", line 77, in manytc4_3_4
+    tc4_3_4(i, driver, wait, skill_name)
+  File "C:\Users\Tim Chen\Documents\GitHub\SPM-G1T1\sprint1testCase\4_3_HR_update_skill\tc4_3_4.py", line 32, in tc4_3_4
+    wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, "#error_success_bar > div"), "Skill name too long (max 50 characters)."))
+  File "C:\Users\Tim Chen\AppData\Local\Programs\Python\Python38-32\lib\site-packages\selenium\webdriver\support\wait.py", line 87, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+
+Test End=====
+

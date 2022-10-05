@@ -82,6 +82,9 @@ class SkillRole(db.Model):
             'Role_ID': self.Role_ID
         }
 
+    def getAssignedSkillsByRoleID(role_id):
+        return Skill.query.join(SkillRole, Skill.Skill_ID == SkillRole.Skill_ID).where(SkillRole.Role_ID == role_id).all()
+
     def getAssignedRoleBySkillID(skill_id):
         return Role.query.join(SkillRole, Role.Role_ID == SkillRole.Role_ID).where(SkillRole.Skill_ID == skill_id).all()
 
@@ -186,6 +189,32 @@ def createRole():
         return jsonify({
             "code": 500,
             "message": "Unable create new role. Error message: " + str(e)
+        }), 500
+
+@app.route('/role/assigned_skills')
+def getAssignedSkills():
+    try:
+        data = request.get_json()
+        if 'Role_ID' not in data.keys() or data['Role_ID'] == []:
+            return jsonify({
+                "code": 400,
+                "message": "Role ID cannot be empty."
+            }), 400
+        role_id = data['Role_ID']
+
+        skills = SkillRole.getAssignedSkillsByRoleID(role_id)
+
+        return jsonify({
+            "code": 201,
+            # "data": skills #doesn't convert by json itself, need to use .to_json() for each skill
+            "data": [s.to_json() for s in skills]
+        }), 201
+
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get assigned skills from database. Error message: " + str(e)
         }), 500
 
 @app.route('/skill')

@@ -191,17 +191,35 @@ def createRole():
             "message": "Unable create new role. Error message: " + str(e)
         }), 500
 
-@app.route('/role/assigned_skills')
-def getAssignedSkills():
-    try:
-        data = request.get_json()
-        if 'Role_ID' not in data.keys() or data['Role_ID'] == []:
-            return jsonify({
-                "code": 400,
-                "message": "Role ID cannot be empty."
-            }), 400
-        role_id = data['Role_ID']
+# @app.route('/role/assigned_skills') # this one is the simulation version
+# def getAssignedSkills():
+#     try:
+#         data = request.get_json()
+#         if 'Role_ID' not in data.keys() or data['Role_ID'] == []:
+#             return jsonify({
+#                 "code": 400,
+#                 "message": "Role ID cannot be empty."
+#             }), 400
+#         role_id = data['Role_ID']
 
+#         skills = SkillRole.getAssignedSkillsByRoleID(role_id)
+
+#         return jsonify({
+#             "code": 201,
+#             # "data": skills #doesn't convert by json itself, need to use .to_json() for each skill
+#             "data": [s.to_json() for s in skills]
+#         }), 201
+
+
+#     except Exception as e:
+#         return jsonify({
+#             "code": 500,
+#             "message": "Unable to get assigned skills from database. Error message: " + str(e)
+#         }), 500
+
+@app.route('/role/assigned_skills/<int:role_id>') # this one is the actual version with URL
+def getAssignedSkills(role_id):
+    try:
         skills = SkillRole.getAssignedSkillsByRoleID(role_id)
 
         return jsonify({
@@ -209,7 +227,6 @@ def getAssignedSkills():
             # "data": skills #doesn't convert by json itself, need to use .to_json() for each skill
             "data": [s.to_json() for s in skills]
         }), 201
-
 
     except Exception as e:
         return jsonify({

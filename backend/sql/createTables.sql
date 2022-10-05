@@ -96,4 +96,5 @@ create table if not exists `is212_G1T1`.`Learning_Journey_Course` (
 insert into `is212_G1T1`.`Position` (`Position_ID`, `Position_Name`) values 
 (1, 'Admin'),
 (2, 'User'),
-(3, 'Manager');
+(3, 'Manager'),
+(4, 'Trainer');

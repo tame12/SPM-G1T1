@@ -380,24 +380,41 @@ def assignSkillToRole():
             "message": "Unable to assign skill to role. Error message: " + str(e)
         }), 500
 
-@app.route('/skill/assign_to_course', methods=['POST'])
-def assignSkillToCourse():
+@app.route('/skill/assign_to_courses', methods=['POST'])
+def assignSkillToCourses():
     try:
         data = request.get_json()
-        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or data['Course_ID'] == "":
+        print(data)
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (int,list)):
             return jsonify({
                 "code": 400,
-                "message": "Skill ID and Course ID cannot be empty; skill ID must be integer"
+                "message": "Skill ID and Course ID cannot be empty or non interger"
             }), 400
-        
-        newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID'])
-        db.session.add(newSkillCourse)
-        db.session.commit()
-        return jsonify({
-            "code": 201,
-            "message": "Skill assigned to course successfully.",
-            "data": newSkillCourse.to_json()
-        }), 201
+            
+        returnMessage = []
+        if isinstance(data['Course_ID'],int):
+            newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID'])
+            db.session.add(newSkillCourse)
+            db.session.commit()
+            return jsonify({
+                "code": 201,
+                "message": "Skill assigned to course successfully.",
+                "data": newSkillCourse.to_json()
+            }), 201
+        # assume that validation is done in the UI
+        elif isinstance(data['Course_ID'],list):
+            for course_id in data['Course_ID']:
+                newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=course_id)
+                db.session.add(newSkillCourse)
+                db.session.commit()
+                returnMessage.append(newSkillCourse.to_json())
+
+            return jsonify({
+                "code": 201,
+                "message": "Skill assigned to course successfully.",
+                "data": returnMessage
+            }), 201
+
 
     except Exception as e:
         return jsonify({

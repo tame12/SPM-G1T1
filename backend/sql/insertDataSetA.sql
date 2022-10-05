@@ -60,8 +60,8 @@ insert into `is212_G1T1`.`Role` (`Role_ID`, `Role_Name`, `Role_Desc`, `Role_Is_A
 
 delete from `is212_G1T1`.`Registration`;
 insert into `is212_G1T1`.`Registration` (`Reg_ID`, `Course_ID`, `Staff_ID`, `Reg_Status`, `Completion_Status`) values 
-(1,"IS-1",4,"Registered","Completed"),
-(2,"IS-1",5,"Registered","Completed");
+(12345,"IS-1",4,"Registered","Completed"),
+(12346,"IS-1",5,"Registered","Completed");
 
 delete from `is212_G1T1`.`Course_Skill`;
 insert into `is212_G1T1`.`Course_Skill` (`Course_ID`, `Skill_ID`) values 

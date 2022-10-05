@@ -85,26 +85,46 @@
                 console.log(response)
                 var html = ''
                 for (let i = 0; i < data.data.length; i++) {
-                    html += `
-                    <div class="gradient-box d-flex justify-content-between" role="button">
-                        <p class="my-auto">${response[i].Role_Name}</p>
-                        <p class="my-auto">${response[i].Role_Desc}</p>
-
-                        <div class="my-auto d-flex gap-3">
-                            <!-- Role Edit Buttons -->
-                            <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">Skills</button>
-                            <button type="button" class="btn btn-danger">Deactivate</button>
-                            <button type="button" class="btn btn-success">Update</button>
-                        </div>
-                        
-                    </div>`
-
-                    $("#view-results").html(html)
+                    // if condition to check whether role is active or not
+                    if (response[i].Role_Is_Active) {
+                        html += `
+                        <div class="gradient-box d-flex justify-content-between" role="button">
+                            <p class="my-auto">${response[i].Role_Name}</p>
+                            <p class="my-auto">${response[i].Role_Desc}</p>
+    
+                            <div class="my-auto d-flex gap-3">
+                                <!-- Role Edit Buttons -->
+                                <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">&nbsp; &nbsp; Skills &nbsp; &nbsp;</button>
+                                <button type="button" class="btn btn-danger">Deactivate</button>
+                                <button type="button" class="btn btn-warning">&nbsp; &nbsp; Update &nbsp; &nbsp;</button>
+                            </div>
+                            
+                        </div>`
+    
+                        // $("#view-results").html(html)
+                    }
+                    else {
+                        html += `
+                        <div class="gradient-box d-flex justify-content-between" role="button">
+                            <p class="my-auto">${response[i].Role_Name}</p>
+                            <p class="my-auto">${response[i].Role_Desc}</p>
+    
+                            <div class="my-auto d-flex gap-3">
+                                <!-- Role Edit Buttons -->
+                                <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">&nbsp; &nbsp; Skills &nbsp; &nbsp;</button>
+                                <button type="button" class="btn btn-success">&nbsp; Activate &nbsp; </button>
+                                <button type="button" class="btn btn-warning">&nbsp; &nbsp; Update &nbsp; &nbsp;</button>
+                            </div>
+                            
+                        </div>`
+    
+                        // $("#view-results").html(html)
+                    }
                 }
+                $("#view-results").html(html) // rewrites the #view-results div with the new html
             }
         )
     }
-
 
     // load navbar and populate roles
     $(function () {

@@ -37,7 +37,7 @@
         <hr />
         <!-- Create Skill Modal button -->
         <div class="d-flex flex-row-reverse">
-            <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="populateModal()">
                 Assign Skill to New Role
             </button>
         </div>
@@ -83,7 +83,6 @@
 
         $("#SkillName").text(getCookie("targetName"))
         getAssignedRoles()
-        populateModal()
         document.cookie = "selected=''"
     });
 
@@ -124,6 +123,8 @@
     }
 
     function populateModal(){
+        let assignedRoles = getCookie("assignedRoles").split(",")
+        console.log(assignedRoles)
         axios.get(
             "http://localhost:456/role"
         ).then(function (response){
@@ -134,12 +135,21 @@
             }
             for (let i=0; i<targetArr.length; i++){
                 if (targetArr[i].Role_Is_Active){
-                    html += `
-                    <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Role_ID} onclick="select(this)">
-                        <p class="my-auto">${targetArr[i].Role_Desc}</p>
-                    </div>
+                    // console.log()
+                    if (targetArr[i].Role_ID in assignedRoles){
+                        html += `
+                        <div class="gradient-box d-flex justify-content-between selected-box" id=${targetArr[i].Role_ID} onclick="select(this)">
+                            <p class="my-auto">${targetArr[i].Role_Desc}</p>
+                        </div>
+                        `
+                    } else{
+                        html += `
+                        <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Role_ID} onclick="select(this)">
+                            <p class="my-auto">${targetArr[i].Role_Desc}</p>
+                        </div>
+                        `
+                    }
                     
-                    `
                 }
             }
             $("#roleViewer").html(html)
@@ -147,7 +157,9 @@
     }
 
     function select(e){
-        if (e.classList.contains('selected-box')){
+        let assignedRoles = getCookie("assignedRoles").split(",")
+
+        if (e.classList.contains('selected-box') && !(e.id in assignedRoles)){
             e.classList.remove('selected-box')
             var list = getCookie('selected')
             list = list.split(",")

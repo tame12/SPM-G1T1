@@ -152,3 +152,8 @@ cython_debug/
 #.idea/
 
 backend/.env
+
+# to whitelist some log files
+!/sprint1testCase/4_1_HR_create_skill/tc4_1.log
+!/sprint1testCase/4_2_HR_view_skill/tc4_2.log
+!/sprint1testCase/4_3_HR_update_skill/tc4_3.log

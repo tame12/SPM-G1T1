@@ -1,0 +1,28 @@
+{
+    "log_output": "tc4_1.log",
+
+    "tc4_1_1": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_1_1",
+        "description": "HR creates skill successfully",
+        "skill_name": "uniqueskillname + time.now()"
+    },
+    "tc4_1_2": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_1_2",
+        "description": "HR creates skill with empty name",
+        "skill_name": ""
+    },
+    "tc4_1_3": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_1_3",
+        "description": "HR creates skill with duplicated name",
+        "skill_name": "Basic programming 2"
+    },
+    "tc4_1_4": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_1_4",
+        "description": "HR creates skill with skill name of 51 characters",
+        "skill_name": "01234567890123456789012345678901234567890123456789a"
+    }
+}

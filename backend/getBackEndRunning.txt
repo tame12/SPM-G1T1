@@ -10,7 +10,7 @@ can always reimport these 2 files for testing
 Flask===
 pip install python-dotenv if not done already
 get .env file from me and change it accordingly
-put the file in /backend/.env
+put the file in /backend/server/.env
 run server/flaskServer.py
 
 Postman===

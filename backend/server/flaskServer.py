@@ -152,6 +152,20 @@ def getAllRole():
             "message": "Unable to get role from database."
         }), 500
 
+@app.route('/course')
+def getAllCourse():
+    try:
+        course = Course.query.all()
+        return jsonify({
+                "code": 201,
+                "data": [c.to_json() for c in course]
+            }), 201
+    except Exception:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get course from database."
+        }), 500
+
 @app.route('/role/create', methods=['POST'])
 def createRole():
     try:
@@ -438,10 +452,25 @@ def getAssignedRoles():
             "message": "Unable to get assigned roles from database. Error message: " + str(e)
         }), 500
 
-@app.route('/skill/get_assigned_courses_by_ID/<int:skill_id>')
+@app.route('/skill/get_assigned_roles_by_ID/<int:skill_id>')
 def getAssignedRoleByID(skill_id):
     try: 
         data = SkillRole.getAssignedRolesBySkillIDs([skill_id])
+        return jsonify({
+            "code": 201,
+            "message": data
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get assigned role from database. Error message: " + str(e)
+        }), 500
+
+@app.route('/skill/get_assigned_courses_by_ID/<int:skill_id>')
+def getAssignedCoursesByID(skill_id):
+    try: 
+        data = SkillCourse.getAssignedCoursesBySkillIDs([skill_id])
         return jsonify({
             "code": 201,
             "message": data

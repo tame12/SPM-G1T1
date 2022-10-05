@@ -32,14 +32,14 @@
     <!-- Page starts -->
     <div class="container">
         <h1>List of Existing Roles</h1>
-        <hr />
-
         <!-- Modal button -->
         <div class="d-flex flex-row-reverse">
             <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Create Role
             </button>
         </div>
+        <hr />
+
 
         <!-- Create Role Modal  -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -89,12 +89,12 @@
                     <div class="gradient-box d-flex justify-content-between" role="button">
                         <p class="my-auto">${response[i].Role_Name}</p>
                         <p class="my-auto">${response[i].Role_Desc}</p>
+                        <a id="${response[i].Role_ID} name="${response[i].Role_Name}" onload="viewSkills(this)" href="#" class="link-Primary my-auto" data-bs-toggle="tooltip" title="Default tooltip"> Skills </a>
 
                         <div class="my-auto d-flex gap-3">
                             <!-- Role Edit Buttons -->
-                            <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">Skills</button>
-                            <button type="button" class="btn btn-danger">Deactivate</button>
-                            <button type="button" class="btn btn-success">Update</button>
+                            <button type="button" class="btn btn-secondary">Deactivate</button>
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateRoleModal">Update</button>
                         </div>
                         
                     </div>`
@@ -129,10 +129,12 @@
             }
             console.log("skillnames: ", skillnames) // works!!!!
             if (skillnames.length == 0) {
-                alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
+                // alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
+                roleDiv.setAttribute("title", `The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
             }
             else {
-                alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: \n\n` + skillnames.join("\n"))
+                // alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: ` + skillnames.join(", "))
+                roleDiv.setAttribute("title", `The role ${roleDiv.getAttribute("name")} is associated with the skills: ` + skillnames.join(", "))
             }
         })
 
@@ -142,5 +144,9 @@
         // window.location.href = "assign_skill.html";
     }
 
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
 
 </script>

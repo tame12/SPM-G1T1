@@ -67,8 +67,24 @@
         <!-- View Roles-->
         <div id="view-results"></div>
 
-        <!-- Error/ Success bar -->
-        <div id="error_success_bar" class="mb-3"></div>
+        <!-- Assigned skills modal  -->
+        <div class="modal fade" id="#skillModal" tabindex="-1" aria-labelledby="skillModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="px-3 pt-3">
+                        <h1 class="modal-title fs-4" id="skillModalTitle"></h1>
+                    </div>
+                    <div class="modal-body" id="skillModalBody">
+                        <!-- Insert assigned skills here using DOM -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </body>
 
@@ -82,25 +98,27 @@
             "http://localhost:456/role",
             function (data) {
                 var response = data.data
-                console.log(response)
+                // console.log("response of roles: ", response) 
                 var html = ''
                 for (let i = 0; i < data.data.length; i++) {
                     html += `
-                    <div class="gradient-box d-flex justify-content-between" role="button">
+                    <div "class="gradient-box d-flex justify-content-between" role="button">
                         <p class="my-auto">${response[i].Role_Name}</p>
                         <p class="my-auto">${response[i].Role_Desc}</p>
 
+
                         <div class="my-auto d-flex gap-3">
                             <!-- Role Edit Buttons -->
-                            <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">Skills</button>
-                            <button type="button" class="btn btn-danger">Deactivate</button>
-                            <button type="button" class="btn btn-success">Update</button>
+                            <button type="button" class="btn btn-secondary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" data-bs-toggle="modal" data-bs-target="#skillModal" onclick="viewSkills(this)"> Skills </button>
+                            <button type="button" class="btn btn-secondary">Deactivate</button>
+                            <button type="button" class="btn btn-secondary">Update</button>
                         </div>
-                        
+
                     </div>`
 
-                    $("#view-results").html(html)
                 }
+                $("#view-results").html(html)
+
             }
         )
     }
@@ -112,6 +130,7 @@
         populate_roles()
     });
 
+    // function to populate the assigned_skills modal when skill button is clicked on
     function viewSkills(roleDiv) {
         // console.log("roleDiv:", roleDiv)  works
         // console.log("Role_ID:", roleDiv.id) // works
@@ -128,18 +147,20 @@
                 skillnames.push(skillsJSON[i].Skill_Name)
             }
             console.log("skillnames: ", skillnames) // works!!!!
+
+            $("#skillModalTitle").html("Skills for " + roleDiv.getAttribute("name"))
+
             if (skillnames.length == 0) {
-                alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
+
+                // alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
+                $("#skillModalBody" + roleDiv.id).html(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
             }
             else {
-                alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: \n\n` + skillnames.join("\n"))
+                // alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: ` + skillnames.join(", "))
+                $("#skillModalBody" + roleDiv.id).html(`The role ${roleDiv.getAttribute("name")} is associated with the skills: <br>` + skillnames.join(", "))
             }
         })
 
-
-        // document.cookie = `targetName=${e.getAttribute("name")}`
-        // document.cookie = `targetID=${e.id}`
-        // window.location.href = "assign_skill.html";
     }
 
 

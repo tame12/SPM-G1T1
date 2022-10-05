@@ -86,15 +86,14 @@
                 var html = ''
                 for (let i = 0; i < data.data.length; i++) {
                     html += `
-                    <div class="gradient-box d-flex justify-content-between" role="button">
+                    <div id="${response[i].Role_ID}" name="${response[i].Role_Name}"class="gradient-box d-flex justify-content-between" onclick="viewSkills(this)" role="button">
                         <p class="my-auto">${response[i].Role_Name}</p>
                         <p class="my-auto">${response[i].Role_Desc}</p>
 
                         <div class="my-auto d-flex gap-3">
                             <!-- Role Edit Buttons -->
-                            <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">Skills</button>
-                            <button type="button" class="btn btn-danger">Deactivate</button>
-                            <button type="button" class="btn btn-success">Update</button>
+                            <button type="button" class="btn btn-secondary">Deactivate</button>
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#updateRoleModal">Update</button>
                         </div>
                         
                     </div>`
@@ -132,7 +131,7 @@
                 alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
             }
             else {
-                alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: \n\n` + skillnames.join("\n"))
+                alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: ` + skillnames.join(", "))
             }
         })
 

@@ -12,7 +12,7 @@
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
         <!-- ?????????????????????         -->
-    <script src="js/validationCommon.js"></script>
+    <!-- <script src="validationCommon.js"></script> -->
 
 
 
@@ -62,7 +62,7 @@
                             <br><br> -->
 
                             <label for="role_Name">*Role Name:</label>
-                            <span>Please enter a valid role name:</span>
+               
                             <input type="text" id="role_Name" name="role_Name" required
                             minlength="1" maxlength="50" placeholder="2-50 letters">
                             <span class="error" aria-live="polite"></span>
@@ -124,7 +124,6 @@
      // on page load, load navbar 
     $(function () {
         $("#navigation").load("navbar.html");
-
     });
 
     // create new role

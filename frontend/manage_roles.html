@@ -46,9 +46,10 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <input type="text" id="create_roleName_input" class="w-100 modal-input" placeholder="Role Name" />
+                        <input type="text" id="create_roleName_input" class="w-100 modal-input" placeholder="Role Name (Max 50 characters)" required
+                        minlength="1" maxlength="50"/>
                         <hr>
-                        <input type="text" id="create_roleDesc_input" class="w-100 modal-input" placeholder="Role Description (Max 50 characters)" style="height:120px" required minlength="0" maxlength="50"/>
+                        <input type="text" id="create_roleDesc_input" class="w-100 modal-input" placeholder="Role Description" style="height:120px" required minlength="0" maxlength="50"/>
                     </div>
                     <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
                         <button type="button" class="button button-grey" data-bs-dismiss="modal">
@@ -137,10 +138,49 @@
         })
 
 
+
+        // create new skill
+    $("#create_role_button").click(function () {
+        var create_role_button = $("#create_roleName_input").val();
+        // console.log(create_roleName_input);
+        console.log(123)
+
+        axios
+            .post("http://localhost:456/role/create", {
+                Role_Name: create_roleName_input,
+            })
+            .then(function (response) {
+                console.log(response);
+
+                // if (response.data.code == "201") { //success
+                //     $("#error_success_bar").html(`
+                //     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                //     `);
+                //     populate_roles();
+                // }
+            })
+            .catch(function (error) {
+                console.log(error);
+
+                // if (error.response.data.code == "400") { //fail
+                //     console.log("error");
+                //     $("#error_success_bar").html(`
+                //     <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
+                //     `);
+                // }
+            }).then(function () {
+                // always executed
+                // $('#error_success_bar')[0].scrollIntoView(false);
+            });
+    });
+
+
         // document.cookie = `targetName=${e.getAttribute("name")}`
         // document.cookie = `targetID=${e.id}`
         // window.location.href = "assign_skill.html";
     }
+
+
 
 
 </script>

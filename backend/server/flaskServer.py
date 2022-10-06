@@ -216,7 +216,7 @@ def createRole():
     except Exception as e:
         return jsonify({
             "code": 500,
-            "message": "Unable create new role. Error message: " + str(e)
+            "message": "Unable to create new role. Error message: " + str(e)
         }), 500
 
 # @app.route('/role/assigned_skills') # this one is the simulation version
@@ -316,7 +316,7 @@ def createSkill():
     except Exception as e:
         return jsonify({
             "code": 500,
-            "message": "Unable create new skill. Error message: " + str(e)
+            "message": "Unable to create new skill. Error message: " + str(e)
         }), 500
 
 @app.route('/skill/update', methods=['PUT'])

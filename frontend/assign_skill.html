@@ -258,14 +258,16 @@
     function select(e){
         let assignedRoles = getCookie("assignedRoles").split(",")
         // making sure that you cannot deselect an assigned role
-        if (e.classList.contains('selected-box') && !(e.id in assignedRoles)){
+        if (e.classList.contains('selected-box')){
             e.classList.remove('selected-box')
-            var list = getCookie('selected')
-            var filtered = list.filter(function(value,index,arr){
+            var list = getCookie('selected').split(',')
+            console.log("e", e.id)
+            console.log("current cookie: ",list)
+            var filtered = list.filter(function(value){
                 return value != e.id
             })
+            console.log("filtered: ",filtered)
             document.cookie = "selected="+filtered.join(',')
-            console.log(filtered.join(","))
         }
         // When you select an option
         else{
@@ -284,7 +286,7 @@
             }
 
         }
-        console.log(getCookie("selected"))
+        console.log("updated cookie", getCookie("selected"))
     }
 
     function assignSkillToRole(){
@@ -309,10 +311,14 @@
             console.log("response: ",response)
             getAssignedRoles()
             populateModal()
-            document.cookie = "selected=''"
-            $("#error_success_bar").html(`
-                <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
-            `);
+            if(!document.cookie == "selected=''"){
+                document.cookie = "selected=''"
+                $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                `);
+            }else{
+                alert("No Roles were selected. Please select one or more roles to assign this skill to.")
+            }
         })
     }
 
@@ -341,10 +347,15 @@
             console.log("response: ",response)
             getAssignedCourses()
             populateCourseModal()
-            document.cookie = "selected=''"
-            $("#error_success_bar").html(`
-                <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
-            `);
+            if(!document.cookie == "selected=''"){
+                document.cookie = "selected=''"
+                $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                `);
+            }else{
+                alert("No Courses were selected. Please select one or more courses to assign this skill to.")
+            }
+            
         })
     }
 </script>

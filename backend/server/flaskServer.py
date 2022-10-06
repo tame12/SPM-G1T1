@@ -178,6 +178,13 @@ def createRole():
                 "message": "Role name cannot be empty."
             }), 400
 
+        # role name cannot be > 50 characters
+        if len(data['Role_Name']) > 50:
+            return jsonify({
+                "code": 400,
+                "message": "Role name cannot be more than 50 characters."
+            }), 400
+
         # check if role name already exists
         role = Role.query.filter_by(Role_Name=data['Role_Name']).first()
         if role:
@@ -188,6 +195,13 @@ def createRole():
 
         # default role description to empty string
         role_Desc = data['Role_Desc'] if 'Role_Desc' in data.keys() else ""
+
+        # role desc cannot be > 255 characters
+        if len(role_Desc) > 255:
+            return jsonify({
+                "code": 400,
+                "message": "Role description cannot be more than 255 characters."
+            }), 400
 
         # create new role, default is active
         new_role = Role(Role_Name=data['Role_Name'], Role_Desc=role_Desc, Role_Is_Active=1)
@@ -273,6 +287,13 @@ def createSkill():
                 "code": 400,
                 "message": "Skill name cannot be empty."
             }), 400
+
+        # check if length is > 50 char
+        if len(data['Skill_Name']) > 50:
+            return jsonify({
+                "code": 400,
+                "message": "Skill name cannot be more than 50 characters."
+            }), 400
         
         # check if skill name already exists
         skill = Skill.query.filter_by(Skill_Name=data['Skill_Name']).first()
@@ -312,6 +333,13 @@ def updateSkill():
             return jsonify({
                 "code": 400,
                 "message": "Skill name cannot be empty."
+            }), 400
+
+        # check if length is > 50 char
+        if len(data['Skill_Name']) > 50:
+            return jsonify({
+                "code": 400,
+                "message": "Skill name cannot be more than 50 characters."
             }), 400
 
         # check if skill name already exists
@@ -380,24 +408,41 @@ def assignSkillToRole():
             "message": "Unable to assign skill to role. Error message: " + str(e)
         }), 500
 
-@app.route('/skill/assign_to_course', methods=['POST'])
-def assignSkillToCourse():
+@app.route('/skill/assign_to_courses', methods=['POST'])
+def assignSkillToCourses():
     try:
         data = request.get_json()
-        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or data['Course_ID'] == "":
+        print(data)
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (int,list)):
             return jsonify({
                 "code": 400,
-                "message": "Skill ID and Course ID cannot be empty; skill ID must be integer"
+                "message": "Skill ID and Course ID cannot be empty or non interger"
             }), 400
-        
-        newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID'])
-        db.session.add(newSkillCourse)
-        db.session.commit()
-        return jsonify({
-            "code": 201,
-            "message": "Skill assigned to course successfully.",
-            "data": newSkillCourse.to_json()
-        }), 201
+            
+        returnMessage = []
+        if isinstance(data['Course_ID'],int):
+            newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID'])
+            db.session.add(newSkillCourse)
+            db.session.commit()
+            return jsonify({
+                "code": 201,
+                "message": "Skill assigned to course successfully.",
+                "data": newSkillCourse.to_json()
+            }), 201
+        # assume that validation is done in the UI
+        elif isinstance(data['Course_ID'],list):
+            for course_id in data['Course_ID']:
+                newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=course_id)
+                db.session.add(newSkillCourse)
+                db.session.commit()
+                returnMessage.append(newSkillCourse.to_json())
+
+            return jsonify({
+                "code": 201,
+                "message": "Skill assigned to course successfully.",
+                "data": returnMessage
+            }), 201
+
 
     except Exception as e:
         return jsonify({

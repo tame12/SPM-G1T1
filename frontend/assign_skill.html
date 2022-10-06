@@ -203,7 +203,7 @@
                     // console.log()
                     if (targetArr[i].Role_ID in assignedRoles){
                         html += `
-                        <div class="gradient-box d-flex justify-content-between selected-box" id=${targetArr[i].Role_ID} onclick="select(this)">
+                        <div class="gradient-box d-flex justify-content-between disabled text-secondary box-secondary" id=${targetArr[i].Role_ID}">
                             <p class="my-auto">${targetArr[i].Role_Desc}</p>
                         </div>
                         `
@@ -222,6 +222,8 @@
     }
 
     function populateCourseModal(){
+        let assignedCourses = getCookie("assignedCourse").split(",")
+        
         axios.get(
             "http://localhost:456/course"
         ).then(function (response){
@@ -232,12 +234,21 @@
             }
             for (let i=0; i<targetArr.length; i++){
                 if (targetArr[i].Course_Is_Active){
-                    html += `
-                    <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Course_ID} onclick="select(this)">
-                        <p class="my-auto">${targetArr[i].Course_Name}</p>
-                    </div>
+                    // cannot use: targetArr[i].Course_ID in assignedCourses)
+                    if (assignedCourses.includes(targetArr[i].Course_ID)){
+                        html += `
+                        <div class="gradient-box d-flex justify-content-between disabled text-secondary box-secondary" id=${targetArr[i].Course_ID}">
+                            <p class="my-auto">${targetArr[i].Course_Name}</p>
+                        </div>
+                        `
+                    } else{
+                        html += `
+                        <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Course_ID} onclick="select(this)">
+                            <p class="my-auto">${targetArr[i].Course_Name}</p>
+                        </div>
+                        `
+                    }
                     
-                    `
                 }
             }
             $("#courseViewer").html(html)

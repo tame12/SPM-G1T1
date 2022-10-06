@@ -162,12 +162,15 @@
         // create new role
     $("#create_role_button").click(function () {
         var create_roleName_input = $("#create_roleName_input").val();
+        var create_roleDesc_input = $("#create_roleDesc_input").val();
+
         // console.log(create_roleName_input);
-        //console.log(123)
+
 
         axios
             .post("http://localhost:456/role/create", {
                 Role_Name: create_roleName_input,
+                Role_Desc: create_roleDesc_input
             })
             .then(function (response) {
                 console.log(response);

@@ -290,6 +290,7 @@
     }
 
     function assignSkillToRole(){
+        $("#error_success_bar").html("")
         console.log("hello")
         var selectedRoles = getCookie("selected").split(",")
         var assignedRoles = getCookie("assignedRoles").split(",")
@@ -311,7 +312,7 @@
             console.log("response: ",response)
             getAssignedRoles()
             populateModal()
-            if(!document.cookie == "selected=''"){
+            if(getCookie("selected") != "''"){
                 document.cookie = "selected=''"
                 $("#error_success_bar").html(`
                     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
@@ -323,6 +324,7 @@
     }
 
     function assignSkillToCourse(){
+        $("#error_success_bar").html("")
         console.log("hello, assignSkillToCourse")
         var selectedCourses = getCookie("selected").split(",")
         var assignedCourses = getCookie("assignedCourse").split(",")
@@ -347,7 +349,8 @@
             console.log("response: ",response)
             getAssignedCourses()
             populateCourseModal()
-            if(!document.cookie == "selected=''"){
+            console.log("cookie: ",getCookie("selected"))
+            if(getCookie("selected") != "''"){
                 document.cookie = "selected=''"
                 $("#error_success_bar").html(`
                     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>

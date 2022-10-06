@@ -203,6 +203,18 @@ def createRole():
                 "message": "Role description cannot be more than 255 characters."
             }), 400
 
+        if data['Role_Name'].isnumeric():
+            return jsonify({
+                "code": 400,
+                "message": "Role name cannot be numeric."
+            }), 400
+        
+        if role_Desc.isnumeric():
+            return jsonify({
+                "code": 400,
+                "message": "Role description cannot be numeric."
+            }), 400
+
         # create new role, default is active
         new_role = Role(Role_Name=data['Role_Name'], Role_Desc=role_Desc, Role_Is_Active=1)
         db.session.add(new_role)

@@ -161,7 +161,7 @@
 
         // create new role
     $("#create_role_button").click(function () {
-        var create_role_button = $("#create_roleName_input").val();
+        var create_roleName_input = $("#create_roleName_input").val();
         // console.log(create_roleName_input);
         //console.log(123)
 
@@ -172,25 +172,25 @@
             .then(function (response) {
                 console.log(response);
 
-                // if (response.data.code == "201") { //success
-                //     $("#error_success_bar").html(`
-                //     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
-                //     `);
-                //     populate_roles();
-                // }
+                if (response.data.code == "201") { //success
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                    `);
+                    populate_roles();
+                }
             })
             .catch(function (error) {
                 console.log(error);
 
-                // if (error.response.data.code == "400") { //fail
-                //     console.log("error");
-                //     $("#error_success_bar").html(`
-                //     <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
-                //     `);
-                // }
+                if (error.response.data.code == "400") { //fail
+                    console.log("error");
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
+                    `);
+                }
             }).then(function () {
                 // always executed
-                // $('#error_success_bar')[0].scrollIntoView(false);
+                $('#error_success_bar')[0].scrollIntoView(false);
             });
     });
 

@@ -363,7 +363,7 @@ def updateSkill():
     except Exception as e:
         return jsonify({
             "code": 500,
-            "message": "Unable update skill. Error message: " + str(e)
+            "message": "Unable to update skill. Error message: " + str(e)
         }), 500
 
 @app.route('/skill/assign_to_role', methods=['POST'])

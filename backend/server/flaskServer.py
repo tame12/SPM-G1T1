@@ -351,6 +351,33 @@ def createSkill():
             "message": "Unable to create new skill. Error message: " + str(e)
         }), 500
 
+#activate/deactivate skill
+@app.route('/skill/toggle/<int:skill_id>', methods=['PUT'])
+def toggleSkill(skill_id):
+    try:
+        skill = Skill.query.filter_by(Skill_ID=skill_id).first()
+        if not skill:
+            return jsonify({
+                "code": 400,
+                "message": "Skill does not exist."
+            }), 400
+
+        action = "deactivated" if skill.Skill_Is_Active else "activated"
+        skill.Skill_Is_Active = 0 if skill.Skill_Is_Active else 1
+
+        db.session.commit()
+        return jsonify({
+            "code": 201,
+            "message": f"Skill {action} successfully.",
+            "data": skill.to_json()
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to toggle skill. Error message: " + str(e)
+        }), 500
+
 @app.route('/skill/update', methods=['PUT'])
 def updateSkill():
     try:

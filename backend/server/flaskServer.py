@@ -24,6 +24,38 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
 db = SQLAlchemy(app)
 CORS(app)
 
+# The Learning Journey Class
+class LJ(db.Model):
+    __tablename__ = 'Learning_Journey'
+    LJ_ID = db.Column(db.Integer, primary_key=True, nullable=False)
+    Staff_ID = db.Column(db.Integer, nullable=False)
+    Role_ID = db.Column(db.Integer, nullable=False)
+    LJ_Number = db.Column(db.Integer, nullable=False)
+    def to_json(self):
+        return {
+            'LJ_ID': self.LJ_ID,
+            'Staff_ID': self.Staff_ID,
+            'Role_ID': self.Role_ID,
+            'LJ_Number': self.LJ_Number
+        }
+
+class LJCourse(db.Model):
+    __tablename__ = 'Learning_Journey_Course'
+    LJ_ID = db.Column(db.Integer, db.ForeignKey('LJ.LJ_ID'), primary_key=True, nullable=False)
+    Course_ID = db.Column(db.String(20), db.ForeignKey('course.Course_ID'), primary_key=True, nullable=False)
+
+    def to_json(self):
+        return {
+            'Skill_ID': self.LJ_ID,
+            'Course_ID': self.Course_ID
+        }
+
+    # this function is weird. 
+    def getCoursesByLJ_ID(lj_id):
+        # get role of the LJ -> find the skills related to that role -> find the courses related to that skill
+        return Course.query.join(LJCourse, Course.Course_ID == LJCourse.Course_ID).where(LJCourse.LJ_ID == lj_id).all()
+        
+
 class Role(db.Model):
     __tablename__ = 'role'
     Role_ID = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -136,6 +168,49 @@ class SkillCourse(db.Model):
 # def getRoleBySkill(skill_id):
 #     try:
 #         Role = SkillRole.getAssignedRoleBySkillID(skill_id)
+@app.route('/LJ')
+def getAllLJ():
+    try:
+        ljs = LJ.query.all()
+        return jsonify({
+            "code": 201,
+            "data": [lj.to_json() for lj in ljs]
+        }), 201
+    except Exception: 
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get role from database"
+        }), 500
+
+# For this, I am unable to validate whether a staff has a LJ.
+@app.route('/LJ/<string:Staff_ID>')
+def getLJsbyStaffID(Staff_ID):
+    try:
+        ljs = LJ.query.filter_by(Staff_ID=Staff_ID)
+        return jsonify({
+            "code":201,
+            "data": [lj.to_json() for lj in ljs]
+        }), 201
+    except Exception: 
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get LJ from database"
+        })
+    
+@app.route('/LJ/get_courses_by_LJ_ID/<string:LJ_ID>')
+def getCoursesByLJ_ID(LJ_ID):
+    try: 
+        courses = LJCourse.getCoursesByLJ_ID(LJ_ID)
+        return jsonify({
+            "code": 201,
+            "data": [c.to_json() for c in courses]
+        }), 201
+    except Exception as e:
+        print(e.args)
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get courses from database."
+        }), 500
 
 @app.route('/role')
 def getAllRole():

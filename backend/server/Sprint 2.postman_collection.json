@@ -1,0 +1,399 @@
+{
+	"info": {
+		"_postman_id": "bd3d6eb1-07b1-41cd-9175-a295f5822cfe",
+		"name": "Sprint 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19060972"
+	},
+	"item": [
+		{
+			"name": "create new role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Role_Desc\": \"Software Engineer\", \r\n    \"Role_Name\": \"SWEeeee\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/role/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"role",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assign skill to course",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_ID\": 4,\r\n    \"Course_ID\": \"IS-10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/assign_to_course",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assign_to_course"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create new skill",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_Name\": \"Advanced programming 10\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "assign skill to role",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_ID\" : 5,\r\n    \"Role_ID\" : 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/assign_to_role",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assign_to_role"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get roles from many skills",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_IDs\": [1,2,3, 5000]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/assigned_roles",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assigned_roles"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get courses from many skills",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_IDs\": [1,2,50,4]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/assigned_courses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"assigned_courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a skill",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Skill_ID\": 1,\r\n    \"Skill_Name\": \"Basic programming 39\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/skill/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "read all skill",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/skill",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "read all role",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/role",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"role"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WIP dont use",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/role/assigned_skill/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"role",
+						"assigned_skill",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get role by skill",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "get all course",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get course from skillID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/skill/get_assigned_courses_by_ID/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"get_assigned_courses_by_ID",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get roles from skillID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/skill/get_assigned_courses_by_ID/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"skill",
+						"get_assigned_courses_by_ID",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get LJ by Staff ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/LJ/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"LJ",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all LJ",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/LJ",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"LJ"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Courses by LJ_ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:456/LJ/get_courses_by_LJ_ID/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"LJ",
+						"get_courses_by_LJ_ID",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

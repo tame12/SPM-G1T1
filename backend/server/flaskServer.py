@@ -603,19 +603,70 @@ def assignSkillToRole():
             "message": "Unable to assign skill to role. Error message: " + str(e)
         }), 500
 
+@app.route('/skill/unassign_role_from_skill', methods=['DELETE'])
+def unassignRoleFromSkill():
+    try:
+        data = request.get_json()
+        print(data)
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int,list)):
+            return jsonify({
+                "code": 400,
+                "message": "Skill ID and Role ID cannot be empty or non interger"
+            }), 400
+
+        if isinstance(data['Role_ID'],int):
+            skillRole = SkillRole.query.filter_by(Skill_ID=data['Skill_ID'], Role_ID=data['Role_ID']).first()
+            if not skillRole:
+                return jsonify({
+                    "code": 400,
+                    "message": "Skill and role does not exist."
+                }), 400
+            db.session.delete(skillRole)
+            db.session.commit()
+            return jsonify({
+                "code": 201,
+                "message": "Skill unassigned from role successfully.",
+                "data": skillRole.to_json()
+            }), 201
+        elif isinstance(data['Role_ID'],list):
+            returnMessage = []
+            for role_id in data['Role_ID']:
+                skillRole = SkillRole.query.filter_by(Skill_ID=data['Skill_ID'], Role_ID=role_id).first()
+                if not skillRole:
+                    return jsonify({
+                        "code": 400,
+                        "message": "Skill and role does not exist."
+                    }), 400
+                db.session.delete(skillRole)
+                db.session.commit()
+                returnMessage.append(skillRole.to_json())
+            return jsonify({
+                "code": 201,
+                "message": "Skill unassigned from role successfully.",
+                "data": returnMessage
+            }), 201
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to unassign skill from role. Error message: " + str(e)
+        }), 500
+
+
+
 @app.route('/skill/assign_to_courses', methods=['POST'])
 def assignSkillToCourses():
     try:
         data = request.get_json()
         print(data)
-        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (int,list)):
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str,list)):
             return jsonify({
                 "code": 400,
-                "message": "Skill ID and Course ID cannot be empty or non interger"
+                "message": "Skill ID and Course ID must be an integer and string respectively"
             }), 400
             
         returnMessage = []
-        if isinstance(data['Course_ID'],int):
+        if isinstance(data['Course_ID'],str):
             newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID'])
             db.session.add(newSkillCourse)
             db.session.commit()
@@ -643,6 +694,55 @@ def assignSkillToCourses():
         return jsonify({
             "code": 500,
             "message": "Unable to assign skill to course. Error message: " + str(e)
+        }), 500
+
+@app.route('/skill/unassign_course_from_skill', methods=['DELETE'])
+def unassignCourseFromSkill():
+    try:
+        data = request.get_json()
+        print(data)
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str,list)):
+            return jsonify({
+                "code": 400,
+                "message": "Skill ID and Course ID must be an integer and string respectively"
+            }), 400
+
+        if isinstance(data['Course_ID'],str):
+            skillCourse = SkillCourse.query.filter_by(Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID']).first()
+            if not skillCourse:
+                return jsonify({
+                    "code": 400,
+                    "message": "Skill and course does not exist."
+                }), 400
+            db.session.delete(skillCourse)
+            db.session.commit()
+            return jsonify({
+                "code": 201,
+                "message": "Skill unassigned from course successfully.",
+                "data": skillCourse.to_json()
+            }), 201
+        elif isinstance(data['Course_ID'],list):
+            returnMessage = []
+            for course_id in data['Course_ID']:
+                skillCourse = SkillCourse.query.filter_by(Skill_ID=data['Skill_ID'], Course_ID=course_id).first()
+                if not skillCourse:
+                    return jsonify({
+                        "code": 400,
+                        "message": "Skill and course does not exist."
+                    }), 400
+                db.session.delete(skillCourse)
+                db.session.commit()
+                returnMessage.append(skillCourse.to_json())
+            return jsonify({
+                "code": 201,
+                "message": "Skill unassigned from course successfully.",
+                "data": returnMessage
+            }), 201
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to unassign skill from course. Error message: " + str(e)
         }), 500
 
 @app.route('/skill/assigned_courses')

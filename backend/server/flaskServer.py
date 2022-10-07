@@ -99,9 +99,8 @@ class SkillRole(db.Model):
                 })
         return output
     
-    # for next sprint
-    # def getAssignedSkillByRoleID(role_id):
-    #     return Skill.query.join(SkillRole, Skill.Skill_ID == SkillRole.Skill_ID).where(SkillRole.Role_ID == role_id).all()
+    def getAssignedSkillByRoleID(role_id):
+        return Skill.query.join(SkillRole, Skill.Skill_ID == SkillRole.Skill_ID).where(SkillRole.Role_ID == role_id).all()
 
 class SkillCourse(db.Model):
     __tablename__ = 'course_skill'
@@ -146,6 +145,27 @@ def getAllRole():
                 "code": 201,
                 "data": [r.to_json() for r in role]
             }), 201
+    except Exception:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get role from database."
+        }), 500
+
+# get role by role name
+@app.route('/role/search/<string:role_name>',methods=['GET'])
+def getRoleByName(role_name):
+    try:
+        role = Role.query.filter(Role.Role_Name.like(f'%{role_name}%')).all()
+        if role:
+            return jsonify({
+                "code": 201,
+                "data": [r.to_json() for r in role]
+            }), 201
+        else:
+            return jsonify({
+                "code": 400,
+                "message": "Role not found."
+            }), 400
     except Exception:
         return jsonify({
             "code": 500,
@@ -539,20 +559,19 @@ def getAssignedCoursesByID(skill_id):
             "message": "Unable to get assigned role from database. Error message: " + str(e)
         }), 500
 
-# probably need for next sprint
-# @app.route('/role/assigned_skill/<int:role_id>')
-# def getAssignedSkill(role_id):
-#     try:
-#         skills = SkillRole.getAssignedSkillByRoleID(role_id=role_id)
-#         return jsonify({
-#                 "code": 201,
-#                 "data": [s.to_json() for s in skills]
-#             }), 201
-#     except Exception as e:
-#         return jsonify({
-#             "code": 500,
-#             "message": "Unable to get assigned skill from database. Error message: " + str(e)
-#         }), 500
+@app.route('/role/assigned_skill/<int:role_id>')
+def getAssignedSkill(role_id):
+    try:
+        skills = SkillRole.getAssignedSkillByRoleID(role_id=role_id)
+        return jsonify({
+                "code": 201,
+                "data": [s.to_json() for s in skills]
+            }), 201
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get assigned skill from database. Error message: " + str(e)
+        }), 500
 
 
 if __name__ == '__main__':

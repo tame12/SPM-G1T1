@@ -212,6 +212,66 @@ def getCoursesByLJ_ID(LJ_ID):
             "message": "Unable to get courses from database."
         }), 500
 
+@app.route('/LJ/addLJ', methods=["POST"])
+def createLJ():
+    try:
+        data = request.get_json()
+        keys = set(data.keys())
+        check = set(["Role_ID","Staff_ID","LJ_Number"])
+
+        # check if the keys are correct
+        if keys !=check:
+                return jsonify({
+                    "code": 400,
+                    "message": 'Fields must match "Role_ID","Staff_ID","LJ_Number" .'
+                }), 400
+        # check if the data are all inputted
+        values = data.values()
+        if "" in data.values():
+            return jsonify({
+                    "code": 400,
+                    "message": 'Fields cannot be empty'
+                }), 400 
+
+        # check if this user already has an LJ with the same role 
+        lj = LJ.query.filter_by(Role_ID=data['Role_ID'],Staff_ID=data['Staff_ID']).first()
+        if lj:
+            return jsonify({
+                    "code": 400,
+                    "message": "LJ already exists."
+                }), 400
+
+        # check that all values are numeric
+        # for i in keys: 
+        #     if not data[i].isdigit():
+        #         return jsonify({
+        #             "code": 400,
+        #             "message": " {name}  must be numeric.".format(name=i)
+        #         }), 400
+
+        # When I add it to the table, will Learning Journey Course be updated? I don't think so right
+        new_LJ = LJ(Staff_ID=data['Staff_ID'], Role_ID=data["Role_ID"], LJ_Number=data["LJ_Number"])
+        db.session.add(new_LJ)
+        db.session.commit()
+        return jsonify({
+            "code": 201,
+            "message": "Role created successfully.",
+            "data": new_LJ.to_json()
+        }), 201
+
+
+
+
+    except Exception as e:
+        print(e)
+        return jsonify({
+            "code": 500,
+            "message": "Unable to create new LJ. Error message: " + str(e)
+        }), 500
+    
+    
+
+
 @app.route('/role')
 def getAllRole():
     try:
@@ -267,6 +327,7 @@ def createRole():
         data = request.get_json()
 
         # check if data has role name
+        print(data.keys())
         if 'Role_Name' not in data.keys() or data['Role_Name'] == "":
             return jsonify({
                 "code": 400,

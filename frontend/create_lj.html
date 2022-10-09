@@ -30,16 +30,16 @@
     <div id="navigation"></div>
     <div class="container">
         <h1 id="role-selected">Role Selected</h1>
-        <!-- <hr /> -->
+        <hr />
 
-        <!-- <p>Role description
+        <p id="role-desc">Role description
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat sed quam in luctus. Morbi faucibus
             semper massa. Fusce ut auctor sapien, nec malesuada diam. Quisque pretium facilisis ullamcorper. Mauris eget
             volutpat metus. Pellentesque pellentesque orci sollicitudin congue molestie. Phasellus elementum ut nibh
             vitae condimentum. Suspendisse elementum lobortis eros, et dignissim felis vestibulum et. Phasellus
             fermentum sit amet dolor in feugiat. Sed quis libero placerat erat eleifend consequat ultricies viverra
             nunc. Duis consequat nulla at elit gravida posuere. In sed gravida mauris, vel commodo lectus.
-        </p> -->
+        </p>
 
         <!-- skills accordion - to be populated by js -->
         <div class="accordion pb-3 d-flex flex-column gap-3 fw-bold" id="accordionPanelsStayOpenExample"></div>
@@ -79,8 +79,8 @@
                 console.log(response.data.data[0]);
 
                 if (response.data.code == "201") { //success
-                    var display = role_name + " - " + response.data.data[0].Role_Desc;
-                    $("#role-selected").text(display);
+                    $("#role-selected").text(role_name);
+                    $("#role-desc").text(response.data.data[0].Role_Desc);
 
                     // nested axios - get skills
                     axios
@@ -98,7 +98,7 @@
                                 skill_html = '';
 
                                 for (skill of skills) {
-                                    console.log(skill);
+                                    // console.log(skill);
                                     if (skill_html == '') {
                                         skill_html +=
                                             `<div class="accordion-item border-box">

@@ -8,7 +8,7 @@ $(function () {
     // need to make this look better?
     skill_is_active = getCookie("targetIsActive") === "true"? true : false
     toggle_button = `<button type="button" ${skill_is_active ? 'checked ' : ''} class="${skill_is_active ? 'btn-success' : 'btn-danger'} btn">${skill_is_active ? "Activated" : "Deactivated"}</button>`
-    disabled_message = skill_is_active ? `` :`<span style="float:right">skill cannot be assigned/ unassigned to new course/ role while deactivated</span>`
+    disabled_message = skill_is_active ? `` :`<span style="float:right">skill cannot be assigned/ unassigned to course/ role while deactivated</span>`
     $("#activeStatus").html(toggle_button + disabled_message)
     if(!skill_is_active){
         $("#assignNewCourse").prop("disabled", true)

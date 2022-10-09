@@ -430,6 +430,33 @@ def getAssignedSkills(role_id):
             "message": "Unable to get assigned skills from database. Error message: " + str(e)
         }), 500
 
+#activate/deactivate role
+@app.route('/role/toggle/<int:role_id>', methods=['PUT'])
+def toggleRole(role_id):
+    try:
+        role = Role.query.filter_by(Role_ID=role_id).first()
+        if not role:
+            return jsonify({
+                "code": 400,
+                "message": "Role does not exist."
+            }), 400
+
+        action = "deactivated" if role.Role_Is_Active else "activated"
+        role.Role_Is_Active = 0 if role.Role_Is_Active else 1
+
+        db.session.commit()
+        return jsonify({
+            "code": 201,
+            "message": f"Role {action} successfully.",
+            "data": role.to_json()
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to toggle role. Error message: " + str(e)
+        }), 500
+
 @app.route('/skill')
 def getAllSkill():
     try:

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 /* 
 ===================TABLE OF CONTENTS===================
@@ -12,110 +12,143 @@
 
 /* || General styles */
 :root {
-    --lightblue: #8FBEE0;
-    --blue: #006FBF;
-    --grey: #59616C;
-    --lightgrey: #E6ECF3;
-    --white: #ffffff;
+  --lightblue: #8fbee0;
+  --blue: #006fbf;
+  --grey: #59616c;
+  --lightgrey: #e6ecf3;
+  --white: #ffffff;
 }
 
 .bg-grey {
-    background-color: var(--lightgrey);
+  background-color: var(--lightgrey);
 }
 
 body {
-    font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 h1,
 .gradient-box {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 hr {
-    border-color: black;
-    opacity: 1;
+  border-color: black;
+  opacity: 1;
 }
 
 .button {
-    font-weight: 600;
-    color: white;
-    border-radius: 0.4em;
-    border: 0px;
-    padding: 0.6em 2em;
+  font-weight: 600;
+  color: white;
+  border-radius: 0.4em;
+  border: 0px;
+  padding: 0.6em 2em;
 }
 
 .button-grey {
-    background-color: var(--grey);
+  background-color: var(--grey);
 }
 
 .button-primary {
-    background-color: var(--blue);
+  background-color: var(--blue);
 }
 
 .modal-content {
-    background-color: var(--lightblue);
-    border: 3px solid var(--blue);
+  background-color: var(--lightblue);
+  border: 3px solid var(--blue);
 }
 
 .modal-input {
-    background-color: #D9D9D9;
-    font-weight: bold;
-    border-radius: 0;
-    border: 0;
-    padding: 0.2em 0.5em;
-    font-size: 1rem;
+  background-color: #d9d9d9;
+  font-weight: bold;
+  border-radius: 0;
+  border: 0;
+  padding: 0.2em 0.5em;
+  font-size: 1rem;
 }
 
 .gradient-box {
-    padding: 0.9em 2.5em;
-    border: solid #D7DEE4 1px;
-    background-image: linear-gradient(#F9FAFE, #E6ECF3);
-    border-radius: 0.7em;
-    margin: 1.5em 0em;
+  padding: 0.9em 2.5em;
+  border: solid #d7dee4 1px;
+  background-image: linear-gradient(#f9fafe, #e6ecf3);
+  border-radius: 0.7em;
+  margin: 1.5em 0em;
 }
 
 .border-box {
-    border: solid #D7DEE4 1px;
-    border-radius: 0.7em;
+  border: solid #d7dee4 1px;
+  border-radius: 0.7em;
 }
 
 .border-blue {
-    outline: 3px solid var(--blue);
+  outline: 3px solid var(--blue);
 }
+
+.toggle-btn {
+    color: white;
+    border: 0;
+    border-radius: 1rem;
+}
+
+.btn-on {
+  background-color: green;
+}
+
+.btn-on::after {
+    content: '';
+    display: inline-block;
+    margin: 0 0 0 0.2rem;
+    width: 15px;
+    height: 15px;
+    border-radius: 7.5px;
+    background-color: white;
+}
+
+.btn-off {
+    background-color: red;
+  }
+  
+  .btn-off::before {
+      content: '';
+      display: inline-block;
+      margin: 0 0.2rem 0 0;
+      width: 15px;
+      height: 15px;
+      border-radius: 7.5px;
+      background-color: white;
+  }
 
 /* || navbar.html */
 .vertical-center {
-    margin: auto 0;
+  margin: auto 0;
 }
 
 navbar a {
-    text-decoration: none;
-    color: black;
+  text-decoration: none;
+  color: black;
 }
 
 .profile {
-    aspect-ratio: 1;
-    margin: auto;
+  aspect-ratio: 1;
+  margin: auto;
 }
 
 /* || assign_skills_to_role.html */
-.tester{
-    height: 20rem;
-    width: 100%;
-    overflow: scroll;
+.tester {
+  height: 20rem;
+  width: 100%;
+  overflow: scroll;
 }
 
-.selected-box{
-    padding: 0.9em 2.5em;
-    border: solid #006FBF 6px;
-    background-image: linear-gradient(#F9FAFE, #E6ECF3);
-    border-radius: 0.7em;
-    margin: 1.5em 0em;
-
+.selected-box {
+  padding: 0.9em 2.5em;
+  border: solid #006fbf 6px;
+  background-image: linear-gradient(#f9fafe, #e6ecf3);
+  border-radius: 0.7em;
+  margin: 1.5em 0em;
 }
 
 /* || create_lj.html */
 .accordion-item:last-of-type {
-    border-radius: 0.7em;
+  border-radius: 0.7em;
 }

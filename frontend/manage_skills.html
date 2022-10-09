@@ -127,7 +127,7 @@
                     //bootstrap toggle not working
                     // toggle_button = `<input type="checkbox" ${skill_is_active?'checked ':''}data-toggle="toggle" data-on="Activated" data-off="Deactivated" data-offstyle="danger" data-onstyle="success" onclick="event.stopPropagation();toggleActivation(${response[i].Skill_ID})">`
 
-                    toggle_button = `<button type="button" ${skill_is_active?'checked ':''} class="${skill_is_active?'btn-success' : 'btn-danger'} btn" onclick="event.stopPropagation();toggleActivation(${response[i].Skill_ID})">${skill_is_active ? "Activated" : "Deactivated"}</button>`
+                    toggle_button = `<button type="button" ${skill_is_active?'checked ':''} class="${skill_is_active?'btn-on' : 'btn-off'} d-flex align-items-center toggle-btn" onclick="event.stopPropagation();toggleActivation(${response[i].Skill_ID})">${skill_is_active ? "On" : "Off"}</button>`
                     // <img id="delete_skill_button" role="button" src="images/delete.svg" alt="" onclick="event.stopPropagation();">
                     // <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}" data-ele="skills" class="gradient-box d-flex justify-content-between">
                     html += `
@@ -141,7 +141,7 @@
                         </div>
                     </div>
                     
-                    <!-- Edit skill Modal // to be placed in vue template along with other modal-->
+                    <!-- Edit skill Modal-->
                     <div class="modal fade" id="editModalPopUp${response[i].Skill_ID}" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">

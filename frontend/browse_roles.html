@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browse Roles</title>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <!-- axios -->
+    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+    <!-- navbar placeholder -->
+    <div id="navigation"></div>
+
+    <!-- Page starts -->
+    <div class="container">
+        <h1>Available Roles</h1>
+        <h5>You should aim to upskill for these roles</h5>
+        <hr />
+        <!-- View Roles-->
+        <div id="currentRoles"></div>
+        <hr />
+        <h1>Outdated Roles</h1>
+        <h5>These roles are no longer required by the company</h5>
+        <div id="archivedRoles"></div>
+
+    </div>
+</body>
+
+</html>
+
+<script>
+    // Populate active roles
+    function populate_current_roles() {
+        // Simulate the retrieval of data from the database
+        $.getJSON(
+            "http://localhost:456/role",
+            function (data) {
+                var response = data.data
+                console.log(response)
+                var currentRoles = ''
+                for (let i = 0; i < data.data.length; i++) {
+                    // check whether role is active
+                    if (response[i].Role_Is_Active) {
+                        currentRoles += `
+                        <div class="gradient-box d-flex justify-content-between" role="button">
+                            <p class="my-auto">${response[i].Role_Name}</p>
+                            <p class="my-auto">${response[i].Role_Desc}</p>
+    
+                            <div class="my-auto d-flex gap-3">
+                                <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">&nbsp; &nbsp; Skills &nbsp; &nbsp;</button>
+                            </div>
+                        </div>`
+                    }
+                }
+                $("#currentRoles").html(currentRoles) // rewrites the #currentRoles div with the new html
+            }
+        )
+    }
+
+    function populate_archived_roles() {
+        $.getJSON(
+            "http://localhost:456/role",
+            function (data) {
+                var response = data.data
+                console.log(response)
+                var archivedRoles = ''
+                for (let i = 0; i < data.data.length; i++) {
+                    // check whether role is inactive
+                    if (response[i].Role_Is_Active == 0) {
+                        archivedRoles += `
+                        <div class="gradient-box d-flex justify-content-between" role="button">
+                            <p class="my-auto">${response[i].Role_Name}</p>
+                            <p class="my-auto">${response[i].Role_Desc}</p>
+    
+                            <div class="my-auto d-flex gap-3">
+                                <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">&nbsp; &nbsp; Skills &nbsp; &nbsp;</button>
+                            </div>
+                        </div>`
+                    }
+                }
+                $("#archivedRoles").html(archivedRoles) // rewrites the #archivedRoles div with the new html
+            }
+        )
+    }
+
+    // load navbar and populate roles
+    $(function () {
+        $('#navigation').load('navbar.html');
+        populate_current_roles()
+        populate_archived_roles()
+    });
+
+    function viewSkills(roleDiv) {
+        // console.log("roleDiv:", roleDiv)  works
+        // console.log("Role_ID:", roleDiv.id) // works
+        // console.log("roleDiv.getAttribute('name')", roleDiv.getAttribute("name")) // works
+        // var skills = get_assigned_skills(roleDiv.id)
+
+        axios.get(
+            "http://localhost:456/role/assigned_skills/" + roleDiv.id
+        ).then(function (response) {
+            var skillsJSON = response.data.data
+            console.log("skillsJSON: ", skillsJSON)
+            skillnames = []
+            for (let i = 0; i < skillsJSON.length; i++) {
+                skillnames.push(skillsJSON[i].Skill_Name)
+            }
+            console.log("skillnames: ", skillnames) // works!!!!
+            if (skillnames.length == 0) {
+                alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it.`)
+            }
+            else {
+                alert(`The role ${roleDiv.getAttribute("name")} is associated with the skills: \n\n` + skillnames.join("\n"))
+            }
+        })
+
+    }
+
+
+
+</script>

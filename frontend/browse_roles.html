@@ -139,7 +139,7 @@
     function createLearningJourney(roleDiv) {
         // console.log("roleDiv:", roleDiv) // works
         console.log("Role_ID:", roleDiv.id) // works
-        console.log("roleDiv.getAttribute('name')", roleDiv.getAttribute("name")) // works
+        console.log("roleDiv.getAttribute('name'):", roleDiv.getAttribute("name")) // works
 
         var role_ID = roleDiv.id
         var role_name = roleDiv.getAttribute("name")
@@ -161,6 +161,7 @@
             else {
                 // anybody linking this to the create_LJ page can edit this part for the data they need to send
                 localStorage.setItem("role_ID", role_ID);
+                localStorage.setItem("role_name", role_name);
                 window.location.href = "create_lj.html";
             }
         })

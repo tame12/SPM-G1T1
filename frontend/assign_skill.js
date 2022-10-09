@@ -5,6 +5,16 @@ $(function () {
     allCookies = document.cookie
     console.log("targetID: ",getCookie("targetID"))
 
+    // need to make this look better?
+    skill_is_active = getCookie("targetIsActive") === "true"? true : false
+    toggle_button = `<button type="button" ${skill_is_active ? 'checked ' : ''} class="${skill_is_active ? 'btn-success' : 'btn-danger'} btn">${skill_is_active ? "Activated" : "Deactivated"}</button>`
+    disabled_message = skill_is_active ? `` :`<span style="float:right">skill cannot be assigned/ unassigned to new course/ role while deactivated</span>`
+    $("#activeStatus").html(toggle_button + disabled_message)
+    if(!skill_is_active){
+        $("#assignNewCourse").prop("disabled", true)
+        $("#assignNewRole").prop("disabled", true)
+    }
+
     $("#SkillName").text(getCookie("targetName"))
     getAssignedRoles()
     getAssignedCourses()
@@ -18,6 +28,7 @@ function getCookie(name) {
 }
 
 function populatePage(targetArr){
+    skill_is_active = getCookie("targetIsActive") === "true" ? true : false
     var html = ``
     if (targetArr.length == 0){
         html = `No Roles Assigned Yet`
@@ -31,7 +42,9 @@ function populatePage(targetArr){
         `
         <div id="${targetArr[i].Role_ID}" name="${targetArr[i].Role_Desc}"class="gradient-box d-flex justify-content-between">
             <p class="my-auto">${targetArr[i].Role_Desc}</p>
-            <i class="fa fa-trash w3-large pt-1" onclick="selectDeleteRole(roleID , roleName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
+            <button ${skill_is_active ? '' : 'disabled'} style="background-color:transparent; border:none;">
+                <i class="fa fa-trash w3-large pt-1" onclick="selectDeleteRole(roleID , roleName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
+            </button>
         </div>
                 
         `
@@ -43,6 +56,7 @@ function populatePage(targetArr){
 
 function populatePageCourses(targetArr){
     console.log("======populatePageCourses Loading=====")
+    skill_is_active = getCookie("targetIsActive") === "true" ? true : false
     var html = ``
     if (targetArr.length == 0){
         html = `No Courses Assigned Yet`
@@ -58,7 +72,9 @@ function populatePageCourses(targetArr){
         `
         <div id="${targetArr[i].Course_ID}" name="${targetArr[i].Course_Name}"class="gradient-box d-flex justify-content-between">
             <p class="my-auto">${targetArr[i].Course_Name}</p>
-            <i class="fa fa-trash w3-large pt-1" onclick="selectDeleteCourse(courseID , courseName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
+            <button ${skill_is_active ? '' : 'disabled'} style="background-color:transparent; border:none;">
+                <i class="fa fa-trash w3-large pt-1" onclick="selectDeleteCourse(courseID , courseName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
+            </button>
         </div>
                 
         `

@@ -131,7 +131,7 @@
                     // <img id="delete_skill_button" role="button" src="images/delete.svg" alt="" onclick="event.stopPropagation();">
                     // <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}" data-ele="skills" class="gradient-box d-flex justify-content-between">
                     html += `
-                    <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}" class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)" role="button"
+                    <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}" class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)" role="button" isActive="${skill_is_active}">
                         <p class="my-auto">${response[i].Skill_Name}</p>
                         <div class="my-auto d-flex gap-3">
                             <!-- Edit skill modal button -->
@@ -277,6 +277,7 @@
 
         document.cookie = `targetName=${e.getAttribute("name")}`
         document.cookie = `targetID=${e.id}`
+        document.cookie = `targetIsActive=${e.getAttribute("isActive")}`
         window.location.href = "./assign_skill.html";
     }
 </script>

@@ -39,10 +39,11 @@
     <!-- Page starts -->
     <div class="container">
         <h1 id="SkillName"></h1>
+        <div id="activeStatus"></div>
         <hr />
         <!-- Create Skill Modal button -->
         <div class="d-flex flex-row-reverse">
-            <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="populateModal()">
+            <button class="button button-primary" id="assignNewRole" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="populateModal()">
                 Assign Skill to New Role
             </button>
         </div>
@@ -75,7 +76,7 @@
 
         <div id="courseModal">
             <div class="d-flex flex-row-reverse">
-                <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#availableCourses" onclick="populateCourseModal()">
+                <button class="button button-primary" id="assignNewCourse" data-bs-toggle="modal" data-bs-target="#availableCourses" onclick="populateCourseModal()">
                     Assign Skill to New Course
                 </button>
             </div>

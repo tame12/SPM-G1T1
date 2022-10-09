@@ -28,6 +28,7 @@ function getCookie(name) {
 }
 
 function populatePage(targetArr){
+    console.log("======populatePage Loading=====")
     skill_is_active = getCookie("targetIsActive") === "true" ? true : false
     var html = ``
     if (targetArr.length == 0){
@@ -36,14 +37,16 @@ function populatePage(targetArr){
     cookieAssignedRoles = ``
     for (let i=0 ; i<targetArr.length ; i++){
         cookieAssignedRoles+=`,${targetArr[i].Role_ID}`
-        roleID = targetArr[i].Role_ID
-        roleName = targetArr[i].Role_Desc
+        hehe = targetArr[i].Role_ID
+        console.log("hehe from cookie populatePage: ",hehe)
+        haha = targetArr[i].Role_Desc
+        console.log("haha from cookie populatePage: ",haha)
         html += 
         `
-        <div id="${targetArr[i].Role_ID}" name="${targetArr[i].Role_Desc}"class="gradient-box d-flex justify-content-between">
+        <div class="gradient-box d-flex justify-content-between">
             <p class="my-auto">${targetArr[i].Role_Desc}</p>
             <button ${skill_is_active ? '' : 'disabled'} style="background-color:transparent; border:none;">
-                <i class="fa fa-trash w3-large pt-1" onclick="selectDeleteRole(roleID , roleName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
+                <i id="${targetArr[i].Role_ID}" name="${targetArr[i].Role_Desc}" class="fa fa-trash w3-large pt-1" onclick="selectDeleteRole(this)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
             </button>
         </div>
                 
@@ -70,10 +73,10 @@ function populatePageCourses(targetArr){
         console.log("courseName from cookie: ",courseName)
         html += 
         `
-        <div id="${targetArr[i].Course_ID}" name="${targetArr[i].Course_Name}"class="gradient-box d-flex justify-content-between">
+        <div class="gradient-box d-flex justify-content-between">
             <p class="my-auto">${targetArr[i].Course_Name}</p>
             <button ${skill_is_active ? '' : 'disabled'} style="background-color:transparent; border:none;">
-                <i class="fa fa-trash w3-large pt-1" onclick="selectDeleteCourse(courseID , courseName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
+                <i id="${targetArr[i].Course_ID}" name="${targetArr[i].Course_Name}" class="fa fa-trash w3-large pt-1" onclick="selectDeleteCourse(this)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
             </button>
         </div>
                 
@@ -280,44 +283,47 @@ function assignSkillToCourse(){
     })
 }
 
-function selectDeleteRole(roleID, roleName){
+function selectDeleteRole(e){
+    console.log(e)
+    console.log(e.getAttribute('name'))
+    console.log("======selectDeleteRole loading======")
     skillID = getCookie("targetID")
     skillName = getCookie("targetName")
-    console.log(skillID)
-    console.log(skillName)
-    console.log("1 roleID: ",roleID)
-    console.log("1 roleName: ",roleName)
+    console.log(e.id)
+    console.log(e.getAttribute('name'))
+    console.log("hehe roleID: ",e.id)
+    console.log("haha roleName: ",e.getAttribute('name'))
     html = 
     `
-        Unassign ${roleName} from ${skillName}?
+        Unassign ${e.getAttribute('name')} from ${skillName}?
     `
     $("#modalTitle").html(html)
 
     html2 = 
     `
-        <button  type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="unassignRoleFromSkill(${roleID})">Unassign Role</button>
+        <button  type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="unassignRoleFromSkill(${e.id})">Unassign Role</button>
     `
     $("#unassignRoleFromSkill").html(html2)
 }
 
-function selectDeleteCourse(courseID, courseName){
+function selectDeleteCourse(e){
     console.log("selectDeleteCourse")
     skillID = getCookie("targetID")
     skillName = getCookie("targetName")
     console.log("======selectDeleteCourse running======")
-    console.log("courseID: ",courseID)
-    console.log("courseName: ",courseName)
+    console.log("courseID: ",e.id)
+    console.log("courseName: ",e.getAttribute('name'))
     console.log("skillID: ",skillID)
     console.log("skillName: ", skillName)
     html = 
     `
-        Unassign ${courseName} from ${skillName}?
+        Unassign ${e.getAttribute('name')} from ${skillName}?
     `
     $("#modalTitle").html(html)
 
     html2 = 
     `
-        <button  type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="unassignCourseFromSkill(courseID)">Unassign Course</button>
+        <button name="${e.id}" type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="unassignCourseFromSkill(this)">Unassign Course</button>
     `
     $("#unassignCourseFromSkill").html(html2)
 }
@@ -347,17 +353,18 @@ function unassignRoleFromSkill(roleIDToUnassign){
     })
 }
 
-function unassignCourseFromSkill(courseID){
+function unassignCourseFromSkill(e){
+    console.log("Shaan: ",e.getAttribute('name'))
     html2 = ''
     $("#unassignCourseFromSkill").html(html2)
     console.log("======unassignCourseFromSkill running: course is being unassigned from database======")
     skillID = getCookie("targetID")
     console.log("parseInt(skillID): ", parseInt(skillID))
-    console.log("courseIDToUnassign: ",courseID)
+    console.log("courseIDToUnassign: ",e.getAttribute('name'))
     axios.delete(
         "http://localhost:456/skill/unassign_course_from_skill", { data: {
             "Skill_ID" : parseInt(skillID),
-            "Course_ID" : courseID
+            "Course_ID" : e.getAttribute('name')
 
         } }
         

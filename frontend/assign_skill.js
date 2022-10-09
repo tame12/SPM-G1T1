@@ -31,7 +31,7 @@ function populatePage(targetArr){
         `
         <div id="${targetArr[i].Role_ID}" name="${targetArr[i].Role_Desc}"class="gradient-box d-flex justify-content-between">
             <p class="my-auto">${targetArr[i].Role_Desc}</p>
-            <i class="fa fa-trash w3-large pt-1" onclick="selectDelete(roleID , roleName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
+            <i class="fa fa-trash w3-large pt-1" onclick="selectDeleteRole(roleID , roleName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
         </div>
                 
         `
@@ -42,6 +42,7 @@ function populatePage(targetArr){
 }
 
 function populatePageCourses(targetArr){
+    console.log("======populatePageCourses Loading=====")
     var html = ``
     if (targetArr.length == 0){
         html = `No Courses Assigned Yet`
@@ -49,10 +50,15 @@ function populatePageCourses(targetArr){
     cookieAssignedCourses = ``
     for (let i=0 ; i<targetArr.length ; i++){
         cookieAssignedCourses+=`,${targetArr[i].Course_ID}`
+        courseID = targetArr[i].Course_ID
+        courseName = targetArr[i].Course_Name
+        console.log("courseID from cookie: ",courseID)
+        console.log("courseName from cookie: ",courseName)
         html += 
         `
         <div id="${targetArr[i].Course_ID}" name="${targetArr[i].Course_Name}"class="gradient-box d-flex justify-content-between">
             <p class="my-auto">${targetArr[i].Course_Name}</p>
+            <i class="fa fa-trash w3-large pt-1" onclick="selectDeleteCourse(courseID , courseName)" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i>
         </div>
                 
         `
@@ -258,7 +264,7 @@ function assignSkillToCourse(){
     })
 }
 
-function selectDelete(roleID, roleName){
+function selectDeleteRole(roleID, roleName){
     skillID = getCookie("targetID")
     skillName = getCookie("targetName")
     console.log(skillID)
@@ -273,12 +279,36 @@ function selectDelete(roleID, roleName){
 
     html2 = 
     `
-        <button  type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="unassignRoleFromSkill(${roleID})">Unassign</button>
+        <button  type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="unassignRoleFromSkill(${roleID})">Unassign Role</button>
     `
     $("#unassignRoleFromSkill").html(html2)
 }
 
+function selectDeleteCourse(courseID, courseName){
+    console.log("selectDeleteCourse")
+    skillID = getCookie("targetID")
+    skillName = getCookie("targetName")
+    console.log("======selectDeleteCourse running======")
+    console.log("courseID: ",courseID)
+    console.log("courseName: ",courseName)
+    console.log("skillID: ",skillID)
+    console.log("skillName: ", skillName)
+    html = 
+    `
+        Unassign ${courseName} from ${skillName}?
+    `
+    $("#modalTitle").html(html)
+
+    html2 = 
+    `
+        <button  type="button" data-bs-dismiss="modal" class="btn btn-primary" onclick="unassignCourseFromSkill(courseID)">Unassign Course</button>
+    `
+    $("#unassignCourseFromSkill").html(html2)
+}
+
 function unassignRoleFromSkill(roleIDToUnassign){
+    html2 = ''
+    $("#unassignRoleFromSkill").html(html2)
     skillID = getCookie("targetID")
     roleID = getCookie("selected")
     console.log("skillID: ", parseInt(skillID))
@@ -299,4 +329,35 @@ function unassignRoleFromSkill(roleIDToUnassign){
     }).catch(function(error){
         console.log(error.message)
     })
+}
+
+function unassignCourseFromSkill(courseID){
+    html2 = ''
+    $("#unassignCourseFromSkill").html(html2)
+    console.log("======unassignCourseFromSkill running: course is being unassigned from database======")
+    skillID = getCookie("targetID")
+    console.log("parseInt(skillID): ", parseInt(skillID))
+    console.log("courseIDToUnassign: ",courseID)
+    axios.delete(
+        "http://localhost:456/skill/unassign_course_from_skill", { data: {
+            "Skill_ID" : parseInt(skillID),
+            "Course_ID" : courseID
+
+        } }
+        
+    ).then(function(response){
+        console.log(response)
+        getAssignedCourses()
+        populateCourseModal()
+        $("#error_success_bar").html(`
+            <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+        `);
+    }).catch(function(error){
+        console.log(error.message)
+    })
+}
+
+function resetUnassignButton(){
+    $("#unassignRoleFromSkill").html('')
+    $("#unassignCourseFromSkill").html('')
 }

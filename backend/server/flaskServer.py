@@ -579,7 +579,7 @@ def assignSkillToRole():
             db.session.commit()
             return jsonify({
                 "code": 201,
-                "message": "Skill assigned to role successfully.",
+                "message": "Role(s) assigned to Skill successfully.",
                 "data": newSkillRole.to_json()
             }), 201
         # assume that validation is done in the UI
@@ -592,7 +592,7 @@ def assignSkillToRole():
 
             return jsonify({
                 "code": 201,
-                "message": "Skill assigned to role successfully.",
+                "message": "Role(s) assigned to Skill successfully.",
                 "data": returnMessage
             }), 201
 
@@ -625,7 +625,7 @@ def unassignRoleFromSkill():
             db.session.commit()
             return jsonify({
                 "code": 201,
-                "message": "Skill unassigned from role successfully.",
+                "message": "Role unassigned from skill successfully.",
                 "data": skillRole.to_json()
             }), 201
         elif isinstance(data['Role_ID'],list):
@@ -642,14 +642,14 @@ def unassignRoleFromSkill():
                 returnMessage.append(skillRole.to_json())
             return jsonify({
                 "code": 201,
-                "message": "Skill unassigned from role successfully.",
+                "message": "Role unassigned from skill successfully.",
                 "data": returnMessage
             }), 201
 
     except Exception as e:
         return jsonify({
             "code": 500,
-            "message": "Unable to unassign skill from role. Error message: " + str(e)
+            "message": "Unable to unassign role from skill. Error message: " + str(e)
         }), 500
 
 
@@ -672,7 +672,7 @@ def assignSkillToCourses():
             db.session.commit()
             return jsonify({
                 "code": 201,
-                "message": "Skill assigned to course successfully.",
+                "message": "Course assigned to course successfully.",
                 "data": newSkillCourse.to_json()
             }), 201
         # assume that validation is done in the UI
@@ -685,7 +685,7 @@ def assignSkillToCourses():
 
             return jsonify({
                 "code": 201,
-                "message": "Skill assigned to course successfully.",
+                "message": "Course(s) assigned to skill successfully.",
                 "data": returnMessage
             }), 201
 
@@ -693,7 +693,7 @@ def assignSkillToCourses():
     except Exception as e:
         return jsonify({
             "code": 500,
-            "message": "Unable to assign skill to course. Error message: " + str(e)
+            "message": "Unable to assign course to skill. Error message: " + str(e)
         }), 500
 
 @app.route('/skill/unassign_course_from_skill', methods=['DELETE'])
@@ -718,7 +718,7 @@ def unassignCourseFromSkill():
             db.session.commit()
             return jsonify({
                 "code": 201,
-                "message": "Skill unassigned from course successfully.",
+                "message": "Course unassigned from skill successfully.",
                 "data": skillCourse.to_json()
             }), 201
         elif isinstance(data['Course_ID'],list):
@@ -735,14 +735,14 @@ def unassignCourseFromSkill():
                 returnMessage.append(skillCourse.to_json())
             return jsonify({
                 "code": 201,
-                "message": "Skill unassigned from course successfully.",
+                "message": "Course unassigned from skill successfully.",
                 "data": returnMessage
             }), 201
 
     except Exception as e:
         return jsonify({
             "code": 500,
-            "message": "Unable to unassign skill from course. Error message: " + str(e)
+            "message": "Unable to unassign course from skill. Error message: " + str(e)
         }), 500
 
 @app.route('/skill/assigned_courses')
@@ -766,7 +766,7 @@ def getAssignedCourses():
     except Exception as e:
         return jsonify({
             "code": 500,
-            "message": "Unable to get assigned course from database. Error message: " + str(e)
+            "message": "Unable to get assigned courses from database. Error message: " + str(e)
         }), 500
 
 @app.route('/skill/assigned_roles')

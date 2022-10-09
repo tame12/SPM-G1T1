@@ -66,6 +66,7 @@
     
                             <div class="my-auto d-flex gap-3">
                                 <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">&nbsp; &nbsp; Skills &nbsp; &nbsp;</button>
+                                <button type="button" class="btn btn-success" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="createLearningJourney(this)"> &nbsp; &nbsp; Create Learning Journey &nbsp; &nbsp; </button>
                             </div>
                         </div>`
                     }
@@ -134,6 +135,37 @@
 
     }
 
+    // button function for whoever to use to conenct to create Learning Journey page
+    function createLearningJourney(roleDiv) {
+        // console.log("roleDiv:", roleDiv) // works
+        console.log("Role_ID:", roleDiv.id) // works
+        console.log("roleDiv.getAttribute('name')", roleDiv.getAttribute("name")) // works
+
+        var role_ID = roleDiv.id
+        var role_name = roleDiv.getAttribute("name")
+
+        axios.get(
+            "http://localhost:456/role/assigned_skills/" + role_ID
+        ).then(function (response) {
+            var skillsJSON = response.data.data
+            console.log("skillsJSON: ", skillsJSON)
+            skillnames = []
+            for (let i = 0; i < skillsJSON.length; i++) {
+                skillnames.push(skillsJSON[i].Skill_Name)
+            }
+            console.log("skillnames: ", skillnames) // works
+            // acceptance criteria for 1.1 -> only allowing
+            if (skillnames.length == 0) {
+                alert(`The role ${roleDiv.getAttribute("name")} has no skills associated with it. You cannot make a Learning Journey for this role.`)
+            }
+            else {
+                // anybody linking this to the create_LJ page can edit this part for the data they need to send
+                localStorage.setItem("role_ID", role_ID);
+                window.location.href = "create_lj.html";
+            }
+        })
+
+    }
 
 
 </script>

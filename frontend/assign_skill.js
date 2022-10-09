@@ -377,3 +377,7 @@ function resetUnassignButton(){
     $("#unassignRoleFromSkill").html('')
     $("#unassignCourseFromSkill").html('')
 }
+
+function resetAssignSelected(){
+    document.cookie = "selected=''"
+}

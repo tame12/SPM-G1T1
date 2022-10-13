@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <!-- axios -->
+    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+    <!-- navbar placeholder -->
+    <div id="navigation"></div>
+    <div class="container">
+        <h1 id="role-selected">Role Selected</h1>
+        <hr />
+
+        <p id="role-desc">Role description
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat sed quam in luctus. Morbi faucibus
+            semper massa. Fusce ut auctor sapien, nec malesuada diam. Quisque pretium facilisis ullamcorper. Mauris eget
+            volutpat metus. Pellentesque pellentesque orci sollicitudin congue molestie. Phasellus elementum ut nibh
+            vitae condimentum. Suspendisse elementum lobortis eros, et dignissim felis vestibulum et. Phasellus
+            fermentum sit amet dolor in feugiat. Sed quis libero placerat erat eleifend consequat ultricies viverra
+            nunc. Duis consequat nulla at elit gravida posuere. In sed gravida mauris, vel commodo lectus.
+        </p>
+
+        <!-- skills accordion - to be populated by js -->
+        <div class="accordion pb-3 d-flex flex-column gap-3 fw-bold" id="accordionPanelsStayOpenExample"></div>
+
+        <!-- Create Skill button -->
+        <div class="d-flex flex-row-reverse">
+            <button class="button button-primary">
+                Create Learning Journey
+            </button>
+        </div>
+
+        <!-- Error/ Success bar -->
+        <div id="error_success_bar" class="mb-3"></div>
+    </div>
+
+
+</body>
+
+</html>
+
+<script>
+    $(function () {
+        //navbar
+        $("#navigation").load("navbar.html");
+
+        //display role
+        var role_name = localStorage.getItem("role_name");
+        var role_id = localStorage.getItem("role_ID");
+        console.log(role_name, role_id);
+
+        axios
+            .get("http://localhost:456/role/search/" + role_name)
+            .then(function (response) {
+                console.log(response.data.data[0]);
+
+                if (response.data.code == "201") { //success
+                    $("#role-selected").text(role_name);
+                    $("#role-desc").text(response.data.data[0].Role_Desc);
+
+                    // nested axios - get skills
+                    axios
+                        .get("http://localhost:456/role/assigned_skill/" + role_id)
+                        .then(function (response) {
+                            console.log(response.data.data);
+
+                            skills = response.data.data;
+
+                            if (response.data.code == "201") { //success
+                                // var display = role + " - " + response.data.data[0].Role_Desc;
+                                $("#skill-one").text(skills[0].Skill_Name);
+
+
+                                for (skill of skills) {
+                                    // Make a request for a user with a given ID
+
+                                    axios.get("http://localhost:456/skill/get_assigned_courses_by_ID/" + skill.Skill_ID)
+                                        .then(function (response) {
+                                            // handle success
+                                            console.log(response);
+                                            // console.log(response.data.message[0].courses)
+
+                                            course_html = ''
+                                            course_name = []
+                                            course_id = []
+
+                                            for (course of response.data.message[0].courses) {
+                                                // course_name.append
+                                                // course_id.append
+                                                // console.log(course)
+                                                course_html += `<div class="border-box px-4 py-2 bg-grey border border-0" data-id='${course.Course_ID}'>${course.Course_Name}</div>`
+                                            }
+
+                                            // $('#replace').html = course_html
+                                            console.log(course_html)
+
+                                            skill_html =
+                                                `<div class="accordion-item border-box">
+                                                <h2 class="accordion-header" >
+                                                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#skill${skill.Skill_ID}" aria-expanded="true" id="skill">
+                                                        ${skill.Skill_Name}
+                                                    </button>
+                                                </h2>
+                                                <div id="skill${skill.Skill_ID}" class="accordion-collapse collapse">
+                                                    <!-- courses - to be populated by js -->
+                                                    <div class="accordion-body d-flex flex-wrap gap-3">
+                                                        ${course_html}
+                                                    </div>
+                                                </div>
+                                            </div>`;
+
+                                            $('#accordionPanelsStayOpenExample').append(skill_html);
+                                        })
+                                        
+                                        $('#' + skill.Skill_ID).text(skill.Skill_Name);
+
+                                    // console.log(skill);
+
+                                }
+
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+
+    });
+
+
+</script>

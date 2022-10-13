@@ -130,7 +130,7 @@
     // load navbar and populate roles
     $(function () {
         $('#navigation').load('navbar.html');
-        populate_roles()
+        populate_roles() //show all roles existed in DB
     });
 
     function viewSkills(roleDiv) {
@@ -180,7 +180,7 @@
                     $("#error_success_bar").html(`
                     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
                     `);
-                    populate_roles();
+                    populate_roles(); //add the new role in the list and display
                 }
             })
             .catch(function (error) {

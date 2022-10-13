@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>View Learning Journey</title>
+
+    <!-- for standard icons (delete button) -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <!-- axios -->
+    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+        crossorigin="anonymous"></script>
+
+    <!-- jQuery cookie -->
+    
+    <!-- main css -->
+    <link rel="stylesheet" href="main.css" />
+</head>
+
+<body>
+    <!-- navbar placeholder -->
+    <div id="navigation"></div>
+
+    <!-- Page starts -->
+    <div class="container">
+        <h1 id="SkillName">My Learning Journeys 🏠</h1>
+        <div id="activeStatus"></div>
+        <!-- Create Skill Modal button -->
+        <div class="d-flex flex-row-reverse">
+            <button class="button button-primary" id="assignNewRole" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="createLearningJourney()">
+                <!-- To be completed -->
+                Create new Learning Journey
+            </button>
+        </div>
+        <h3>Learning Journeys in Progress</h3>
+        <hr>
+        <!-- Create Skill Modal // to be placed in vue template along with other modal -->
+        <div class="gradient-box d-flex justify-content-between">
+            <p class="my-auto">Software Engineering</p>
+            <h4><span class="badge bg-secondary">New</span></h4>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<!-- js file with all functions necessary for this page to load -->
+<script>
+    $(function () {
+    $("#navigation").load("navbar.html");
+    allCookies = document.cookie
+    console.log("targetID: ",getCookie("targetID"))
+
+    // need to make this look better?
+    skill_is_active = getCookie("targetIsActive") === "true"? true : false
+    toggle_button = `<button type="button" ${skill_is_active ? 'checked ' : ''} class="${skill_is_active ? 'btn-success' : 'btn-danger'} btn">${skill_is_active ? "Activated" : "Deactivated"}</button>`
+    disabled_message = skill_is_active ? `` :`<span style="float:right">skill cannot be assigned/ unassigned to course/ role while deactivated</span>`
+    $("#activeStatus").html(toggle_button + disabled_message)
+    if(!skill_is_active){
+        $("#assignNewCourse").prop("disabled", true)
+        $("#assignNewRole").prop("disabled", true)
+    }
+
+    $("#SkillName").text(getCookie("targetName"))
+    getAssignedRoles()
+    getAssignedCourses()
+    document.cookie = "selected=''"
+});
+
+    function createLearningJourney(){
+        window.location.href="./create_lj.html"
+    }
+</script>

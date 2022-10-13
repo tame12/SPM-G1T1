@@ -84,7 +84,7 @@
 
                     // nested axios - get skills
                     axios
-                        .get("http://localhost:456//role/assigned_skill/" + role_id)
+                        .get("http://localhost:456/role/assigned_skill/" + role_id)
                         .then(function (response) {
                             console.log(response.data.data);
 
@@ -98,6 +98,43 @@
                                 skill_html = '';
 
                                 for (skill of skills) {
+                                    // Make a request for a user with a given ID
+                                    axios.get("http://localhost:456/skill/get_assigned_courses_by_ID/" + skill.Skill_ID)
+                                        .then(function (response) {
+                                            // handle success
+                                            console.log(response);
+                                            // console.log(response.data.message[0].courses)
+
+                                            course_html = ''
+                                            course_name=[]
+                                            course_id=[]
+                                
+                                            for (course of response.data.message[0].courses) {
+                                                // course_name.append
+                                                // course_id.append
+                                                // console.log(course)
+                                                course_html += `<div class="border-box px-4 py-2 bg-grey border border-0" data-id='${course.Course_ID}'>${course.Course_Name}</div>`
+                                            }
+
+                                            // $('#replace').html = course_html
+                                            console.log(course_html)
+                                          
+                                            
+
+
+                                        })
+                                        .catch(function (error) {
+                                            // handle error
+                                            console.log(error);
+                                        })
+                                        .then(function () {
+                                            // always executed
+                                        });
+
+
+
+                                   
+
                                     // console.log(skill);
                                     if (skill_html == '') {
                                         skill_html +=
@@ -112,7 +149,8 @@
                                                 <div id="skill${skill.Skill_ID}" class="accordion-collapse collapse show"
                                                     aria-labelledby="panelsStayOpen-headingOne">
                                                     <!-- courses - to be populated by js -->
-                                                    <div class="accordion-body d-flex flex-wrap gap-3">
+                                                    <div class="accordion-body d-flex flex-wrap gap-3" id="replace">                     
+
                                                         <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
                                                         <div class="border-box px-4 py-2 bg-grey border-blue">Course1</div>
                                                         <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>

@@ -5,8 +5,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Assign Skill -> Role</title>
 
+    <!-- for standard icons (delete button) -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
@@ -34,10 +39,11 @@
     <!-- Page starts -->
     <div class="container">
         <h1 id="SkillName"></h1>
+        <div id="activeStatus"></div>
         <hr />
         <!-- Create Skill Modal button -->
         <div class="d-flex flex-row-reverse">
-            <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="populateModal()">
+            <button class="button button-primary" id="assignNewRole" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="populateModal()">
                 Assign Skill to New Role
             </button>
         </div>
@@ -51,7 +57,7 @@
                         </div>
                         <!-- buttons here -->
                         <div class="d-flex flex-row-reverse mb-3 mt-3 me-4 gap-3">
-                            <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                            <button type="button" class="button button-grey" data-bs-dismiss="modal" onclick="resetAssignSelected()">
                                 Cancel
                             </button>
                             <!-- not sure if should dismiss after creating, block error/success msg if dont -->
@@ -70,7 +76,7 @@
 
         <div id="courseModal">
             <div class="d-flex flex-row-reverse">
-                <button class="button button-primary" data-bs-toggle="modal" data-bs-target="#availableCourses" onclick="populateCourseModal()">
+                <button class="button button-primary" id="assignNewCourse" data-bs-toggle="modal" data-bs-target="#availableCourses" onclick="populateCourseModal()">
                     Assign Skill to New Course
                 </button>
             </div>
@@ -84,7 +90,7 @@
                         </div>
                         <!-- buttons here -->
                         <div class="d-flex flex-row-reverse mb-3 mt-3 me-4 gap-3">
-                            <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                            <button type="button" class="button button-grey" data-bs-dismiss="modal" onclick="resetAssignSelected()">
                                 Cancel
                             </button>
                             <!-- not sure if should dismiss after creating, block error/success msg if dont -->
@@ -101,266 +107,31 @@
         </div>
 
         <div id="error_success_bar" class="mb-3"></div>
+
+        <!-- Modal for confirming unassiging a role from a skill-->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalTitle"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                You can always re-assign again later.
+                </div>
+                <div class="modal-footer">
+                    <!-- span links the unassign button to the right unassign function -->
+                    <span id = "unassignRoleFromSkill"></span>
+                    <span id = "unassignCourseFromSkill"></span>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="resetUnassignButton()">Cancel</button>
+                </div>
+            </div>
+            </div>
+        </div>
     </div>
 </body>
 
 </html>
 
-<script>
-
-    // load navbar & populate skills
-    $(function () {
-        $("#navigation").load("navbar.html");
-        allCookies = document.cookie
-        console.log("targetID: ",getCookie("targetID"))
-
-        $("#SkillName").text(getCookie("targetName"))
-        getAssignedRoles()
-        getAssignedCourses()
-        document.cookie = "selected=''"
-    });
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-
-    function populatePage(targetArr){
-        var html = ``
-        if (targetArr.length == 0){
-            html = `No Roles Assigned Yet`
-        }
-        cookieAssignedRoles = ``
-        for (let i=0 ; i<targetArr.length ; i++){
-            cookieAssignedRoles+=`,${targetArr[i].Role_ID}`
-            html += 
-            `
-            <div id="${targetArr[i].Role_ID}" name="${targetArr[i].Role_Desc}"class="gradient-box d-flex justify-content-between">
-                <p class="my-auto">${targetArr[i].Role_Desc}</p>
-            </div>
-                    
-            `
-        }
-        document.cookie = `assignedRoles=${cookieAssignedRoles}`
-
-        $("#SearchResults").html(html)
-    }
-
-    function populatePageCourses(targetArr){
-        var html = ``
-        if (targetArr.length == 0){
-            html = `No Courses Assigned Yet`
-        }
-        cookieAssignedCourses = ``
-        for (let i=0 ; i<targetArr.length ; i++){
-            cookieAssignedCourses+=`,${targetArr[i].Course_ID}`
-            html += 
-            `
-            <div id="${targetArr[i].Course_ID}" name="${targetArr[i].Course_Name}"class="gradient-box d-flex justify-content-between">
-                <p class="my-auto">${targetArr[i].Course_Name}</p>
-            </div>
-                    
-            `
-        }
-        document.cookie = `assignedCourse=${cookieAssignedCourses}`
-
-        $("#SearchResultsCourses").html(html)
-    }
-
-    function getAssignedRoles(){
-        axios.get(
-            "http://localhost:456/skill/get_assigned_roles_by_ID/" + getCookie('targetID')
-        ).then(function (response){
-            var targetArr = response.data.message[0].roles;
-            populatePage(targetArr)
-        })
-    }
-
-    function getAssignedCourses(){
-        axios.get(
-            "http://localhost:456/skill/get_assigned_courses_by_ID/" + getCookie('targetID')
-        ).then(function (response){
-            var targetArr = response.data.message[0].courses;
-            // console.log("targetArr: ",targetArr)
-            populatePageCourses(targetArr)
-        })
-    }
-
-    function populateModal(){
-        let assignedRoles = getCookie("assignedRoles").split(",")
-        axios.get(
-            "http://localhost:456/role"
-        ).then(function (response){
-            var targetArr = response.data.data
-            html = ``
-            if (targetArr.length == 0){
-                html+=`No available roles yet. Please activate a role, or add a role`
-            }
-            for (let i=0; i<targetArr.length; i++){
-                if (targetArr[i].Role_Is_Active){
-                    console.log("assignedRoles:",assignedRoles)
-                    console.log("targetArr[i].Role_ID: ",typeof targetArr[i].Role_ID)
-                    if (assignedRoles.includes(String(targetArr[i].Role_ID))){
-                    // if (targetArr[i].Role_ID in assignedRoles){
-                        console.log("already assigned assignedRoles:",assignedRoles)
-                        html += `
-                        <div class="gradient-box d-flex justify-content-between disabled text-secondary box-secondary" id=${targetArr[i].Role_ID}">
-                            <p class="my-auto">${targetArr[i].Role_Desc}</p>
-                        </div>
-                        `
-                    } else{
-                        html += `
-                        <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Role_ID} onclick="select(this)">
-                            <p class="my-auto">${targetArr[i].Role_Desc}</p>
-                        </div>
-                        `
-                    }
-                    
-                }
-            }
-            $("#roleViewer").html(html)
-        })
-    }
-
-    function populateCourseModal(){
-        let assignedCourses = getCookie("assignedCourse").split(",")
-        
-        axios.get(
-            "http://localhost:456/course"
-        ).then(function (response){
-            var targetArr = response.data.data
-            html = ``
-            if (targetArr.length == 0){
-                html+=`No available courses yet. Please activate a course, or add a course`
-            }
-            for (let i=0; i<targetArr.length; i++){
-                if (targetArr[i].Course_Is_Active){
-                    // cannot use: targetArr[i].Course_ID in assignedCourses)
-                    if (assignedCourses.includes(targetArr[i].Course_ID)){
-                        html += `
-                        <div class="gradient-box d-flex justify-content-between disabled text-secondary box-secondary" id=${targetArr[i].Course_ID}">
-                            <p class="my-auto">${targetArr[i].Course_Name}</p>
-                        </div>
-                        `
-                    } else{
-                        html += `
-                        <div class="gradient-box d-flex justify-content-between" id=${targetArr[i].Course_ID} onclick="select(this)">
-                            <p class="my-auto">${targetArr[i].Course_Name}</p>
-                        </div>
-                        `
-                    }
-                    
-                }
-            }
-            $("#courseViewer").html(html)
-        })
-    }
-
-    function select(e){
-        let assignedRoles = getCookie("assignedRoles").split(",")
-        // making sure that you cannot deselect an assigned role
-        if (e.classList.contains('selected-box')){
-            e.classList.remove('selected-box')
-            var list = getCookie('selected').split(',')
-            // console.log("e", e.id)
-            // console.log("current cookie: ",list)
-            var filtered = list.filter(function(value){
-                return value != e.id
-            })
-            // console.log("filtered: ",filtered)
-            document.cookie = "selected="+filtered.join(',')
-        }
-        // When you select an option
-        else{
-            // If this is the first time that you are selecting something
-            e.classList.add('selected-box')
-            if (getCookie("selected") == ''){
-                document.cookie = "selected="+e.id
-            }
-            else{
-                var list = getCookie('selected')
-                list = list.split(",")
-                var filtered = list.filter(function(value,index,arr){
-                    return value != e.id
-                })
-                document.cookie = "selected="+filtered.join(',')+","+e.id
-            }
-
-        }
-        console.log("updated cookie", getCookie("selected"))
-    }
-
-    function assignSkillToRole(){
-        $("#error_success_bar").html("")
-        console.log("hello")
-        var selectedRoles = getCookie("selected").split(",")
-        var assignedRoles = getCookie("assignedRoles").split(",")
-        var toBackEnd = selectedRoles.filter(function(value){
-            if (!assignedRoles.includes(value)){
-                return parseInt(value)
-            }
-        })
-        var targetID = getCookie('targetID')
-        console.log(targetID)
-        console.log(toBackEnd)
-        axios.post(
-        "http://localhost:456/skill/assign_to_role",
-        {
-            Skill_ID : parseInt(targetID),
-            Role_ID : toBackEnd,
-        }
-        ).then(function(response){
-            console.log("response: ",response)
-            getAssignedRoles()
-            populateModal()
-            if(getCookie("selected") != "''"){
-                document.cookie = "selected=''"
-                $("#error_success_bar").html(`
-                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
-                `);
-            }else{
-                alert("No Roles were selected. Please select one or more roles to assign this skill to.")
-            }
-        })
-    }
-
-    function assignSkillToCourse(){
-        $("#error_success_bar").html("")
-        console.log("hello, assignSkillToCourse")
-        var selectedCourses = getCookie("selected").split(",")
-        var assignedCourses = getCookie("assignedCourse").split(",")
-        console.log("selectedCourses: ",selectedCourses)
-        console.log("assignedCourses", assignedCourses)
-        var toBackEnd = selectedCourses.filter(function(value){
-            if (!assignedCourses.includes(value) && value != "''"){
-                return value
-            }
-        })
-        var targetID = getCookie('targetID')
-        console.log("The target ID: ", targetID)
-        console.log("the backend: ")
-        console.log(toBackEnd)
-        axios.post(
-        "http://localhost:456/skill/assign_to_courses",
-        {
-            Skill_ID : parseInt(targetID),
-            Course_ID : toBackEnd,
-        }
-        ).then(function(response){
-            console.log("response: ",response)
-            getAssignedCourses()
-            populateCourseModal()
-            console.log("cookie: ",getCookie("selected"))
-            if(getCookie("selected") != "''"){
-                document.cookie = "selected=''"
-                $("#error_success_bar").html(`
-                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
-                `);
-            }else{
-                alert("No Courses were selected. Please select one or more courses to assign this skill to.")
-            }
-            
-        })
-    }
-</script>
+<!-- js file with all functions necessary for this page to load -->
+<script src="assign_skill.js"></script>

@@ -29,10 +29,10 @@
     <!-- navbar placeholder -->
     <div id="navigation"></div>
     <div class="container">
-        <h1>Role Selected</h1>
+        <h1 id="role-selected">Role Selected</h1>
         <hr />
 
-        <p>Role description
+        <p id="role-desc">Role description
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec placerat sed quam in luctus. Morbi faucibus
             semper massa. Fusce ut auctor sapien, nec malesuada diam. Quisque pretium facilisis ullamcorper. Mauris eget
             volutpat metus. Pellentesque pellentesque orci sollicitudin congue molestie. Phasellus elementum ut nibh
@@ -42,58 +42,7 @@
         </p>
 
         <!-- skills accordion - to be populated by js -->
-        <div class="accordion pb-3 d-flex flex-column gap-3 fw-bold" id="accordionPanelsStayOpenExample">
-            <div class="accordion-item border-box">
-                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
-                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
-                        aria-controls="panelsStayOpen-collapseOne">
-                        Skill 1
-                    </button>
-                </h2>
-                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
-                    aria-labelledby="panelsStayOpen-headingOne">
-                    <!-- courses - to be populated by js -->
-                    <div class="accordion-body d-flex flex-wrap gap-3">
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border-blue">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                    </div>
-                </div>
-            </div>
-            <!-- placeholder second one - can dlt after coded js -->
-            <div class="accordion-item border-box">
-                <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true"
-                        aria-controls="panelsStayOpen-collapseTwo">
-                        Accordion Item #1
-                    </button>
-                </h2>
-                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
-                    aria-labelledby="panelsStayOpen-headingTwo">
-                    <!-- courses - to be populated by js -->
-                    <div class="accordion-body d-flex flex-wrap gap-3">
-                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="accordion pb-3 d-flex flex-column gap-3 fw-bold" id="accordionPanelsStayOpenExample"></div>
 
         <!-- Create Skill button -->
         <div class="d-flex flex-row-reverse">
@@ -116,7 +65,108 @@
 
 <script>
     $(function () {
+        //navbar
         $("#navigation").load("navbar.html");
+
+        //display role
+        var role_name = localStorage.getItem("role_name");
+        var role_id = localStorage.getItem("role_ID");
+        console.log(role_name, role_id);
+
+        axios
+            .get("http://localhost:456/role/search/" + role_name)
+            .then(function (response) {
+                console.log(response.data.data[0]);
+
+                if (response.data.code == "201") { //success
+                    $("#role-selected").text(role_name);
+                    $("#role-desc").text(response.data.data[0].Role_Desc);
+
+                    // nested axios - get skills
+                    axios
+                        .get("http://localhost:456//role/assigned_skill/" + role_id)
+                        .then(function (response) {
+                            console.log(response.data.data);
+
+                            skills = response.data.data;
+
+                            if (response.data.code == "201") { //success
+                                // var display = role + " - " + response.data.data[0].Role_Desc;
+                                $("#skill-one").text(skills[0].Skill_Name);
+
+                                //populate skills
+                                skill_html = '';
+
+                                for (skill of skills) {
+                                    // console.log(skill);
+                                    if (skill_html == '') {
+                                        skill_html +=
+                                            `<div class="accordion-item border-box">
+                                                <h2 class="accordion-header" id="${skill.Skill_ID}">
+                                                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#skill${skill.Skill_ID}" aria-expanded="true"
+                                                        aria-controls="panelsStayOpen-collapseOne" id="skill-one">
+                                                        ${skill.Skill_Name}
+                                                    </button>
+                                                </h2>
+                                                <div id="skill${skill.Skill_ID}" class="accordion-collapse collapse show"
+                                                    aria-labelledby="panelsStayOpen-headingOne">
+                                                    <!-- courses - to be populated by js -->
+                                                    <div class="accordion-body d-flex flex-wrap gap-3">
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border-blue">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                                    } else {
+                                        skill_html +=
+                                            `<div class="accordion-item border-box">
+                                                <h2 class="accordion-header" id="${skill.Skill_ID}">
+                                                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#skill${skill.Skill_ID}" aria-expanded="true">
+                                                        ${skill.Skill_Name}
+                                                    </button>
+                                                </h2>
+                                                <div id="skill${skill.Skill_ID}" class="accordion-collapse collapse">
+                                                    <!-- courses - to be populated by js -->
+                                                    <div class="accordion-body d-flex flex-wrap gap-3">
+                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
+                                                    </div>
+                                                </div>
+                                            </div>`;
+                                    }
+                                }
+
+                                $('#accordionPanelsStayOpenExample').html(skill_html);
+
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+
     });
+
 
 </script>

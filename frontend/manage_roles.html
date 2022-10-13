@@ -76,6 +76,30 @@
 </html>
 
 <script>
+    function toggleActivation(id) {
+        // $('#spinnerModal').modal('show');
+        console.log(id)
+        axios.put(`http://localhost:456/role/toggle/${id}`)
+        .then(response => {
+            console.log(response)
+                if (response.data.code == "201") {
+                    populate_roles();
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            }).finally(() => { 
+                // modal is so buggy
+                // $('#spinnerModal').modal('hide');
+                // setTimeout(() => {
+                //     $('#spinnerModal').modal('hide');
+                // }, 1000);
+                // setTimeout(() => {
+                //     $('#spinnerModal').modal('hide');
+                // }, 1000);
+            });
+    }
+
     // Populate roles
     function populate_roles() {
         // Simulate the retrieval of data from the database
@@ -87,7 +111,8 @@
                 var html = ''
                 for (let i = 0; i < data.data.length; i++) {
                     // if condition to check whether role is active or not
-                    if (response[i].Role_Is_Active) {
+                    toggle_button = `<button type="button" ${response[i].Role_Is_Active?'checked ':''} class="${response[i].Role_Is_Active?'btn-on' : 'btn-off'} d-flex align-items-center toggle-btn" onclick="event.stopPropagation();toggleActivation(${response[i].Role_ID})">${response[i].Role_Is_Active ? "On" : "Off"}</button>`
+
                         html += `
                         <div class="gradient-box d-flex justify-content-between" role="button">
                             <p class="my-auto">${response[i].Role_Name}</p>
@@ -96,31 +121,40 @@
                             <div class="my-auto d-flex gap-3">
                                 <!-- Role Edit Buttons -->
                                 <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">&nbsp; &nbsp; Skills &nbsp; &nbsp;</button>
-                                <button type="button" class="btn btn-danger">Deactivate</button>
-                                <button type="button" class="btn btn-warning">&nbsp; &nbsp; Update &nbsp; &nbsp;</button>
+                                <!-- Edit skill modal button -->
+                                <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal" onclick="event.stopPropagation();"
+                                data-bs-target="#editModalPopUp${response[i].Skill_ID}">
+                                ${toggle_button}
                             </div>
                             
+                        </div>
+                        
+                        <!-- Edit skill Modal-->
+                        <div class="modal fade" id="editModalPopUp${response[i].Skill_ID}" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="px-3 pt-3">
+                                        <h1 class="modal-title fs-4" id="exampleModalLabel">Update ${response[i].Skill_Name}</h1>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="text" data-id="edit_skill_input" class="w-100 modal-input" placeholder="Skill name" />
+                                    </div>
+                                    <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
+                                        <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                                            Cancel
+                                        </button>
+                                        <!-- not sure if should dismiss after creating, block error/success msg if dont -->
+                                        <button type="button" class="button button-primary" data-bs-dismiss="modal"
+                                            data-id="edit_skill_button"
+                                            data-skill-id="${response[i].Skill_ID}">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>`
     
                         // $("#view-results").html(html)
-                    }
-                    else {
-                        html += `
-                        <div class="gradient-box d-flex justify-content-between" role="button">
-                            <p class="my-auto">${response[i].Role_Name}</p>
-                            <p class="my-auto">${response[i].Role_Desc}</p>
-    
-                            <div class="my-auto d-flex gap-3">
-                                <!-- Role Edit Buttons -->
-                                <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">&nbsp; &nbsp; Skills &nbsp; &nbsp;</button>
-                                <button type="button" class="btn btn-success">&nbsp; Activate &nbsp; </button>
-                                <button type="button" class="btn btn-warning">&nbsp; &nbsp; Update &nbsp; &nbsp;</button>
-                            </div>
-                            
-                        </div>`
-    
-                        // $("#view-results").html(html)
-                    }
                 }
                 $("#view-results").html(html) // rewrites the #view-results div with the new html
             }

@@ -83,128 +83,86 @@
                     $("#role-desc").text(response.data.data[0].Role_Desc);
 
                     // nested axios - get skills
-                    axios
-                        .get("http://localhost:456/role/assigned_skill/" + role_id)
-                        .then(function (response) {
-                            console.log(response.data.data);
 
-                            skills = response.data.data;
-
-                            if (response.data.code == "201") { //success
-                                // var display = role + " - " + response.data.data[0].Role_Desc;
-                                $("#skill-one").text(skills[0].Skill_Name);
-
-                                //populate skills
-                                skill_html = '';
-
-                                for (skill of skills) {
-                                    // Make a request for a user with a given ID
-                                    axios.get("http://localhost:456/skill/get_assigned_courses_by_ID/" + skill.Skill_ID)
-                                        .then(function (response) {
-                                            // handle success
-                                            console.log(response);
-                                            // console.log(response.data.message[0].courses)
-
-                                            course_html = ''
-                                            course_name=[]
-                                            course_id=[]
-                                
-                                            for (course of response.data.message[0].courses) {
-                                                // course_name.append
-                                                // course_id.append
-                                                // console.log(course)
-                                                course_html += `<div class="border-box px-4 py-2 bg-grey border border-0" data-id='${course.Course_ID}'>${course.Course_Name}</div>`
-                                            }
-
-                                            // $('#replace').html = course_html
-                                            console.log(course_html)
-                                          
-                                            
-
-
-                                        })
-                                        .catch(function (error) {
-                                            // handle error
-                                            console.log(error);
-                                        })
-                                        .then(function () {
-                                            // always executed
-                                        });
-
-
-
-                                   
-
-                                    // console.log(skill);
-                                    if (skill_html == '') {
-                                        skill_html +=
-                                            `<div class="accordion-item border-box">
-                                                <h2 class="accordion-header" id="${skill.Skill_ID}">
-                                                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#skill${skill.Skill_ID}" aria-expanded="true"
-                                                        aria-controls="panelsStayOpen-collapseOne" id="skill-one">
-                                                        ${skill.Skill_Name}
-                                                    </button>
-                                                </h2>
-                                                <div id="skill${skill.Skill_ID}" class="accordion-collapse collapse show"
-                                                    aria-labelledby="panelsStayOpen-headingOne">
-                                                    <!-- courses - to be populated by js -->
-                                                    <div class="accordion-body d-flex flex-wrap gap-3" id="replace">                     
-
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border-blue">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                    </div>
-                                                </div>
-                                            </div>`;
-                                    } else {
-                                        skill_html +=
-                                            `<div class="accordion-item border-box">
-                                                <h2 class="accordion-header" id="${skill.Skill_ID}">
-                                                    <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#skill${skill.Skill_ID}" aria-expanded="true">
-                                                        ${skill.Skill_Name}
-                                                    </button>
-                                                </h2>
-                                                <div id="skill${skill.Skill_ID}" class="accordion-collapse collapse">
-                                                    <!-- courses - to be populated by js -->
-                                                    <div class="accordion-body d-flex flex-wrap gap-3">
-                                                        <div class="border-box px-4 py-2 bg-grey border border-0">Course1</div>
-                                                    </div>
-                                                </div>
-                                            </div>`;
-                                    }
-                                }
-
-                                $('#accordionPanelsStayOpenExample').html(skill_html);
-
-                            }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
                 }
             })
             .catch(function (error) {
                 console.log(error);
             })
 
+        axios
+            .get("http://localhost:456/role/assigned_skill/" + role_id)
+            .then(function (response) {
+                console.log(response.data.data);
+
+                skills = response.data.data;
+
+                if (response.data.code == "201") { //success
+                    //populate skills
+
+                    const urls = []
+                    for (skill of skills) {
+                        // console.log(skill);
+                        urls.push(skill.Skill_ID)
+                    }
+                    const promises = urls.map(url => axios.get("http://localhost:456/skill/get_assigned_courses_by_ID/" + url));
+                    Promise.all(promises).then(get_courses => {
+                        // courses = response[0].data.message[0].courses
+                        // console.log(courses)
+                        skill_html = '';
+
+
+                        for (i = 0; i < skills.length; i++) {
+                            skill = skills[i]
+                            console.log(skill)
+                            courses = get_courses[i].data.message[0].courses
+                            course_html = ''
+                            for (course of courses) {
+                                course_html += `<div class="border-box px-4 py-2 bg-grey border border-0" data-id='${course.Course_ID}'>${course.Course_Name}</div>`
+                            }
+                            console.log(course_html)
+
+                            // console.log(skill);
+                            skill_html +=
+                                `<div class="accordion-item border-box">
+                                    <h2 class="accordion-header" id="${skill.Skill_ID}">
+                                        <button class="accordion-button gradient-box text-black m-0 border border-0" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#skill${skill.Skill_ID}" aria-expanded="true">
+                                            ${skill.Skill_Name}
+                                        </button>
+                                    </h2>
+                                    <div id="skill${skill.Skill_ID}" class="accordion-collapse collapse">
+                                        <!-- courses - to be populated by js -->
+                                        <div class="accordion-body d-flex flex-wrap gap-3">
+                                            ${course_html}
+                                        </div>
+                                    </div>
+                                </div>`;
+                        }
+                    $('#accordionPanelsStayOpenExample').html(skill_html);
+
+                    });
+
+
+                }
+            })
     });
 
+    // // Make a request for a user with a given ID
+    // axios.get("http://localhost:456/skill/get_assigned_courses_by_ID/" + skill.Skill_ID)
+    //                     // handle success
+    //                     console.log(response);
+    //                     // console.log(response.data.message[0].courses)
+
+    //                     course_html = ''
+    //                     course_name = []
+    //                     course_id = []
+
+    //                     for (course of response.data.message[0].courses) {
+    //                         // course_name.append
+    //                         // course_id.append
+    //                         // console.log(course)
+    //                         course_html += `<div class="border-box px-4 py-2 bg-grey border border-0" data-id='${course.Course_ID}'>${course.Course_Name}</div>`
+    //                     }
 
 </script>

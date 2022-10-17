@@ -252,8 +252,8 @@ def createLJ():
             "message": "Unable to create new LJ. Error message: " + str(e)
         }), 500
     
-@app.route('/LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>', methods=["GET"])
-def getCourseAndSkillByLJ_ID(LJ_ID):
+# @app.route('/LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>', methods=["GET"])
+# def getCourseAndSkillByLJ_ID(LJ_ID):
 
 
 @app.route('/role')

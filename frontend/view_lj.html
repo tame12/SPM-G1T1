@@ -50,10 +50,11 @@
         <h3>Learning Journeys in Progress</h3>
         <hr>
         <!-- Create Skill Modal // to be placed in vue template along with other modal -->
-        <div class="gradient-box d-flex justify-content-between">
+        <div id="RoleResults"></div>
+        <!-- <div class="gradient-box d-flex justify-content-between">
             <p class="my-auto">Software Engineering</p>
             <h4><span class="badge bg-secondary">New</span></h4>
-        </div>
+        </div> -->
     </div>
 </body>
 
@@ -64,7 +65,7 @@
     $(function () {
     $("#navigation").load("navbar.html");
     allCookies = document.cookie
-    console.log("targetID: ",getCookie("targetID"))
+    getAllLJ()
 
     // need to make this look better?
     skill_is_active = getCookie("targetIsActive") === "true"? true : false
@@ -76,13 +77,40 @@
         $("#assignNewRole").prop("disabled", true)
     }
 
-    $("#SkillName").text(getCookie("targetName"))
-    getAssignedRoles()
-    getAssignedCourses()
-    document.cookie = "selected=''"
 });
 
     function createLearningJourney(){
         window.location.href="./browse_roles.html"
+    }
+
+    function getAllLJ(id){
+        // Defaults to a value of 1. However, I will need to retrieve ID of the user from somewhere.
+        axios.get("http://localhost:456/LJ/" + 1).then(
+            function(response){
+                if (response.data.code == 201){
+                    // need to display all the learning journeys in progress
+                    // need to display all the learning journeys completed
+                    html= ``;
+                    for (i = 0; i < response.data.data.length; i++){
+                        rid = response.data.data[i].Role_ID
+                        html += `<div class="gradient-box d-flex justify-content-between">
+                            <p class="my-auto">${response.data.role_data[rid-1]["Role_Desc"]}</p>
+                        </div>`
+                    }
+                    $("#RoleResults").after(html)
+                    console.log("end")
+                }
+                else{
+                    console.log("Error: " + response.data.message)
+                }
+            }
+        )
+    }
+
+    function getSkillsPerLJ(LJ_ID){
+        // Causes the Role to dropdown, revealing a list of skills that pertain to that role 
+        
+        // 1. Get the skills for each Role_ID
+        
     }
 </script>

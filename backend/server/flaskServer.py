@@ -159,15 +159,6 @@ class SkillCourse(db.Model):
                 })
         return output
 
-    # not really needed?
-    # def getAssignedSkillByCourseID(course_id):
-    #     return Skill.query.join(SkillCourse, Skill.Skill_ID == SkillCourse.Skill_ID).where(SkillCourse.Course_ID == course_id).all()
-
-# Shaan to be deleted
-# @app.route('/role/role_by_skill/<int:skill_id>',methods=['GET'])
-# def getRoleBySkill(skill_id):
-#     try:
-#         Role = SkillRole.getAssignedRoleBySkillID(skill_id)
 @app.route('/LJ')
 def getAllLJ():
     try:
@@ -187,9 +178,11 @@ def getAllLJ():
 def getLJsbyStaffID(Staff_ID):
     try:
         ljs = LJ.query.filter_by(Staff_ID=Staff_ID)
+        roles = Role.query.all()
         return jsonify({
             "code":201,
-            "data": [lj.to_json() for lj in ljs]
+            "data": [lj.to_json() for lj in ljs],
+            "role_data": [role.to_json() for role in roles]
         }), 201
     except Exception: 
         return jsonify({
@@ -241,15 +234,6 @@ def createLJ():
                     "message": "LJ already exists."
                 }), 400
 
-        # check that all values are numeric
-        # for i in keys: 
-        #     if not data[i].isdigit():
-        #         return jsonify({
-        #             "code": 400,
-        #             "message": " {name}  must be numeric.".format(name=i)
-        #         }), 400
-
-        # When I add it to the table, will Learning Journey Course be updated? I don't think so right
         new_LJ = LJ(Staff_ID=data['Staff_ID'], Role_ID=data["Role_ID"], LJ_Number=data["LJ_Number"])
         db.session.add(new_LJ)
         db.session.commit()
@@ -385,6 +369,26 @@ def createRole():
         return jsonify({
             "code": 500,
             "message": "Unable to create new role. Error message: " + str(e)
+        }), 500
+
+@app.route('/role/<string:role_id>', methods=['GET'])
+def getRole(role_id):
+    try:
+        role = Role.query.filter_by(Role_ID=role_id).first()
+        if role:
+            return jsonify({
+                "code": 201,
+                "data": role.to_json()
+            }), 201
+        else:
+            return jsonify({
+                "code": 400,
+                "message": "Role not found."
+            }), 400
+    except Exception:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get role from database."
         }), 500
 
 # @app.route('/role/assigned_skills') # this one is the simulation version
@@ -862,6 +866,7 @@ def getAssignedSkill(role_id):
             "code": 500,
             "message": "Unable to get assigned skill from database. Error message: " + str(e)
         }), 500
+
 
 
 if __name__ == '__main__':

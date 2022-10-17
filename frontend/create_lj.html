@@ -116,10 +116,43 @@
                             console.log(skill)
                             courses = get_courses[i].data.message[0].courses
                             course_html = ''
+
+
                             for (course of courses) {
-                                course_html += `<div class="border-box px-4 py-2 bg-grey border border-0" data-id='${course.Course_ID}'>${course.Course_Name}</div>`
+                                // original
+                                //course_html += `<div class=" border-box px-4 py-2 bg-grey border border-0" text-black data-id='${course.Course_ID}'>${course.Course_Name}</div>`
+
+
+                                course_html += `<div> <button style="background-color:#E8E8E8; border-radius: 8px; border: none;margin: 4px 2px; font-size: 17px;" data-id='${course.Course_ID}'>${course.Course_Name}</button> </div>`
+
+//plz uncomment the chunk below for the border select func..:
+
+                            //     //border turn blue when selected , onclick
+                            //     const element = document.getElementById('${course.Course_ID}');
+                            //     element.addEventListener('click', function handleClick(event) {
+                            //         event.target.classList.add(
+                            //             'borderSelected'//,
+                            //             //'recordValue'
+
+                            //             // in main.css
+                            //             // .borderSelected{
+                            //             //     border-color: blue;
+                            //             // }
+
+                            //             // this func for future use for 2-2 I added this in style css ,not sure if correct @Andrea
+                            //             // .recordValue{
+                            //             //     CourseSelected=${course.Course_ID}
+                            //             // }
+
+                            //         );
+                            //     });
+
                             }
+
+
                             console.log(course_html)
+
+
 
                             // console.log(skill);
                             skill_html +=
@@ -138,7 +171,7 @@
                                     </div>
                                 </div>`;
                         }
-                    $('#accordionPanelsStayOpenExample').html(skill_html);
+                        $('#accordionPanelsStayOpenExample').html(skill_html);
 
                     });
 

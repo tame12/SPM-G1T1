@@ -152,3 +152,11 @@ navbar a {
 .accordion-item:last-of-type {
   border-radius: 0.7em;
 }
+
+.borderSelected{
+  border: 1px solid blue;
+}
+
+/* .recordValue{
+  CourseSelected = {course.Course_ID}
+} */

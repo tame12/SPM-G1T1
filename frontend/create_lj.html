@@ -125,7 +125,7 @@
                                 //course_html += `<div class=" border-box px-4 py-2 bg-grey border border-0" text-black data-id='${course.Course_ID}'>${course.Course_Name}</div>`
 
 
-                                course_html += `<div> <button onclick="myFunction()" style="background-color:#E8E8E8; border-radius: 8px; border: none;margin: 4px 2px; font-size: 17px;" data-id='${course.Course_ID}'>${course.Course_Name}</button> </div>`
+                                course_html += `<div> <button onclick="myFunction()" style="background-color:#E8E8E8; border-radius: 8px; border: 1px solid; margin: 4px 2px; font-size: 17px;" data-id='${course.Course_ID}'>${course.Course_Name}</button> </div>`
                                
                                 function myFunction() {
                                     document.getElementById('${course.Course_ID}').style.borderColor = "blue";

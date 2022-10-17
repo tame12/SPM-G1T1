@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create Learning Journey</title>
 
     <!-- JQuery -->
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
@@ -57,7 +57,6 @@
         <!-- Error/ Success bar -->
         <div id="error_success_bar" class="mb-3"></div>
     </div>
-
 
 </body>
 
@@ -111,19 +110,15 @@
                         // console.log(courses)
                         skill_html = '';
 
-
-
                         for (i = 0; i < skills.length; i++) {
                             skill = skills[i]
                             console.log(skill)
                             courses = get_courses[i].data.message[0].courses
                             course_html = ''
 
-
                             for (course of courses) {
                                 // original
                                 //course_html += `<div class=" border-box px-4 py-2 bg-grey border border-0" text-black data-id='${course.Course_ID}'>${course.Course_Name}</div>`
-
 
                                 course_html += `<div> <button onclick="courseButtonSelected('${course.Course_ID.toString()}')" style="background-color:#E8E8E8; border-radius: 8px; border: 1px solid; margin: 4px 2px; font-size: 17px;" data-id='${course.Course_ID}' id='${course.Course_ID}'>${course.Course_ID}: ${course.Course_Name}</button> </div>`
 
@@ -131,17 +126,10 @@
                                 // function myFunction() {
                                 //     document.getElementById('${course.Course_ID}').style.borderColor = "blue";
                                 // }
-
-                                
-
                             }
-
-
                             console.log(course_html)
-
-
-
                             // console.log(skill);
+
                             skill_html +=
                                 `<div class="accordion-item border-box">
                                     <h2 class="accordion-header" id="${skill.Skill_ID}">
@@ -159,19 +147,27 @@
                                 </div>`;
                         }
                         $('#accordionPanelsStayOpenExample').html(skill_html);
-
                     });
-
-
                 }
             })
     });
 
+    // turns the course button blue when selected and black when deselected
     function courseButtonSelected(course_ID) {
         // console.log(course_ID)
+        courseButton = document.getElementById(course_ID)
 
-        document.getElementById(course_ID).style.borderColor = "blue";
-        document.getElementById(course_ID).style.color = "blue";
+        if (courseButton.style.borderColor == "blue") {
+            courseButton.style.borderColor = "black"
+            courseButton.style.color = "black"
+        } 
+
+        else {
+            courseButton.style.borderColor = "blue"
+            courseButton.style.color = "blue"
+        }
+        // document.getElementById(course_ID).style.borderColor = "blue";
+        // document.getElementById(course_ID).style.color = "blue";
     }
 
 </script>

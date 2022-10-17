@@ -46,7 +46,7 @@ class LJCourse(db.Model):
 
     def to_json(self):
         return {
-            'Skill_ID': self.LJ_ID,
+            'LJ_ID': self.LJ_ID,
             'Course_ID': self.Course_ID
         }
 
@@ -54,7 +54,6 @@ class LJCourse(db.Model):
     def getCoursesByLJ_ID(lj_id):
         # get role of the LJ -> find the skills related to that role -> find the courses related to that skill
         return Course.query.join(LJCourse, Course.Course_ID == LJCourse.Course_ID).where(LJCourse.LJ_ID == lj_id).all()
-        
 
 class Role(db.Model):
     __tablename__ = 'role'
@@ -253,7 +252,8 @@ def createLJ():
             "message": "Unable to create new LJ. Error message: " + str(e)
         }), 500
     
-    
+@app.route('/LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>', methods=["GET"])
+def getCourseAndSkillByLJ_ID(LJ_ID):
 
 
 @app.route('/role')

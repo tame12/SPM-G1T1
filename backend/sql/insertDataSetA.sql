@@ -80,3 +80,5 @@ insert into `is212_G1T1`.`Learning_Journey` (`LJ_ID`, `Staff_ID`, `Role_ID`, `LJ
 delete from `is212_G1T1`.`Learning_Journey_Course`;
 insert into `is212_G1T1`.`Learning_Journey_Course` (`LJ_ID`, `Course_ID`) values 
 (1,"IS-1");
+
+

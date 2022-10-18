@@ -116,21 +116,13 @@
                             courses = get_courses[i].data.message[0].courses
                             course_html = ''
 
+                          
+                            for (course of courses) {
+                                // original
+                                //course_html += `<div class=" border-box px-4 py-2 bg-grey border border-0" text-black data-id='${course.Course_ID}'>${course.Course_Name}</div>`
 
-                            // original - paul
-                            // for (course of courses) {
-                            //     // original
-                            //     //course_html += `<div class=" border-box px-4 py-2 bg-grey border border-0" text-black data-id='${course.Course_ID}'>${course.Course_Name}</div>`
-
-                            //     course_html += `<div> <button onclick="courseButtonSelected('${course.Course_ID.toString()}')" style="background-color:#E8E8E8; border-radius: 8px; border: 1px solid; margin: 4px 2px; font-size: 17px;" data-id='${course.Course_ID}' id='${course.Course_ID}'>${course.Course_ID}: ${course.Course_Name}</button> </div>`
-                            // }
-
-                            //yimei debugging
-                            for (i = 0; i < courses.length; i++) {
-                                course = courses[i]
-                                course_html += `<div> <button onclick="courseButtonSelected(i)" style="background-color:#E8E8E8; border-radius: 8px; border: 1px solid; margin: 4px 2px; font-size: 17px;" data-id='${course.Course_ID}' id=i>${course.Course_ID}: ${course.Course_Name}</button> </div>`
+                                course_html += `<div> <button onclick="courseButtonSelected('${skill.Skill_ID.toString()} ${course.Course_ID.toString()}')" style="background-color:#E8E8E8; border-radius: 8px; border: 1px solid; margin: 4px 2px; font-size: 17px;" data-id='${course.Course_ID}' id='${skill.Skill_ID} ${course.Course_ID}'>${course.Course_ID}: ${course.Course_Name}</button> </div>`
                             }
-
 
 
 
@@ -160,11 +152,10 @@
     });
 
 
-//yimei debugging
     // turns the course button blue when selected and black when deselected
-    function courseButtonSelected(i) {
+    function courseButtonSelected(id) {
         // console.log(course_ID)
-        courseButton = document.getElementById(i)
+        courseButton = document.getElementById(id)
 
         if (courseButton.style.borderColor == "blue") {
             courseButton.style.borderColor = "black"
@@ -180,33 +171,5 @@
         // document.getElementById(course_ID).style.color = "blue";
     }
 
-
-
-
-
-
-
-
-
-//paul original
-
-    // // turns the course button blue when selected and black when deselected
-    // function courseButtonSelected(course_ID) {
-    //     // console.log(course_ID)
-    //     courseButton = document.getElementById(course_ID)
-
-    //     if (courseButton.style.borderColor == "blue") {
-    //         courseButton.style.borderColor = "black"
-    //         courseButton.style.color = "black"
-    //     }
-
-    //     else {
-    //         courseButton.style.borderColor = "blue"
-    //         courseButton.style.borderWidth = "2px"
-    //         courseButton.style.color = "blue"
-    //     }
-    //     // document.getElementById(course_ID).style.borderColor = "blue";
-    //     // document.getElementById(course_ID).style.color = "blue";
-    // }
 
 </script>

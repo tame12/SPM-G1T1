@@ -262,17 +262,18 @@ def getCoursesByLJ_ID(LJ_ID):
 
 @app.route('/LJ/addLJ', methods=["POST"])
 def createLJ():
+    # TODO : add course and skill to dbtable as well
     try:
         data = request.get_json()
         keys = set(data.keys())
-        check = set(["Role_ID","Staff_ID","LJ_Number"])
+        check = set(["Role_ID","Staff_ID","LJ_Number","LJ_Courses"])
 
         # check if the keys are correct
         if keys !=check:
-                return jsonify({
-                    "code": 400,
-                    "message": 'Fields must match "Role_ID","Staff_ID","LJ_Number" .'
-                }), 400
+            return jsonify({
+                "code": 400,
+                "message": 'Fields must match "Role_ID","Staff_ID","LJ_Number","LJ_Courses" .'
+            }), 400
         # check if the data are all inputted
         values = data.values()
         if "" in data.values():
@@ -289,17 +290,20 @@ def createLJ():
                     "message": "LJ already exists."
                 }), 400
 
+        # add to LJ table (who owns the learning journey)
         new_LJ = LJ(Staff_ID=data['Staff_ID'], Role_ID=data["Role_ID"], LJ_Number=data["LJ_Number"])
         db.session.add(new_LJ)
         db.session.commit()
+
+        # add courses tagged to newly created learning journey ID
+        # new_LJ_Course = LJSkillCourse(LJ_ID=new_LJ.LJ_ID, Course_ID=data["LJ_Courses"])
+        # db.session.add(new_LJ_Course)
+        # db.session.commit()
         return jsonify({
             "code": 201,
             "message": "Role created successfully.",
             "data": new_LJ.to_json()
         }), 201
-
-
-
 
     except Exception as e:
         print(e)

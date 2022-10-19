@@ -59,12 +59,12 @@ class LJSkillCourse(db.Model):
 
     def getCourseSkillByLJ_ID(lj_id):
         # Error Here
-        return db.session.query(LJSkillCourse, SkillCourse, Skill, Course).filter(
+        return db.session.query(LJSkillCourse, Skill, Course).filter(
             LJSkillCourse.LJ_ID == lj_id
         ) .filter(
-            LJSkillCourse.Skill_ID == SkillCourse.Skill_ID == Skill.Skill_ID
+            LJSkillCourse.Skill_ID == Skill.Skill_ID
         ) .filter (
-            LJSkillCourse.Course_ID == SkillCourse.Course_ID == Course.Course_ID
+            LJSkillCourse.Course_ID == Course.Course_ID
         ).all()
 
 
@@ -271,13 +271,26 @@ def createLJ():
 def getCourseAndSkillByLJ_ID(LJ_ID):
     try:
         skill_course = LJSkillCourse.getCourseSkillByLJ_ID(LJ_ID)
-        print([s.to_json() for s in skill_course])
+        print(skill_course)
+        data =[]
+        entries = []
+        for tple in skill_course:
+            entries = {}
+            counter = 0
+            for idx,entry in enumerate(tple):
+                counter +=1
+                if counter == 2:
+
+                    entries['Skill_ID'] = entry.to_json().get('Skill_ID')
+                    entries['Skill_Name'] = entry.to_json().get('Skill_Name')
+                if counter == 3:
+                    entries['Course_ID'] = entry.to_json().get('Course_ID')
+                    entries['Course_Name'] = entry.to_json().get('Course_Name')
+            data.append(entries)
+        print(data)
         return jsonify({
             "code": 201,
-            "data": {
-                "skill": [s.to_json() for s in skill_course['Skills']],
-                "course": [c.to_json() for c in skill_course['Courses']]
-            }
+            "data": data
         }), 201
     except Exception as e:
         print(e)

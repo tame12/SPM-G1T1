@@ -75,11 +75,16 @@ insert into `is212_G1T1`.`Skill_Role` (`Skill_ID`, `Role_ID`) values
 
 delete from `is212_G1T1`.`Learning_Journey`;
 insert into `is212_G1T1`.`Learning_Journey` (`LJ_ID`, `Staff_ID`, `Role_ID`, `LJ_Number`) values 
-(1,1,1,1);
+(1,1,1,1),
+(2,1,2,2),
+(3,1,3,3);
 
-delete from `is212_G1T1`.`Learning_Journey_Slkill`;
+delete from `is212_G1T1`.`Learning_Journey_Course`;
 insert into `is212_G1T1`.`Learning_Journey_Course` (`LJ_ID`, `Course_ID`,`Skill_ID`) values 
 (1,"IS-1",1),
-(1,"IS-2",2);
-
+(1,"IS-2",2),
+(2, "IS-3", 3),
+(2, "IS-4", 4),
+(3,"IS-5",5),
+(3,"IS-6",6);
 

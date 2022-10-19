@@ -1,0 +1,21 @@
+{
+    "log_output": "tc4_4.log",
+
+    "tc4_4_1": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_4_1",
+        "description": "HR deactivates skill successfully",
+        "skills": {
+            "10": "Business process management 1"
+        }
+    },
+
+    "tc4_4_2": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_4_2",
+        "description": "HR fail to deactivate a deactivated skill",
+        "skills": {
+            "11": "Prototyping 1"
+        }
+    }
+}

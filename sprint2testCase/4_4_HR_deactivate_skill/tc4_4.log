@@ -1,0 +1,23 @@
+New Test=====
+tc4_4_1
+1 tests
+HR deactivates skill successfully
+at time: 10/19/2022 04:22:25 PM
+
+10/19/2022 04:22:28 PM	INFO:	Start of test 1
+10/19/2022 04:22:28 PM	INFO:	verified skill is active
+10/19/2022 04:22:31 PM	INFO:	verified skill has been disabled
+10/19/2022 04:22:31 PM	INFO:	End of test 1
+Test End=====
+
+New Test=====
+tc4_4_2
+1 tests
+HR fail to deactivate a deactivated skill
+at time: 10/19/2022 04:22:33 PM
+
+10/19/2022 04:22:35 PM	INFO:	Start of test 1
+10/19/2022 04:22:36 PM	INFO:	verified skill is disabled; unable to find disable skill button
+10/19/2022 04:22:36 PM	INFO:	End of test 1
+Test End=====
+

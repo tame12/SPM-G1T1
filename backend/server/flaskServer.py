@@ -24,6 +24,34 @@ app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
 db = SQLAlchemy(app)
 CORS(app)
 
+
+class Staff(db.Model):
+    __tablename__ = 'staff'
+    staff_ID = db.Column(db.Integer, primary_key=True, nullable=False)
+    staff_FName = db.Column(db.String(50), nullable=False)
+    staff_LName = db.Column(db.String(50), nullable=False)
+    dept = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False)
+    position_ID = db.Column(db.Integer, nullable=False)
+
+    def to_json(self):
+        return {
+            'staff_ID': self.staff_ID,
+            'staff_FName': self.staff_FName,
+            'staff_LName': self.staff_LName,
+            'dept': self.dept,
+            'email': self.email,
+            'position_ID': self.position_ID
+        }
+    
+    def get_login_info(self):
+        return {
+            'staff_ID': self.staff_ID,
+            'email': self.email,
+            'position_ID': self.position_ID,
+            'staff_FName': self.staff_FName,
+        }
+
 # The Learning Journey Class
 class LJ(db.Model):
     __tablename__ = 'Learning_Journey'
@@ -172,6 +200,19 @@ class SkillCourse(db.Model):
                     'courses': [course.to_json() for course in SkillCourse.getAssignedCourseBySkillID(skill_id)]
                 })
         return output
+
+@app.route('/staff')
+def get_staff():
+    staff = Staff.query.all()
+    # return jsonify([s.to_json() for s in staff])
+    return jsonify([s.get_login_info() for s in staff])
+
+
+@app.route('/staff/<int:staff_ID>')
+def get_staff_by_id(staff_ID):
+    staff = Staff.query.filter_by(staff_ID=staff_ID).first()
+    return jsonify(staff.to_json())
+
 
 @app.route('/LJ')
 def getAllLJ():

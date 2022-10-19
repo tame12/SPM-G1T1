@@ -88,9 +88,11 @@ create table if not exists `is212_G1T1`.`Learning_Journey` (
 create table if not exists `is212_G1T1`.`Learning_Journey_Course` (
     `LJ_ID` int not null,
     `Course_ID` varchar(20) not null,
+    `Skill_ID` int not null,
     primary key (`LJ_ID`, `Course_ID`),
     foreign key (`LJ_ID`) references `is212_G1T1`.`Learning_Journey` (`LJ_ID`),
-    foreign key (`Course_ID`) references `is212_G1T1`.`Course` (`Course_ID`)
+    foreign key (`Course_ID`) references `is212_G1T1`.`Course` (`Course_ID`),
+    foreign key (`Skill_ID`) references `is212_G1T1`.`Skill` (`Skill_ID`)
 ) engine = InnoDB default charset = utf8;
 
 insert into `is212_G1T1`.`Position` (`Position_ID`, `Position_Name`) values 

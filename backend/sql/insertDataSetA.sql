@@ -2,6 +2,8 @@
 
 use `is212_G1T1`;
 
+SET SQL_SAFE_UPDATES = 0;
+
 delete from `is212_G1T1`.`Learning_Journey_Course`;
 delete from `is212_G1T1`.`Learning_Journey`;
 delete from `is212_G1T1`.`Skill_Role`;
@@ -56,8 +58,6 @@ insert into `is212_G1T1`.`Role` (`Role_ID`, `Role_Name`, `Role_Desc`, `Role_Is_A
 (2,"PM", "Project Manager", 1),
 (3,"BA", "Business Analyst", 0);
 
-
-
 delete from `is212_G1T1`.`Registration`;
 insert into `is212_G1T1`.`Registration` (`Reg_ID`, `Course_ID`, `Staff_ID`, `Reg_Status`, `Completion_Status`) values 
 (12345,"IS-1",4,"Registered","Completed"),
@@ -77,8 +77,9 @@ delete from `is212_G1T1`.`Learning_Journey`;
 insert into `is212_G1T1`.`Learning_Journey` (`LJ_ID`, `Staff_ID`, `Role_ID`, `LJ_Number`) values 
 (1,1,1,1);
 
-delete from `is212_G1T1`.`Learning_Journey_Course`;
-insert into `is212_G1T1`.`Learning_Journey_Course` (`LJ_ID`, `Course_ID`) values 
-(1,"IS-1");
+delete from `is212_G1T1`.`Learning_Journey_Slkill`;
+insert into `is212_G1T1`.`Learning_Journey_Course` (`LJ_ID`, `Course_ID`,`Skill_ID`) values 
+(1,"IS-1",1),
+(1,"IS-2",2);
 
 

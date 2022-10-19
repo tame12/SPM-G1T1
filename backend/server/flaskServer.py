@@ -39,21 +39,36 @@ class LJ(db.Model):
             'LJ_Number': self.LJ_Number
         }
 
-class LJCourse(db.Model):
+class LJSkillCourse(db.Model):
     __tablename__ = 'Learning_Journey_Course'
     LJ_ID = db.Column(db.Integer, db.ForeignKey('LJ.LJ_ID'), primary_key=True, nullable=False)
     Course_ID = db.Column(db.String(20), db.ForeignKey('course.Course_ID'), primary_key=True, nullable=False)
+    Skill_ID = db.Column(db.String(20),db.ForeignKey('skill.Skill_ID'), primary_key=False, nullable=False)
 
     def to_json(self):
         return {
             'LJ_ID': self.LJ_ID,
-            'Course_ID': self.Course_ID
+            'Course_ID': self.Course_ID,
+            'Skill_ID': self.Skill_ID
         }
 
     # this function is weird. 
     def getCoursesByLJ_ID(lj_id):
         # get role of the LJ -> find the skills related to that role -> find the courses related to that skill
-        return Course.query.join(LJCourse, Course.Course_ID == LJCourse.Course_ID).where(LJCourse.LJ_ID == lj_id).all()
+        return Course.query.join(LJSkillCourse, Course.Course_ID == LJSkillCourse.Course_ID).where(LJSkillCourse.LJ_ID == lj_id).all()
+
+    def getCourseSkillByLJ_ID(lj_id):
+        # Error Here
+        return db.session.query(LJSkillCourse, SkillCourse, Skill, Course).filter(
+            LJSkillCourse.LJ_ID == lj_id
+        ) .filter(
+            LJSkillCourse.Skill_ID == SkillCourse.Skill_ID == Skill.Skill_ID
+        ) .filter (
+            LJSkillCourse.Course_ID == SkillCourse.Course_ID == Course.Course_ID
+        ).all()
+
+
+        
 
 class Role(db.Model):
     __tablename__ = 'role'
@@ -192,7 +207,7 @@ def getLJsbyStaffID(Staff_ID):
 @app.route('/LJ/get_courses_by_LJ_ID/<string:LJ_ID>')
 def getCoursesByLJ_ID(LJ_ID):
     try: 
-        courses = LJCourse.getCoursesByLJ_ID(LJ_ID)
+        courses = LJSkillCourse.getCoursesByLJ_ID(LJ_ID)
         return jsonify({
             "code": 201,
             "data": [c.to_json() for c in courses]
@@ -252,8 +267,25 @@ def createLJ():
             "message": "Unable to create new LJ. Error message: " + str(e)
         }), 500
     
-# @app.route('/LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>', methods=["GET"])
-# def getCourseAndSkillByLJ_ID(LJ_ID):
+@app.route('/LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>', methods=["GET"])
+def getCourseAndSkillByLJ_ID(LJ_ID):
+    try:
+        skill_course = LJSkillCourse.getCourseSkillByLJ_ID(LJ_ID)
+        print([s.to_json() for s in skill_course])
+        return jsonify({
+            "code": 201,
+            "data": {
+                "skill": [s.to_json() for s in skill_course['Skills']],
+                "course": [c.to_json() for c in skill_course['Courses']]
+            }
+        }), 201
+    except Exception as e:
+        print(e)
+        return jsonify({
+            "code": 500,
+            "message": "Unable to create new LJ. Error message: " + str(e)
+        }), 500
+
 
 
 @app.route('/role')

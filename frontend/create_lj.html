@@ -71,7 +71,7 @@ $(function () {
     //display role
     var role_name = localStorage.getItem("role_name");
     var role_id = localStorage.getItem("role_ID");
-    localStorage.setItem("rolesSelected", JSON.stringify([]));
+    localStorage.setItem("rolesSelected", JSON.stringify({}));
     console.log(role_name, role_id);
 
     axios
@@ -171,18 +171,16 @@ function courseButtonSelected(e) {
     ids = e.id
     id = ids.split(" ")[1]
     skill_ID = ids.split(" ")[0]
-    courseButton = document.getElementById(id)
-    
-    rolesSelected= {}
+
     // if there are items within the local storage, then get the items
-    if (localStorage.getItem("rolesSelected") !== null){
-        rolesSelected = JSON.parse(localStorage.getItem("rolesSelected"))
-    }
+    rolesSelected = JSON.parse(localStorage.getItem("rolesSelected"))
+
     // Skill ID : Course ID 
-    rolesSelected['${skill_ID}'] = id
+    rolesSelected[skill_ID] = id
+    console.log(rolesSelected)
     localStorage.setItem("rolesSelected",JSON.stringify(rolesSelected))
-    console.log(localStorage.getItem('rolesSelected')[skill_ID])
-    console.log(id)
+    // console.log(localStorage.getItem('rolesSelected')[skill_ID])
+    // console.log(id)
     // console.log("updatedSelectedRoles: ", rolesSelectedStorage)
     // if (rolesSelectedStorage.includes(id)) {
     //     console.log("id is in rolesSelectedStorage")
@@ -211,9 +209,9 @@ function createLearningJourney(){
     else{
         courses = []
         skills = []
-        for (i=0;i<rolesSelectedStorage.length;i++){
-            courses.push(rolesSelectedStorage[i]["Course_ID"])
-            skills.push(rolesSelectedStorage[i]["Skill_ID"])
+        for (key in rolesSelectedStorage){
+            courses.push(rolesSelectedStorage[key])
+            skills.push(key)
         }
         console.log(courses, skills)
         axios.post(
@@ -225,7 +223,12 @@ function createLearningJourney(){
                 "LJ_Courses": courses,
                 "LJ_Skills": skills
             }
-        )
+        ).then(response=>{
+            console.log(response.data.code)
+            if(response.data.code == 201){
+                window.location.href = "view_lj.html"
+            }
+        })
     }
 
     function getCookie(name) {

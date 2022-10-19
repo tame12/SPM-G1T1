@@ -119,20 +119,24 @@
             console.log(response)
             if (response.data.code == 201){
                 SkillCourse = response.data.data
-                html = ``
+                html = `<div class="container text-left">`
                 for (i =0; i< SkillCourse.length; i++){
                     dict = SkillCourse[i]
                     html += `
-                    <button class="button-grey">
-                        ${dict['Skill_Name']}
-                    </button> 
-                    fulfils
-                    <button class="button-grey">
-                        ${dict['Course_Name']}
-                    </button> 
-                    <br>
+                    <div class="row">
+                        <div class = "col-3 border">
+                            ${dict["Course_Name"]}
+                        </div>
+                        <div class = "col-3 border">
+                            fulfils
+                        </div>
+                        <div class="col-3 border">
+                            ${dict["Skill_Name"]}
+                        </div>
+                    </div>
                     `
                 }
+                html+="</div>"
                 $("#Skill_"+e.id).html(html)
 
             }

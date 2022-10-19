@@ -50,13 +50,13 @@
         <h3>Learning Journeys in Progress</h3>
         <hr>
         <!-- Create Skill Modal // to be placed in vue template along with other modal -->
-        <div id="RoleResults" class="container accordian">
+        <div class="accordion accordion-flush" id="RoleResults">
 
-        </div>
         <!-- <div class="gradient-box d-flex justify-content-between">
             <p class="my-auto">Software Engineering</p>
             <h4><span class="badge bg-secondary">New</span></h4>
         </div> -->
+        </div>
     </div>
 </body>
 
@@ -93,32 +93,19 @@
                     html= ``;
                     for (i = 0; i < response.data.data.length; i++){
                         rid = response.data.data[i].Role_ID
-                        // html += `
-                        // <div class="accordian-item">
-                        //     <div id="Role_${rid}_header" class="accordian-header">
-                        //         <div class="accordian-button collapsed gradient-box d-flex justify-content-between" data-bs-toggle="collapse" data-bs-target="#reveal_skill_for_role${rid}" aria-expanded="true" aria-controls="reveal_skill_for_role${rid}" type="button">
-                        //             ${response.data.role_data[rid-1]["Role_Desc"]}
-                        //             <div id="reveal_skill_for_role${rid}" class="accordion-collapse collapse" aria-labelledby="Role_${rid}_header">
-                        //                 <div class="accordian-body">
-                        //                     Hello
-                        //                 </div>
-                        //             </div>
-                        //         </div>
-                        //     </div>
-                        // </div>`
-                        html += `
-                        <div class="accordion-item">
-                            <div id="Role_${rid}_header" class="accordian-header">
-                                <div id="role_${rid}"class="accordion-button gradient-box d-flex justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse${rid}" aria-expanded="true" aria-controls="panelsStayOpen-collapse${rid}" onclick="populateSkillModal(this)">
+                        html+=
+                        `
+                            <div class="accordion-item border-box">                                
+                                <button class="accordion-button collapsed gradient-box text-black m-0 border border-0 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne${rid}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne${rid}" id="${rid}" onclick="populateSkillModal(this)">
                                     ${response.data.role_data[rid-1]["Role_Desc"]}
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapseOne${rid}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne${rid}">
+                                <div class="accordion-body">
+                                    <div id=Skill_${rid}></div>
                                 </div>
                             </div>
-                            <div id="panelsStayOpen-collapse${rid}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading${rid}">
-                                <div class="accordion-body" id="skill_for_role_${rid}" >
-                                
                             </div>
-                        </div>
-
                         `
                     }
                     $("#RoleResults").append(html)
@@ -132,8 +119,29 @@
     }
 
     function populateSkillModal(e){
-        rid = e.id.split("_")[1]
-        console.log(rid)
-        axios.get("http://localhost:456/")
+        console.log(e.id)
+        axios.get("http://localhost:456/LJ/getCourseAndSkillByLJ_ID/" + e.id).then(response=>{
+            console.log(response)
+            if (response.data.code == 201){
+                SkillCourse = response.data.data
+                html = ``
+                for (i =0; i< SkillCourse.length; i++){
+                    dict = SkillCourse[i]
+                    html += `
+                    <button class="button-grey">
+                        ${dict['Course_Name']}
+                    </button> 
+                    fulfils
+                    <button class="button-grey">
+                        ${dict['Skill_Name']}
+                    </button> 
+                    <br>
+                    `
+                }
+                $("#Skill_"+rid).html(html)
+                console.log(html)
+
+            }
+        })
     }
 </script>

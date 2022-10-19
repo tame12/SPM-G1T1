@@ -157,6 +157,14 @@ navbar a {
   border: 1px solid blue;
 }
 
+.button-grey{
+  background-color:#E8E8E8; 
+  border-radius: 8px; 
+  border: 1px solid; 
+  margin: 4px 2px; 
+  font-size: 17px;
+}
+
 /* .recordValue{
   CourseSelected = {course.Course_ID}
 } */

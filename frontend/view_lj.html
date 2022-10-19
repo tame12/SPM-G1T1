@@ -50,12 +50,8 @@
         <h3>Learning Journeys in Progress</h3>
         <hr>
         <!-- Create Skill Modal // to be placed in vue template along with other modal -->
-        <div class="accordion accordion-flush" id="RoleResults">
+        <div class="accordion accordion-flush pb-3 d-flex flex-column gap-3" id="RoleResults">
 
-        <!-- <div class="gradient-box d-flex justify-content-between">
-            <p class="my-auto">Software Engineering</p>
-            <h4><span class="badge bg-secondary">New</span></h4>
-        </div> -->
         </div>
     </div>
 </body>
@@ -99,12 +95,11 @@
                                 <button class="accordion-button collapsed gradient-box text-black m-0 border border-0 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne${rid}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne${rid}" id="${rid}" onclick="populateSkillModal(this)">
                                     ${response.data.role_data[rid-1]["Role_Desc"]}
                                 </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseOne${rid}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne${rid}">
-                                <div class="accordion-body">
-                                    <div id=Skill_${rid}></div>
+                                </h2>
+                                <div id="panelsStayOpen-collapseOne${rid}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne${rid}">
+                                    <div class="accordion-body" id="Skill_${rid}">
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         `
                     }
@@ -129,17 +124,16 @@
                     dict = SkillCourse[i]
                     html += `
                     <button class="button-grey">
-                        ${dict['Course_Name']}
+                        ${dict['Skill_Name']}
                     </button> 
                     fulfils
                     <button class="button-grey">
-                        ${dict['Skill_Name']}
+                        ${dict['Course_Name']}
                     </button> 
                     <br>
                     `
                 }
-                $("#Skill_"+rid).html(html)
-                console.log(html)
+                $("#Skill_"+e.id).html(html)
 
             }
         })

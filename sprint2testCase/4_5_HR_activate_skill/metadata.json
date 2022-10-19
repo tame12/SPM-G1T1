@@ -1,0 +1,21 @@
+{
+    "log_output": "tc4_5.log",
+
+    "tc4_5_1": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_5_1",
+        "description": "HR activates disabled skill successfully",
+        "skills": {
+            "11": "Prototyping 1"
+        }
+    },
+
+    "tc4_5_2": {
+        "url": "http://127.0.0.1:5500/frontend/manage_skills.html",
+        "name": "tc4_5_2",
+        "description": "HR fail to activate an active skill",
+        "skills": {
+            "10": "Business process management 1"
+        }
+    }
+}

@@ -1,0 +1,23 @@
+New Test=====
+tc4_5_1
+1 tests
+HR activates disabled skill successfully
+at time: 10/19/2022 04:29:40 PM
+
+10/19/2022 04:29:42 PM	INFO:	Start of test 1
+10/19/2022 04:29:42 PM	INFO:	verified skill is disabled
+10/19/2022 04:29:45 PM	INFO:	verified skill has been activated
+10/19/2022 04:29:45 PM	INFO:	End of test 1
+Test End=====
+
+New Test=====
+tc4_5_2
+1 tests
+HR fail to activate an active skill
+at time: 10/19/2022 04:29:47 PM
+
+10/19/2022 04:29:50 PM	INFO:	Start of test 1
+10/19/2022 04:29:50 PM	INFO:	verified skill is activated; unable to find activate skill button
+10/19/2022 04:29:50 PM	INFO:	End of test 1
+Test End=====
+

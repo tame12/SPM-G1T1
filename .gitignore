@@ -159,3 +159,4 @@ backend/.env
 !/sprint1testCase/4_3_HR_update_skill/tc4_3.log
 
 !/sprint2testCase/4_4_HR_deactivate_skill/tc4_4.log
+!/sprint2testCase/4_5_HR_activate_skill/tc4_5.log

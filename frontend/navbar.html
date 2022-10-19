@@ -29,7 +29,7 @@
     user_logo.html(all_cookies.username.charAt(0).toUpperCase())
     username.html(all_cookies.username)
 
-    if (all_cookies.username == 'User' || all_cookies.username == 'Manager') {
+    if (all_cookies.position != '1') { // not admin
         $('#manage_roles').remove()
         $('#manage_skills').remove()
         // $('#manage_courses').remove()

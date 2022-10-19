@@ -1,4 +1,5 @@
 # import json
+from time import sleep
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -66,37 +67,6 @@ class LJ(db.Model):
             'Role_ID': self.Role_ID,
             'LJ_Number': self.LJ_Number
         }
-
-class LJSkillCourse(db.Model):
-    __tablename__ = 'Learning_Journey_Course'
-    LJ_ID = db.Column(db.Integer, db.ForeignKey('LJ.LJ_ID'), primary_key=True, nullable=False)
-    Course_ID = db.Column(db.String(20), db.ForeignKey('course.Course_ID'), primary_key=True, nullable=False)
-    Skill_ID = db.Column(db.String(20),db.ForeignKey('skill.Skill_ID'), primary_key=False, nullable=False)
-
-    def to_json(self):
-        return {
-            'LJ_ID': self.LJ_ID,
-            'Course_ID': self.Course_ID,
-            'Skill_ID': self.Skill_ID
-        }
-
-    # this function is weird. 
-    def getCoursesByLJ_ID(lj_id):
-        # get role of the LJ -> find the skills related to that role -> find the courses related to that skill
-        return Course.query.join(LJSkillCourse, Course.Course_ID == LJSkillCourse.Course_ID).where(LJSkillCourse.LJ_ID == lj_id).all()
-
-    def getCourseSkillByLJ_ID(lj_id):
-        # Error Here
-        return db.session.query(LJSkillCourse, Skill, Course).filter(
-            LJSkillCourse.LJ_ID == lj_id
-        ) .filter(
-            LJSkillCourse.Skill_ID == Skill.Skill_ID
-        ) .filter (
-            LJSkillCourse.Course_ID == Course.Course_ID
-        ).all()
-
-
-        
 
 class Role(db.Model):
     __tablename__ = 'role'
@@ -201,6 +171,34 @@ class SkillCourse(db.Model):
                 })
         return output
 
+class LJSkillCourse(db.Model):
+    __tablename__ = 'Learning_Journey_Course'
+    LJ_ID = db.Column(db.Integer, db.ForeignKey(LJ.LJ_ID), primary_key=True, nullable=False)
+    Course_ID = db.Column(db.String(20), db.ForeignKey(Course.Course_ID), primary_key=True, nullable=False)
+    Skill_ID = db.Column(db.String(20),db.ForeignKey(Skill.Skill_ID), primary_key=False, nullable=False)
+
+    def to_json(self):
+        return {
+            'LJ_ID': self.LJ_ID,
+            'Course_ID': self.Course_ID,
+            'Skill_ID': self.Skill_ID
+        }
+
+    # this function is weird. 
+    def getCoursesByLJ_ID(lj_id):
+        # get role of the LJ -> find the skills related to that role -> find the courses related to that skill
+        return Course.query.join(LJSkillCourse, Course.Course_ID == LJSkillCourse.Course_ID).where(LJSkillCourse.LJ_ID == lj_id).all()
+
+    def getCourseSkillByLJ_ID(lj_id):
+        # Error Here
+        return db.session.query(LJSkillCourse, Skill, Course).filter(
+            LJSkillCourse.LJ_ID == lj_id
+        ) .filter(
+            LJSkillCourse.Skill_ID == Skill.Skill_ID
+        ) .filter (
+            LJSkillCourse.Course_ID == Course.Course_ID
+        ).all()
+
 @app.route('/staff')
 def get_staff():
     staff = Staff.query.all()
@@ -262,11 +260,10 @@ def getCoursesByLJ_ID(LJ_ID):
 
 @app.route('/LJ/addLJ', methods=["POST"])
 def createLJ():
-    # TODO : add course and skill to dbtable as well
     try:
         data = request.get_json()
         keys = set(data.keys())
-        check = set(["Role_ID","Staff_ID","LJ_Number","LJ_Courses"])
+        check = set(["Role_ID","Staff_ID","LJ_Number","LJ_Courses","LJ_Skills"])
 
         # check if the keys are correct
         if keys !=check:
@@ -275,7 +272,6 @@ def createLJ():
                 "message": 'Fields must match "Role_ID","Staff_ID","LJ_Number","LJ_Courses" .'
             }), 400
         # check if the data are all inputted
-        values = data.values()
         if "" in data.values():
             return jsonify({
                     "code": 400,
@@ -294,6 +290,13 @@ def createLJ():
         new_LJ = LJ(Staff_ID=data['Staff_ID'], Role_ID=data["Role_ID"], LJ_Number=data["LJ_Number"])
         db.session.add(new_LJ)
         db.session.commit()
+        print(new_LJ.LJ_ID)
+        # add LJ to the LJSkillCourse table
+        for i in range(len(data['LJ_Skills'])):
+            new_LJSkillCourse = LJSkillCourse(LJ_ID=new_LJ.LJ_ID, Course_ID=data['LJ_Courses'][i], Skill_ID=data['LJ_Skills'][i])
+            db.session.add(new_LJSkillCourse)
+        db.session.commit()
+
 
         # add courses tagged to newly created learning journey ID
         # new_LJ_Course = LJSkillCourse(LJ_ID=new_LJ.LJ_ID, Course_ID=data["LJ_Courses"])

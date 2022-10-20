@@ -65,18 +65,23 @@
 <script>
     $(function () {
         $("#navigation").load("navbar.html");
-        allCookies = document.cookie
-        getAllLJ()
+        // allCookies = document.cookie
+        var all_cookies = document.cookie.split('; ')
+            .map(cookie => cookie.split('='))
+        all_cookies = Object.fromEntries(all_cookies);
+        // console.log(all_cookies)
+        staff_id = all_cookies.staff_ID
+        getAllLJ(staff_id)
 
         // need to make this look better?
-        skill_is_active = getCookie("targetIsActive") === "true" ? true : false
-        toggle_button = `<button type="button" ${skill_is_active ? 'checked ' : ''} class="${skill_is_active ? 'btn-success' : 'btn-danger'} btn">${skill_is_active ? "Activated" : "Deactivated"}</button>`
-        disabled_message = skill_is_active ? `` : `<span style="float:right">skill cannot be assigned/ unassigned to course/ role while deactivated</span>`
-        $("#activeStatus").html(toggle_button + disabled_message)
-        if (!skill_is_active) {
-            $("#assignNewCourse").prop("disabled", true)
-            $("#assignNewRole").prop("disabled", true)
-        }
+        // skill_is_active = getCookie("targetIsActive") === "true" ? true : false
+        // toggle_button = `<button type="button" ${skill_is_active ? 'checked ' : ''} class="${skill_is_active ? 'btn-success' : 'btn-danger'} btn">${skill_is_active ? "Activated" : "Deactivated"}</button>`
+        // disabled_message = skill_is_active ? `` : `<span style="float:right">skill cannot be assigned/ unassigned to course/ role while deactivated</span>`
+        // $("#activeStatus").html(toggle_button + disabled_message)
+        // if (!skill_is_active) {
+        //     $("#assignNewCourse").prop("disabled", true)
+        //     $("#assignNewRole").prop("disabled", true)
+        // }
 
     });
 
@@ -85,8 +90,7 @@
     }
 
     function getAllLJ(id) {
-        // Defaults to a value of 1. However, I will need to retrieve ID of the user from somewhere.
-        axios.get("http://localhost:456/LJ/" + 1).then(
+        axios.get("http://localhost:456/LJ/" + id).then(
             function (response) {
                 // console.log(response.data.data)
                 if (response.data.code == 201) {
@@ -98,7 +102,7 @@
                         html +=
                             `
                             <div class="accordion-item border-box">
-                                <button class="accordion-button collapsed gradient-box text-black m-0 border border-0 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne${rid}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne${rid}" data-ljid="${rid}" onclick="populateSkillModal(this)">
+                                <button class="accordion-button collapsed gradient-box text-black m-0 border border-0 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne${rid}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne${rid}" data-ljid="${ljid}" onclick="populateSkillModal(this)">
                                     <div class="w-100 d-flex justify-content-between pe-4">
                                         <p class="m-0">${response.data.role_data[rid - 1]["Role_Desc"]}</p>
                                         <img role="button" src="images/delete.svg" alt="" data-ljid="${ljid}" onclick="event.stopPropagation(); delete_lj(this)">
@@ -106,7 +110,7 @@
                                     </button>
                                 </h2>
                                 <div id="panelsStayOpen-collapseOne${rid}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne${rid}">
-                                    <div class="accordion-body" id="Skill_${rid}">
+                                    <div class="accordion-body" id="Skill_${ljid}">
                                     </div>
                                 </div>
                             </div>
@@ -116,7 +120,7 @@
                         html = 'You have no learning journeys.'
                     }
                     $("#RoleResults").html(html)
-                    console.log("end")
+                    // console.log("end")
                 }
                 else {
                     console.log("Error: " + response.data.message)
@@ -129,7 +133,7 @@
         ljid = $(e).data("ljid")
 
         axios.get("http://localhost:456/LJ/getCourseAndSkillByLJ_ID/" + ljid).then(response => {
-            console.log(response)
+            // console.log(ljid, response.data.data)
             if (response.data.code == 201) {
                 SkillCourse = response.data.data
                 html = `<div class="container text-left">
@@ -168,6 +172,7 @@
                     `
                 }
                 html += "</div>"
+                // console.log(html)
                 $("#Skill_" + ljid).html(html)
 
             }
@@ -188,7 +193,9 @@
                     $("#error_success_bar").html(`
                     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
                     `);
-                    getAllLJ();
+                    // getAllLJ();
+                    getAllLJ(staff_id)
+
                 }
             })
             .catch(function (error) {
@@ -209,7 +216,7 @@
             });
     }
 
-    function delete_course(e){
+    function delete_course(e) {
         // console.log('deleted_c')
         cid = $(e).data("cid")
         ljid = $(e).data("ljid")

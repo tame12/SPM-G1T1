@@ -133,7 +133,7 @@
                     html += `
                     <div id="${response[i].Skill_ID}" name="${response[i].Skill_Name}" class="gradient-box d-flex justify-content-between" onclick="viewRoles(this)" role="button" isActive="${skill_is_active}">
                         <p class="my-auto">${response[i].Skill_Name}</p>
-                        <div class="my-auto d-flex gap-3">
+                        <div class="my-auto d-flex gap-3 align-items-center">
                             <!-- Edit skill modal button -->
                             <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal" onclick="event.stopPropagation();"
                                 data-bs-target="#editModalPopUp${response[i].Skill_ID}">

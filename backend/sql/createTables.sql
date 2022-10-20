@@ -81,7 +81,7 @@ create table if not exists `is212_G1T1`.`Learning_Journey` (
     `Role_ID` int not null,
     `LJ_Number` int not null, -- backend need to auto increment LJ_Number within each staff
     primary key (`LJ_ID`),
-    foreign key (`Staff_ID`) references `is212_G1T1`.`Staff` (`Staff_ID`),
+    foreign key (`Staff_ID`) references `is212_G1T1`.`Staff` (`Staff_ID`), 
     foreign key (`Role_ID`) references `is212_G1T1`.`Role` (`Role_ID`)
 ) engine = InnoDB default charset = utf8;
 

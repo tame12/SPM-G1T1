@@ -38,17 +38,18 @@
 
     <!-- Page starts -->
     <div class="container">
-        <h1 id="SkillName">My Learning Journeys 🏠</h1>
         <div id="activeStatus"></div>
         <!-- Create Skill Modal button -->
-        <div class="d-flex flex-row-reverse">
+        <div class="d-flex justify-content-between">
+            <h1 id="SkillName">My Learning Journeys 🏠</h1>
+
             <button class="button button-primary" id="assignNewRole" data-bs-toggle="modal"
                 data-bs-target="#exampleModal" onclick="createLearningJourney()">
                 <!-- To be completed -->
                 Create new Learning Journey
             </button>
         </div>
-        <h3>Learning Journeys in Progress</h3>
+        <!-- <h3>Learning Journeys in Progress</h3> -->
         <hr>
         <!-- Create Skill Modal // to be placed in vue template along with other modal -->
         <div class="accordion accordion-flush pb-3 d-flex flex-column gap-3" id="RoleResults"></div>
@@ -97,7 +98,7 @@
                         html +=
                             `
                             <div class="accordion-item border-box">
-                                <button class="accordion-button collapsed gradient-box text-black m-0 border border-0 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne${rid}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne${rid}" id="${rid}" onclick="populateSkillModal(this)">
+                                <button class="accordion-button collapsed gradient-box text-black m-0 border border-0 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne${rid}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne${rid}" data-ljid="${rid}" onclick="populateSkillModal(this)">
                                     <div class="w-100 d-flex justify-content-between pe-4">
                                         <p class="m-0">${response.data.role_data[rid - 1]["Role_Desc"]}</p>
                                         <img role="button" src="images/delete.svg" alt="" data-ljid="${ljid}" onclick="event.stopPropagation(); delete_lj(this)">
@@ -125,20 +126,39 @@
     }
 
     function populateSkillModal(e) {
-        console.log(e.id)
-        axios.get("http://localhost:456/LJ/getCourseAndSkillByLJ_ID/" + e.id).then(response => {
+        ljid = $(e).data("ljid")
+
+        axios.get("http://localhost:456/LJ/getCourseAndSkillByLJ_ID/" + ljid).then(response => {
             console.log(response)
             if (response.data.code == 201) {
                 SkillCourse = response.data.data
-                html = `<div class="container text-left">`
+                html = `<div class="container text-left">
+                            <div class="row">
+                                <div class = "col-1 fw-bold text-end">
+                                    Delete course
+                                </div>
+                                <div class = "col-3 border fw-bold">
+                                    Course
+                                </div>
+                                <div class = "col-1 border fw-bold">
+                                    fulfils
+                                </div>
+                                <div class = "col-3 border fw-bold">
+                                    Skill
+                                </div>
+                            </div>
+                    `
                 for (i = 0; i < SkillCourse.length; i++) {
                     dict = SkillCourse[i]
                     html += `
                     <div class="row">
+                        <div class = "col-1 d-flex justify-content-end align-items-center">
+                            <img role="button" src="images/delete.svg" alt="" data-cid="${dict["Course_ID"]}" data-ljid="${ljid}" onclick="delete_course(this)">
+                        </div>
                         <div class = "col-3 border">
                             ${dict["Course_Name"]}
                         </div>
-                        <div class = "col-3 border">
+                        <div class = "col-1 border">
                             fulfils
                         </div>
                         <div class="col-3 border">
@@ -148,7 +168,7 @@
                     `
                 }
                 html += "</div>"
-                $("#Skill_" + e.id).html(html)
+                $("#Skill_" + ljid).html(html)
 
             }
         })
@@ -187,7 +207,43 @@
                 $('#error_success_bar')[0].scrollIntoView(false);
 
             });
+    }
 
+    function delete_course(e){
+        // console.log('deleted_c')
+        cid = $(e).data("cid")
+        ljid = $(e).data("ljid")
+        // console.log(ljid)
+        // console.log(cid)
+
+        axios.get('http://localhost:456/course/delete/' + cid + '/' + ljid)
+            .then(function (response) {
+                // handle success
+                console.log(response.data.code);
+
+                if (response.data.code == "201") { //success
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                    `);
+                    populateSkillModal(e);
+                }
+            })
+            .catch(function (error) {
+                // handle error
+                // console.log(error);
+
+                if (error.response.data.code == "400") {
+                    console.log("error");
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
+                    `);
+                }
+            })
+            .then(function () {
+                // always executed
+                $('#error_success_bar')[0].scrollIntoView(false);
+
+            });
 
     }
 </script>

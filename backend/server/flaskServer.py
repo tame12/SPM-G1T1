@@ -1,4 +1,5 @@
 # import json
+from calendar import c
 from time import sleep
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, jsonify
@@ -1027,6 +1028,32 @@ def deleteLJ(lj_id):
         return jsonify({
             "code": 400,
             "message": "Unable to delete LJ from database. Error message: " + str(e)
+        }), 400
+
+@app.route('/course/delete/<string:course_id>/<int:lj_id>')
+def deleteCourse(course_id, lj_id):
+    try:
+        course_count = LJSkillCourse.query.filter_by(LJ_ID=lj_id).count()
+        # print(course_count)
+        if course_count == 1:
+            return jsonify({
+                "code": 400,
+                "message": "Cannot delete course. At least one course is required."
+            }), 400
+        
+        # course = LJSkillCourse.query.filter_by(Course_ID=course_id).first()
+        course = LJSkillCourse.query.filter_by(LJ_ID=lj_id, Course_ID=course_id).first()
+        if course:
+            db.session.delete(course)
+            db.session.commit()
+            return jsonify({
+                "code": 201,
+                "message": "Course deleted successfully."
+            }), 201
+    except Exception as e:
+        return jsonify({
+            "code": 400,
+            "message": "Unable to delete course from database. Error message: " + str(e)
         }), 400
 
 

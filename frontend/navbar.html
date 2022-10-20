@@ -30,6 +30,14 @@
     username.html(all_cookies.username)
 
     if (all_cookies.position != '1') { // not admin
+
+        // non admin will be rerouted
+        path = window.location.pathname
+        if (path.includes('manage_roles') || path.includes('manage_skills')) {
+            window.location.href = 'browse_roles.html'
+            // window.location.href = 'index.html'
+        }
+
         $('#manage_roles').remove()
         $('#manage_skills').remove()
         // $('#manage_courses').remove()

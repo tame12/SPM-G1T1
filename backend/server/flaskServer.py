@@ -20,7 +20,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@localhost:3306/is212_g1t1'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
-                                        'pool_recycle': 280}
+                                           'pool_recycle': 280}
 
 db = SQLAlchemy(app)
 CORS(app)
@@ -44,7 +44,7 @@ class Staff(db.Model):
             'email': self.email,
             'position_ID': self.position_ID
         }
-    
+
     def get_login_info(self):
         return {
             'staff_ID': self.staff_ID,
@@ -54,12 +54,15 @@ class Staff(db.Model):
         }
 
 # The Learning Journey Class
+
+
 class LJ(db.Model):
     __tablename__ = 'Learning_Journey'
     LJ_ID = db.Column(db.Integer, primary_key=True, nullable=False)
     Staff_ID = db.Column(db.Integer, nullable=False)
     Role_ID = db.Column(db.Integer, nullable=False)
     LJ_Number = db.Column(db.Integer, nullable=False)
+
     def to_json(self):
         return {
             'LJ_ID': self.LJ_ID,
@@ -67,6 +70,7 @@ class LJ(db.Model):
             'Role_ID': self.Role_ID,
             'LJ_Number': self.LJ_Number
         }
+
 
 class Role(db.Model):
     __tablename__ = 'role'
@@ -83,6 +87,7 @@ class Role(db.Model):
             'Role_Is_Active': self.Role_Is_Active
         }
 
+
 class Skill(db.Model):
     __tablename__ = 'skill'
     Skill_ID = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -95,6 +100,7 @@ class Skill(db.Model):
             'Skill_Name': self.Skill_Name,
             'Skill_Is_Active': self.Skill_Is_Active
         }
+
 
 class Course(db.Model):
     __tablename__ = 'course'
@@ -115,10 +121,13 @@ class Course(db.Model):
             'Course_Category': self.Course_Category
         }
 
+
 class SkillRole(db.Model):
     __tablename__ = 'skill_role'
-    Skill_ID = db.Column(db.Integer, db.ForeignKey('skill.Skill_ID'), primary_key=True, nullable=False)
-    Role_ID = db.Column(db.Integer, db.ForeignKey('role.Role_ID'), primary_key=True, nullable=False)
+    Skill_ID = db.Column(db.Integer, db.ForeignKey(
+        'skill.Skill_ID'), primary_key=True, nullable=False)
+    Role_ID = db.Column(db.Integer, db.ForeignKey(
+        'role.Role_ID'), primary_key=True, nullable=False)
 
     def to_json(self):
         return {
@@ -142,14 +151,17 @@ class SkillRole(db.Model):
                     'roles': [role.to_json() for role in SkillRole.getAssignedRoleBySkillID(skill_id)]
                 })
         return output
-    
+
     def getAssignedSkillByRoleID(role_id):
         return Skill.query.join(SkillRole, Skill.Skill_ID == SkillRole.Skill_ID).where(SkillRole.Role_ID == role_id).all()
 
+
 class SkillCourse(db.Model):
     __tablename__ = 'course_skill'
-    Skill_ID = db.Column(db.Integer, db.ForeignKey('skill.Skill_ID'), primary_key=True, nullable=False)
-    Course_ID = db.Column(db.String(20), db.ForeignKey('course.Course_ID'), primary_key=True, nullable=False)
+    Skill_ID = db.Column(db.Integer, db.ForeignKey(
+        'skill.Skill_ID'), primary_key=True, nullable=False)
+    Course_ID = db.Column(db.String(20), db.ForeignKey(
+        'course.Course_ID'), primary_key=True, nullable=False)
 
     def to_json(self):
         return {
@@ -171,11 +183,15 @@ class SkillCourse(db.Model):
                 })
         return output
 
+
 class LJSkillCourse(db.Model):
     __tablename__ = 'Learning_Journey_Course'
-    LJ_ID = db.Column(db.Integer, db.ForeignKey(LJ.LJ_ID), primary_key=True, nullable=False)
-    Course_ID = db.Column(db.String(20), db.ForeignKey(Course.Course_ID), primary_key=True, nullable=False)
-    Skill_ID = db.Column(db.String(20),db.ForeignKey(Skill.Skill_ID), primary_key=False, nullable=False)
+    LJ_ID = db.Column(db.Integer, db.ForeignKey(LJ.LJ_ID),
+                      primary_key=True, nullable=False)
+    Course_ID = db.Column(db.String(20), db.ForeignKey(
+        Course.Course_ID), primary_key=True, nullable=False)
+    Skill_ID = db.Column(db.String(20), db.ForeignKey(
+        Skill.Skill_ID), primary_key=False, nullable=False)
 
     def to_json(self):
         return {
@@ -184,7 +200,7 @@ class LJSkillCourse(db.Model):
             'Skill_ID': self.Skill_ID
         }
 
-    # this function is weird. 
+    # this function is weird.
     def getCoursesByLJ_ID(lj_id):
         # get role of the LJ -> find the skills related to that role -> find the courses related to that skill
         return Course.query.join(LJSkillCourse, Course.Course_ID == LJSkillCourse.Course_ID).where(LJSkillCourse.LJ_ID == lj_id).all()
@@ -195,9 +211,10 @@ class LJSkillCourse(db.Model):
             LJSkillCourse.LJ_ID == lj_id
         ) .filter(
             LJSkillCourse.Skill_ID == Skill.Skill_ID
-        ) .filter (
+        ) .filter(
             LJSkillCourse.Course_ID == Course.Course_ID
         ).all()
+
 
 @app.route('/staff')
 def get_staff():
@@ -220,32 +237,35 @@ def getAllLJ():
             "code": 201,
             "data": [lj.to_json() for lj in ljs]
         }), 201
-    except Exception: 
+    except Exception:
         return jsonify({
             "code": 500,
             "message": "Unable to get role from database"
         }), 500
 
 # For this, I am unable to validate whether a staff has a LJ.
+
+
 @app.route('/LJ/<string:Staff_ID>')
 def getLJsbyStaffID(Staff_ID):
     try:
         ljs = LJ.query.filter_by(Staff_ID=Staff_ID)
         roles = Role.query.all()
         return jsonify({
-            "code":201,
+            "code": 201,
             "data": [lj.to_json() for lj in ljs],
             "role_data": [role.to_json() for role in roles]
         }), 201
-    except Exception: 
+    except Exception:
         return jsonify({
             "code": 500,
             "message": "Unable to get LJ from database"
         })
-    
+
+
 @app.route('/LJ/get_courses_by_LJ_ID/<string:LJ_ID>')
 def getCoursesByLJ_ID(LJ_ID):
-    try: 
+    try:
         courses = LJSkillCourse.getCoursesByLJ_ID(LJ_ID)
         return jsonify({
             "code": 201,
@@ -258,15 +278,17 @@ def getCoursesByLJ_ID(LJ_ID):
             "message": "Unable to get courses from database."
         }), 500
 
+
 @app.route('/LJ/addLJ', methods=["POST"])
 def createLJ():
     try:
         data = request.get_json()
         keys = set(data.keys())
-        check = set(["Role_ID","Staff_ID","LJ_Number","LJ_Courses","LJ_Skills"])
+        check = set(["Role_ID", "Staff_ID", "LJ_Number",
+                    "LJ_Courses", "LJ_Skills"])
 
         # check if the keys are correct
-        if keys !=check:
+        if keys != check:
             return jsonify({
                 "code": 400,
                 "message": 'Fields must match "Role_ID","Staff_ID","LJ_Number","LJ_Courses" .'
@@ -274,29 +296,31 @@ def createLJ():
         # check if the data are all inputted
         if "" in data.values():
             return jsonify({
-                    "code": 400,
-                    "message": 'Fields cannot be empty'
-                }), 400 
+                "code": 400,
+                "message": 'Fields cannot be empty'
+            }), 400
 
-        # check if this user already has an LJ with the same role 
-        lj = LJ.query.filter_by(Role_ID=data['Role_ID'],Staff_ID=data['Staff_ID']).first()
+        # check if this user already has an LJ with the same role
+        lj = LJ.query.filter_by(
+            Role_ID=data['Role_ID'], Staff_ID=data['Staff_ID']).first()
         if lj:
             return jsonify({
-                    "code": 400,
-                    "message": "LJ already exists."
-                }), 400
+                "code": 400,
+                "message": "LJ already exists."
+            }), 400
 
         # add to LJ table (who owns the learning journey)
-        new_LJ = LJ(Staff_ID=data['Staff_ID'], Role_ID=data["Role_ID"], LJ_Number=data["LJ_Number"])
+        new_LJ = LJ(
+            Staff_ID=data['Staff_ID'], Role_ID=data["Role_ID"], LJ_Number=data["LJ_Number"])
         db.session.add(new_LJ)
         db.session.commit()
         print(new_LJ.LJ_ID)
         # add LJ to the LJSkillCourse table
         for i in range(len(data['LJ_Skills'])):
-            new_LJSkillCourse = LJSkillCourse(LJ_ID=new_LJ.LJ_ID, Course_ID=data['LJ_Courses'][i], Skill_ID=data['LJ_Skills'][i])
+            new_LJSkillCourse = LJSkillCourse(
+                LJ_ID=new_LJ.LJ_ID, Course_ID=data['LJ_Courses'][i], Skill_ID=data['LJ_Skills'][i])
             db.session.add(new_LJSkillCourse)
         db.session.commit()
-
 
         # add courses tagged to newly created learning journey ID
         # new_LJ_Course = LJSkillCourse(LJ_ID=new_LJ.LJ_ID, Course_ID=data["LJ_Courses"])
@@ -314,19 +338,20 @@ def createLJ():
             "code": 500,
             "message": "Unable to create new LJ. Error message: " + str(e)
         }), 500
-    
+
+
 @app.route('/LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>', methods=["GET"])
 def getCourseAndSkillByLJ_ID(LJ_ID):
     try:
         skill_course = LJSkillCourse.getCourseSkillByLJ_ID(LJ_ID)
         print(skill_course)
-        data =[]
+        data = []
         entries = []
         for tple in skill_course:
             entries = {}
             counter = 0
-            for idx,entry in enumerate(tple):
-                counter +=1
+            for idx, entry in enumerate(tple):
+                counter += 1
                 if counter == 2:
 
                     entries['Skill_ID'] = entry.to_json().get('Skill_ID')
@@ -348,15 +373,14 @@ def getCourseAndSkillByLJ_ID(LJ_ID):
         }), 500
 
 
-
 @app.route('/role')
 def getAllRole():
     try:
         role = Role.query.all()
         return jsonify({
-                "code": 201,
-                "data": [r.to_json() for r in role]
-            }), 201
+            "code": 201,
+            "data": [r.to_json() for r in role]
+        }), 201
     except Exception:
         return jsonify({
             "code": 500,
@@ -364,7 +388,9 @@ def getAllRole():
         }), 500
 
 # get role by role name
-@app.route('/role/search/<string:role_name>',methods=['GET'])
+
+
+@app.route('/role/search/<string:role_name>', methods=['GET'])
 def getRoleByName(role_name):
     try:
         role = Role.query.filter(Role.Role_Name.like(f'%{role_name}%')).all()
@@ -384,19 +410,21 @@ def getRoleByName(role_name):
             "message": "Unable to get role from database."
         }), 500
 
+
 @app.route('/course')
 def getAllCourse():
     try:
         course = Course.query.all()
         return jsonify({
-                "code": 201,
-                "data": [c.to_json() for c in course]
-            }), 201
+            "code": 201,
+            "data": [c.to_json() for c in course]
+        }), 201
     except Exception:
         return jsonify({
             "code": 500,
             "message": "Unable to get course from database."
         }), 500
+
 
 @app.route('/role/create', methods=['POST'])
 def createRole():
@@ -441,7 +469,7 @@ def createRole():
                 "code": 400,
                 "message": "Role name cannot be numeric."
             }), 400
-        
+
         if role_Desc.isnumeric():
             return jsonify({
                 "code": 400,
@@ -449,7 +477,8 @@ def createRole():
             }), 400
 
         # create new role, default is active
-        new_role = Role(Role_Name=data['Role_Name'], Role_Desc=role_Desc, Role_Is_Active=1)
+        new_role = Role(Role_Name=data['Role_Name'],
+                        Role_Desc=role_Desc, Role_Is_Active=1)
         db.session.add(new_role)
         db.session.commit()
         return jsonify({
@@ -463,6 +492,7 @@ def createRole():
             "code": 500,
             "message": "Unable to create new role. Error message: " + str(e)
         }), 500
+
 
 @app.route('/role/<string:role_id>', methods=['GET'])
 def getRole(role_id):
@@ -510,7 +540,8 @@ def getRole(role_id):
 #             "message": "Unable to get assigned skills from database. Error message: " + str(e)
 #         }), 500
 
-@app.route('/role/assigned_skills/<int:role_id>') # this one is the actual version with URL
+# this one is the actual version with URL
+@app.route('/role/assigned_skills/<int:role_id>')
 def getAssignedSkills(role_id):
     try:
         skills = SkillRole.getAssignedSkillsByRoleID(role_id)
@@ -527,7 +558,9 @@ def getAssignedSkills(role_id):
             "message": "Unable to get assigned skills from database. Error message: " + str(e)
         }), 500
 
-#activate/deactivate role
+# activate/deactivate role
+
+
 @app.route('/role/toggle/<int:role_id>', methods=['PUT'])
 def toggleRole(role_id):
     try:
@@ -554,19 +587,21 @@ def toggleRole(role_id):
             "message": "Unable to toggle role. Error message: " + str(e)
         }), 500
 
+
 @app.route('/skill')
 def getAllSkill():
     try:
         skill = Skill.query.all()
         return jsonify({
-                "code": 201,
-                "data": [s.to_json() for s in skill]
-            }), 201
+            "code": 201,
+            "data": [s.to_json() for s in skill]
+        }), 201
     except Exception:
         return jsonify({
             "code": 500,
             "message": "Unable to get skill from database."
         }), 500
+
 
 @app.route('/skill/create', methods=['POST'])
 def createSkill():
@@ -586,7 +621,7 @@ def createSkill():
                 "code": 400,
                 "message": "Skill name cannot be more than 50 characters."
             }), 400
-        
+
         # check if skill name already exists
         skill = Skill.query.filter_by(Skill_Name=data['Skill_Name']).first()
         if skill:
@@ -598,7 +633,7 @@ def createSkill():
         # create new skill, default is active
         new_skill = Skill(Skill_Name=data['Skill_Name'], Skill_Is_Active=1)
         db.session.add(new_skill)
-        db.session.commit() 
+        db.session.commit()
         return jsonify({
             "code": 201,
             "message": "Skill created successfully.",
@@ -611,7 +646,9 @@ def createSkill():
             "message": "Unable to create new skill. Error message: " + str(e)
         }), 500
 
-#activate/deactivate skill
+# activate/deactivate skill
+
+
 @app.route('/skill/toggle/<int:skill_id>', methods=['PUT'])
 def toggleSkill(skill_id):
     try:
@@ -637,6 +674,7 @@ def toggleSkill(skill_id):
             "code": 500,
             "message": "Unable to toggle skill. Error message: " + str(e)
         }), 500
+
 
 @app.route('/skill/update', methods=['PUT'])
 def updateSkill():
@@ -685,20 +723,22 @@ def updateSkill():
             "message": "Unable to update skill. Error message: " + str(e)
         }), 500
 
+
 @app.route('/skill/assign_to_role', methods=['POST'])
 def assignSkillToRole():
     try:
         data = request.get_json()
         print(data)
-        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int,list)):
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int, list)):
             return jsonify({
                 "code": 400,
                 "message": "Skill ID and Role ID cannot be empty or non interger"
             }), 400
-            
+
         returnMessage = []
-        if isinstance(data['Role_ID'],int):
-            newSkillRole = SkillRole(Skill_ID=data['Skill_ID'], Role_ID=data['Role_ID'])
+        if isinstance(data['Role_ID'], int):
+            newSkillRole = SkillRole(
+                Skill_ID=data['Skill_ID'], Role_ID=data['Role_ID'])
             db.session.add(newSkillRole)
             db.session.commit()
             return jsonify({
@@ -707,9 +747,10 @@ def assignSkillToRole():
                 "data": newSkillRole.to_json()
             }), 201
         # assume that validation is done in the UI
-        elif isinstance(data['Role_ID'],list):
+        elif isinstance(data['Role_ID'], list):
             for role_id in data['Role_ID']:
-                newSkillRole = SkillRole(Skill_ID=data['Skill_ID'], Role_ID=role_id)
+                newSkillRole = SkillRole(
+                    Skill_ID=data['Skill_ID'], Role_ID=role_id)
                 db.session.add(newSkillRole)
                 db.session.commit()
                 returnMessage.append(newSkillRole.to_json())
@@ -720,26 +761,27 @@ def assignSkillToRole():
                 "data": returnMessage
             }), 201
 
-
     except Exception as e:
         return jsonify({
             "code": 500,
             "message": "Unable to assign skill to role. Error message: " + str(e)
         }), 500
 
+
 @app.route('/skill/unassign_role_from_skill', methods=['DELETE'])
 def unassignRoleFromSkill():
     try:
         data = request.get_json()
         print(data)
-        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int,list)):
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int, list)):
             return jsonify({
                 "code": 400,
                 "message": "Skill ID and Role ID cannot be empty or non interger"
             }), 400
 
-        if isinstance(data['Role_ID'],int):
-            skillRole = SkillRole.query.filter_by(Skill_ID=data['Skill_ID'], Role_ID=data['Role_ID']).first()
+        if isinstance(data['Role_ID'], int):
+            skillRole = SkillRole.query.filter_by(
+                Skill_ID=data['Skill_ID'], Role_ID=data['Role_ID']).first()
             if not skillRole:
                 return jsonify({
                     "code": 400,
@@ -752,10 +794,11 @@ def unassignRoleFromSkill():
                 "message": "Role unassigned from skill successfully.",
                 "data": skillRole.to_json()
             }), 201
-        elif isinstance(data['Role_ID'],list):
+        elif isinstance(data['Role_ID'], list):
             returnMessage = []
             for role_id in data['Role_ID']:
-                skillRole = SkillRole.query.filter_by(Skill_ID=data['Skill_ID'], Role_ID=role_id).first()
+                skillRole = SkillRole.query.filter_by(
+                    Skill_ID=data['Skill_ID'], Role_ID=role_id).first()
                 if not skillRole:
                     return jsonify({
                         "code": 400,
@@ -777,21 +820,21 @@ def unassignRoleFromSkill():
         }), 500
 
 
-
 @app.route('/skill/assign_to_courses', methods=['POST'])
 def assignSkillToCourses():
     try:
         data = request.get_json()
         print(data)
-        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str,list)):
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str, list)):
             return jsonify({
                 "code": 400,
                 "message": "Skill ID and Course ID must be an integer and string respectively"
             }), 400
-            
+
         returnMessage = []
-        if isinstance(data['Course_ID'],str):
-            newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID'])
+        if isinstance(data['Course_ID'], str):
+            newSkillCourse = SkillCourse(
+                Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID'])
             db.session.add(newSkillCourse)
             db.session.commit()
             return jsonify({
@@ -800,9 +843,10 @@ def assignSkillToCourses():
                 "data": newSkillCourse.to_json()
             }), 201
         # assume that validation is done in the UI
-        elif isinstance(data['Course_ID'],list):
+        elif isinstance(data['Course_ID'], list):
             for course_id in data['Course_ID']:
-                newSkillCourse = SkillCourse(Skill_ID=data['Skill_ID'], Course_ID=course_id)
+                newSkillCourse = SkillCourse(
+                    Skill_ID=data['Skill_ID'], Course_ID=course_id)
                 db.session.add(newSkillCourse)
                 db.session.commit()
                 returnMessage.append(newSkillCourse.to_json())
@@ -813,26 +857,27 @@ def assignSkillToCourses():
                 "data": returnMessage
             }), 201
 
-
     except Exception as e:
         return jsonify({
             "code": 500,
             "message": "Unable to assign course to skill. Error message: " + str(e)
         }), 500
 
+
 @app.route('/skill/unassign_course_from_skill', methods=['DELETE'])
 def unassignCourseFromSkill():
     try:
         data = request.get_json()
         print(data)
-        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str,list)):
+        if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str, list)):
             return jsonify({
                 "code": 400,
                 "message": "Skill ID and Course ID must be an integer and string respectively"
             }), 400
 
-        if isinstance(data['Course_ID'],str):
-            skillCourse = SkillCourse.query.filter_by(Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID']).first()
+        if isinstance(data['Course_ID'], str):
+            skillCourse = SkillCourse.query.filter_by(
+                Skill_ID=data['Skill_ID'], Course_ID=data['Course_ID']).first()
             if not skillCourse:
                 return jsonify({
                     "code": 400,
@@ -845,10 +890,11 @@ def unassignCourseFromSkill():
                 "message": "Course unassigned from skill successfully.",
                 "data": skillCourse.to_json()
             }), 201
-        elif isinstance(data['Course_ID'],list):
+        elif isinstance(data['Course_ID'], list):
             returnMessage = []
             for course_id in data['Course_ID']:
-                skillCourse = SkillCourse.query.filter_by(Skill_ID=data['Skill_ID'], Course_ID=course_id).first()
+                skillCourse = SkillCourse.query.filter_by(
+                    Skill_ID=data['Skill_ID'], Course_ID=course_id).first()
                 if not skillCourse:
                     return jsonify({
                         "code": 400,
@@ -868,6 +914,7 @@ def unassignCourseFromSkill():
             "code": 500,
             "message": "Unable to unassign course from skill. Error message: " + str(e)
         }), 500
+
 
 @app.route('/skill/assigned_courses')
 def getAssignedCourses():
@@ -893,6 +940,7 @@ def getAssignedCourses():
             "message": "Unable to get assigned courses from database. Error message: " + str(e)
         }), 500
 
+
 @app.route('/skill/assigned_roles')
 def getAssignedRoles():
     try:
@@ -916,9 +964,10 @@ def getAssignedRoles():
             "message": "Unable to get assigned roles from database. Error message: " + str(e)
         }), 500
 
+
 @app.route('/skill/get_assigned_roles_by_ID/<int:skill_id>')
 def getAssignedRoleByID(skill_id):
-    try: 
+    try:
         data = SkillRole.getAssignedRolesBySkillIDs([skill_id])
         return jsonify({
             "code": 201,
@@ -931,9 +980,10 @@ def getAssignedRoleByID(skill_id):
             "message": "Unable to get assigned role from database. Error message: " + str(e)
         }), 500
 
+
 @app.route('/skill/get_assigned_courses_by_ID/<int:skill_id>')
 def getAssignedCoursesByID(skill_id):
-    try: 
+    try:
         data = SkillCourse.getAssignedCoursesBySkillIDs([skill_id])
         return jsonify({
             "code": 201,
@@ -946,20 +996,38 @@ def getAssignedCoursesByID(skill_id):
             "message": "Unable to get assigned role from database. Error message: " + str(e)
         }), 500
 
+
 @app.route('/role/assigned_skill/<int:role_id>')
 def getAssignedSkill(role_id):
     try:
         skills = SkillRole.getAssignedSkillByRoleID(role_id=role_id)
         return jsonify({
-                "code": 201,
-                "data": [s.to_json() for s in skills]
-            }), 201
+            "code": 201,
+            "data": [s.to_json() for s in skills]
+        }), 201
     except Exception as e:
         return jsonify({
             "code": 500,
             "message": "Unable to get assigned skill from database. Error message: " + str(e)
         }), 500
 
+
+@app.route('/LJ/deleteLJ/<int:lj_id>')
+def deleteLJ(lj_id):
+    try:
+        data = LJ.query.filter_by(LJ_ID=lj_id).first()
+        if data:
+            db.session.delete(data)
+            db.session.commit()
+            return jsonify({
+                "code": 201,
+                "message": "Learning Journey deleted successfully."
+            }), 201
+    except Exception as e:
+        return jsonify({
+            "code": 400,
+            "message": "Unable to delete LJ from database. Error message: " + str(e)
+        }), 400
 
 
 if __name__ == '__main__':

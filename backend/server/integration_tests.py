@@ -93,6 +93,12 @@ class TestSkillCRUD(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill already exists.")
 
+    def test_createSkillNameNumeric(self):
+        response = self.client.post('/skill/create', json={'Skill_Name': '123'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill name cannot be numeric.")
+
     # update methods
     def test_updateSkill(self):
         response = self.client.put('/skill/update', json={'Skill_ID': 1, 'Skill_Name': 'testSkill'})
@@ -133,6 +139,12 @@ class TestSkillCRUD(TestApp):
         self.assertEqual(response.status_code, 400)
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill name cannot be more than 50 characters.")
+
+    def test_updateSkillNameNumeric(self):
+        response = self.client.put('/skill/update', json={'Skill_ID': 1, 'Skill_Name': '123'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill name cannot be numeric.")
 
     # delete methods
     def test_deactivateSkill(self):

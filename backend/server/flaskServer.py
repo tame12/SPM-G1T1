@@ -631,6 +631,13 @@ def createSkill():
                 "message": "Skill already exists."
             }), 400
 
+        # check if skill name is numeric
+        if data['Skill_Name'].isnumeric():
+            return jsonify({
+                "code": 400,
+                "message": "Skill name cannot be numeric."
+            }), 400
+
         # create new skill, default is active
         new_skill = Skill(Skill_Name=data['Skill_Name'], Skill_Is_Active=1)
         db.session.add(new_skill)
@@ -706,6 +713,13 @@ def updateSkill():
             return jsonify({
                 "code": 400,
                 "message": "Skill name already exists."
+            }), 400
+
+        # check if skill name is numeric
+        if data['Skill_Name'].isnumeric():
+            return jsonify({
+                "code": 400,
+                "message": "Skill name cannot be numeric."
             }), 400
 
         # update skill

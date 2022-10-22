@@ -2,19 +2,11 @@ from email import message
 import unittest
 import flask_testing
 import json
-# import sys
-
-# from backend.server.flaskServer import *
-from sqlalchemy import text
-
-# import sys
-# sys.path.insert(1, '../server')
 
 from flaskServer import *
 
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
 
 DB_USERNAME = os.getenv('DB_USERNAME')
@@ -24,17 +16,15 @@ if DB_USERNAME is None or DB_PASSWORD is None:
     print('DB_USERNAME or DB_PASSWORD not set')
     exit(1)
 
-# someone pls send help
-# need to automate the creation of the test database and not use production db
-# need to set up and tear down database as the test for get skills and create skills will interfere with each other
-# kinda working when manually loading production DB with createTables.sql and insertDataSetA.sql
-
-# WARNING DO NOT RUN THIS FILE AS IT IS USING PRODUCTION DB
-exit()
-# RUN AT YOUR OWN RISK
 
 class TestApp(flask_testing.TestCase):
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@localhost:3306/is212_g1t1'
+    """
+    Intergration tests for the flask server
+    Using ../sql/createTables.sql and ../sql/insertDataSetA.sql
+    to create a test database and populate it with data
+    """
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@localhost:3306/'
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,'pool_recycle': 280}
     app.config['TESTING'] = True
 
@@ -42,18 +32,20 @@ class TestApp(flask_testing.TestCase):
         return app
 
     def setUp(self):
-        # with open('../sql/createTables.sql') as f:
-        #     db.engine.execute(text(f.read()))
-        #     print(text(f.read()))
-        # with open('../sql/insertDataSetA.sql') as f:
-        #     db.engine.execute(text(f.read()))
-        # db.create_all()
-        pass
+        with open('../sql/createTables.sql') as f:
+            for statement in f.read().split(';'):
+                stm = statement.replace("is212_G1T1", "is212_G1T1_test")
+                db.session.execute(stm.strip() + ';') if len(stm.strip()) > 0 else None
+
+        with open('../sql/insertDataSetA.sql') as f:
+            for statement in f.read().split(';'):
+                stm = statement.replace("is212_G1T1", "is212_G1T1_test")
+                db.session.execute(stm.strip() + ';') if len(stm.strip()) > 0 else None
 
     def tearDown(self):
-        pass
-        # db.session.remove()
-        # db.drop_all()
+        # not sure why the database is empty if we dont drop it
+        db.session.execute('DROP DATABASE is212_G1T1_test;')
+
 
 class TestSkill(TestApp):
 

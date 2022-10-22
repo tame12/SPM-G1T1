@@ -390,7 +390,7 @@ def getAllRole():
 
 # get role by role name
 
-
+# not in use
 @app.route('/role/search/<string:role_name>', methods=['GET'])
 def getRoleByName(role_name):
     try:

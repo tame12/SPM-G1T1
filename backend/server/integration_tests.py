@@ -47,7 +47,7 @@ class TestApp(flask_testing.TestCase):
         db.session.execute('DROP DATABASE is212_G1T1_test;')
 
 
-class TestSkill(TestApp):
+class TestSkillCRUD(TestApp):
 
     # read methods
     def test_getSkills(self):
@@ -65,6 +65,28 @@ class TestSkill(TestApp):
         data = json.loads(response.data)['data']
         self.assertEqual(data, {'Skill_ID': 12, 'Skill_Is_Active': True, 'Skill_Name': 'testSkill'})
 
+    def test_createSkillEmptyName(self):
+        response = self.client.post('/skill/create', json={'Skill_Name': ''})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill name cannot be empty.")
+
+        response = self.client.post('/skill/create', json={})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill name cannot be empty.")
+
+    def test_createSkillBoundary50Chars(self):
+        response = self.client.post('/skill/create', json={'Skill_Name': 't' * 50})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Skill_ID': 12, 'Skill_Is_Active': True, 'Skill_Name': 't' * 50})
+
+        response = self.client.post('/skill/create', json={'Skill_Name': 't' * 51})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill name cannot be more than 50 characters.")
+
     def test_createSkillAlreadyExists(self):
         response = self.client.post('/skill/create', json={'Skill_Name': 'Basic programming 1'})
         self.assertEqual(response.status_code, 400)
@@ -72,15 +94,45 @@ class TestSkill(TestApp):
         self.assertEqual(message, "Skill already exists.")
 
     # update methods
+    def test_updateSkill(self):
+        response = self.client.put('/skill/update', json={'Skill_ID': 1, 'Skill_Name': 'testSkill'})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        message = json.loads(response.data)['message']
+        self.assertEqual(data, {'Skill_ID': 1, 'Skill_Is_Active': True, 'Skill_Name': 'testSkill'})
+        self.assertEqual(message, "Skill updated successfully.")
+
     def test_updateSkillNotFound(self):
-        response = self.client.put('/skill/100', json={'Skill_Name': 'testSkill'})
-        self.assertEqual(response.status_code, 404)
+        response = self.client.put('/skill/update', json={'Skill_ID': 100, 'Skill_Name': 'testSkill'})
+        self.assertEqual(response.status_code, 500)
+
+    def test_updateSkillEmptyName(self):
+        response = self.client.put('/skill/update', json={'Skill_ID': 1, 'Skill_Name': ''})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill name cannot be empty.")
+
+        response = self.client.put('/skill/update', json={'Skill_ID': 1})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill name cannot be empty.")
 
     def test_updateSkillAlreadyExists(self):
         response = self.client.put('/skill/update', json={"Skill_ID": 1, 'Skill_Name': 'Basic programming 2'})
         self.assertEqual(response.status_code, 400)
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill name already exists.")
+
+    def test_updateSkillBoundary50Chars(self):
+        response = self.client.put('/skill/update', json={'Skill_ID': 1, 'Skill_Name': 't' * 50})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Skill_ID': 1, 'Skill_Is_Active': True, 'Skill_Name': 't' * 50})
+
+        response = self.client.put('/skill/update', json={'Skill_ID': 1, 'Skill_Name': 't' * 51})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill name cannot be more than 50 characters.")
 
     # delete methods
     def test_deactivateSkill(self):
@@ -108,35 +160,11 @@ class TestSkill(TestApp):
             "Skill_Name": "Basic programming 1"
         })
 
-    # def test_postSkill(self):
-    #     response = self.client.post('/skill', json={'name': 'C++', 'description': 'C++ is a programming language'})
-    #     self.assertEqual(response.status_code, 201)
-    #     self.assertEqual(response.json, {'id': 3, 'name': 'C++', 'description': 'C++ is a programming language'})
-
-    # def test_postSkillAlreadyExists(self):
-    #     response = self.client.post('/skill', json={'name': 'Python', 'description': 'Python is a programming language'})
-    #     self.assertEqual(response.status_code, 409)
-
-    # def test_postSkillMissingName(self):
-    #     response = self.client.post('/skill', json={'description': 'Python is a programming language'})
-    #     self.assertEqual(response.status_code, 400)
-
-    # def test_postSkillMissingDescription(self):
-    #     response = self.client.post('/skill', json={'name': 'Python'})
-    #     self.assertEqual(response.status_code, 400)
-
-    # def test_putSkill(self):
-    #     response = self.client.put('/skill/1', json={'name': 'Python', 'description': 'Python is a programming language'})
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(response.json, {'id': 1, 'name': 'Python', 'description': 'Python is a programming language'})
-
-    # def test_putSkillNotFound(self):
-    #     response = self.client.put('/skill/100', json={'name': 'Python', 'description': 'Python is a programming language'})
-    #     self.assertEqual(response.status_code, 404)
-
-    # def test_putSkillMissingName(self):
-    #     response = self.client.put('/skill/1', json={'
-
+    def test_deactivateSkillNotFound(self):
+        response = self.client.put('/skill/toggle/100')
+        message = json.loads(response.data)['message']
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(message, "Skill does not exist.")
 
 
 if __name__ == '__main__':

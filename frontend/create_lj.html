@@ -71,6 +71,7 @@ $(function () {
     //display role
     var role_name = localStorage.getItem("role_name");
     var role_id = localStorage.getItem("role_ID");
+    localStorage.setItem("checked",JSON.stringify([]))
     localStorage.setItem("rolesSelected", JSON.stringify({}));
     console.log(role_name, role_id);
 
@@ -126,7 +127,7 @@ $(function () {
                             course_html += `
                             <div> 
                                 <input 
-                                type="radio"  
+                                type="checkbox"  
                                 class="btn-check"
                                 name="options"
                                 autocomplete="off"
@@ -174,28 +175,61 @@ function courseButtonSelected(e) {
 
     // if there are items within the local storage, then get the items
     rolesSelected = JSON.parse(localStorage.getItem("rolesSelected"))
+    checked = JSON.parse(localStorage.getItem("checked"))
+
+    // case 1: never been checked before
+    // console.log(checked)
+    if (checked.indexOf(id) < 0){
+        checked.push(id)
+    }
+    // case 2: unchecking previously checked
+    else if (e.checked == false){
+        if (checked.indexOf(id) >= 0) {
+            newChecked = []
+            for (i of checked){
+                if (i != id){
+                    newChecked.push(i)
+                }
+            }
+            checked = newChecked
+        }
+    }
+    else{
+        alert("Please select a course that you haven't already selected")
+        e.checked = false;
+        return;
+    }
+    // console.log(checked)
+    localStorage.setItem("checked",JSON.stringify(checked))
+
+
+    // for (i =0;i < checked.length; i++){
+    //     // case 1: has never been checked:
+
+    // }
+    // checked.push(id)
 
     // Skill ID : Course ID 
-    rolesSelected[skill_ID] = id
-    console.log(rolesSelected)
+    if (rolesSelected[skill_ID] != undefined){
+        if (rolesSelected[skill_ID].indexOf(id) >=0){
+            newList = []
+            for (i=0;i<rolesSelected[skill_ID].length; i++){
+                if (rolesSelected[skill_ID][i] !== id){
+                    newList.push(rolesSelected[skill_ID][i])
+                }
+            }
+            rolesSelected[skill_ID] = newList
+        }
+        else{
+            rolesSelected[skill_ID].push(id)
+        }
+    }
+    else{
+        rolesSelected[skill_ID] = [id]
+    }
+    
+    // console.log(rolesSelected)
     localStorage.setItem("rolesSelected",JSON.stringify(rolesSelected))
-    // console.log(localStorage.getItem('rolesSelected')[skill_ID])
-    // console.log(id)
-    // console.log("updatedSelectedRoles: ", rolesSelectedStorage)
-    // if (rolesSelectedStorage.includes(id)) {
-    //     console.log("id is in rolesSelectedStorage")
-    //     // if the course button is selected, deselect it
-    //     rolesSelectedStorage = rolesSelectedStorage.filter(e => e !== id);
-    // }
-
-    // else {
-    //     console.log("id is NOT in rolesSelectedStorage")
-    //     // if the course button is not selected, select it
-    //     rolesSelectedStorage.push(id)
-        
-    // }
-    // localStorage.setItem("rolesSelected", JSON.stringify(rolesSelectedStorage));
-    // console.log("rolesSelected before click: ", rolesSelectedStorage);
 }
 
 function createLearningJourney(){
@@ -210,9 +244,13 @@ function createLearningJourney(){
         courses = []
         skills = []
         for (key in rolesSelectedStorage){
-            courses.push(rolesSelectedStorage[key])
-            skills.push(key)
+            for (value of rolesSelectedStorage[key]){
+                courses.push(value)
+                skills.push(key)    
+
+            }
         }
+        console.log("Printing")
         console.log(courses, skills)
         axios.post(
             "http://localhost:456/LJ/addLJ",

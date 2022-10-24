@@ -340,6 +340,71 @@ def createLJ():
             "message": "Unable to create new LJ. Error message: " + str(e)
         }), 500
 
+@app.route('/LJ/addLJ/Course', methods=["POST"])
+def addCourseToLJ():
+    try:
+        data = request.get_json()
+        keys = set(data.keys())
+        check = set(["LJ_ID", "Course_ID", "Skill_ID"])
+
+        # check staff id? 
+
+        # check if the keys are correct
+        if keys != check:
+            return jsonify({
+                "code": 400,
+                "message": 'Fields must match "LJ_ID","Course_ID","Skill_ID"'
+            }), 400
+        # check if the data are all inputted
+        if "" in data.values():
+            return jsonify({
+                "code": 400,
+                "message": 'Fields cannot be empty'
+            }), 400
+
+        # check if this user already has an LJ with the same role
+        lj = LJSkillCourse.query.filter_by(LJ_ID=data['LJ_ID'], Course_ID=data['Course_ID'], Skill_ID=data['Skill_ID']).first()
+        if lj:
+            return jsonify({
+                "code": 400,
+                "message": "Course already exists in the LJ."
+            }), 400
+
+        # check if skill is mapped to course
+        skillCourseMap = SkillCourse.query.filter_by(Course_ID=data['Course_ID'], Skill_ID=data['Skill_ID']).first()
+        if not skillCourseMap:
+            return jsonify({
+                "code": 400,
+                "message": "Skill is not mapped to course."
+            }), 400
+
+        #check if skill is mapped to role
+        roleID = LJ.query.filter_by(LJ_ID=data['LJ_ID']).first().Role_ID
+        skillRoleMap = SkillRole.query.filter_by(Role_ID=roleID, Skill_ID=data['Skill_ID']).first()
+        if not skillRoleMap:
+            return jsonify({
+                "code": 400,
+                "message": "Skill is not mapped to role."
+            }), 400
+
+        # add to LJSkillCourse
+        new_LJ = LJSkillCourse(
+            LJ_ID=data['LJ_ID'], Course_ID=data["Course_ID"], Skill_ID=data["Skill_ID"])
+        db.session.add(new_LJ)
+        db.session.commit()
+        return jsonify({
+            "code": 201,
+            "message": "Course added successfully.",
+            "data": new_LJ.to_json()
+        }), 201
+
+    except Exception as e:
+        print(e)
+        return jsonify({
+            "code": 500,
+            "message": "Unable to create new LJ. Error message: " + str(e)
+        }), 500
+
 
 @app.route('/LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>', methods=["GET"])
 def getCourseAndSkillByLJ_ID(LJ_ID):

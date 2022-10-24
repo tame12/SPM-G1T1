@@ -71,6 +71,7 @@ insert into `is212_G1T1`.`Course_Skill` (`Course_ID`, `Skill_ID`) values
 delete from `is212_G1T1`.`Skill_Role`;
 insert into `is212_G1T1`.`Skill_Role` (`Skill_ID`, `Role_ID`) values 
 (1,1),
+(2,2),
 (2,1);
 
 delete from `is212_G1T1`.`Learning_Journey`;

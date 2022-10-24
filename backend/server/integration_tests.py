@@ -47,8 +47,7 @@ class TestApp(flask_testing.TestCase):
         db.session.execute('DROP DATABASE is212_G1T1_test;')
 
 
-class TestSkillCRUD(TestApp):
-
+class TestSkillR(TestApp):
     # read methods
     def test_getSkills(self):
         response = self.client.get('/skill')
@@ -58,6 +57,7 @@ class TestSkillCRUD(TestApp):
         self.assertEqual(data[0], {'Skill_ID': 1, 'Skill_Is_Active': True, 'Skill_Name': 'Basic programming 1'})
         self.assertEqual(data, [{'Skill_ID': 1, 'Skill_Is_Active': True, 'Skill_Name': 'Basic programming 1'}, {'Skill_ID': 2, 'Skill_Is_Active': True, 'Skill_Name': 'Basic programming 2'}, {'Skill_ID': 3, 'Skill_Is_Active': True, 'Skill_Name': 'Intermediate programming 1'}, {'Skill_ID': 4, 'Skill_Is_Active': True, 'Skill_Name': 'Intermediate programming 2'}, {'Skill_ID': 5, 'Skill_Is_Active': True, 'Skill_Name': 'Modeling 1'}, {'Skill_ID': 6, 'Skill_Is_Active': True, 'Skill_Name': 'Agile 1'}, {'Skill_ID': 7, 'Skill_Is_Active': True, 'Skill_Name': 'Critical thinking 1'}, {'Skill_ID': 8, 'Skill_Is_Active': True, 'Skill_Name': 'Database 1'}, {'Skill_ID': 9, 'Skill_Is_Active': True, 'Skill_Name': 'Front end 1'}, {'Skill_ID': 10, 'Skill_Is_Active': True, 'Skill_Name': 'Business process management 1'}, {'Skill_ID': 11, 'Skill_Is_Active': False, 'Skill_Name': 'Prototyping 1'}])
 
+class TestSkillC(TestApp):
     # create methods
     def test_createSkill(self):
         response = self.client.post('/skill/create', json={'Skill_Name': 'testSkill'})
@@ -99,6 +99,7 @@ class TestSkillCRUD(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill name cannot be numeric.")
 
+class TestSkillU(TestApp):
     # update methods
     def test_updateSkill(self):
         response = self.client.put('/skill/update', json={'Skill_ID': 1, 'Skill_Name': 'testSkill'})
@@ -108,6 +109,7 @@ class TestSkillCRUD(TestApp):
         self.assertEqual(data, {'Skill_ID': 1, 'Skill_Is_Active': True, 'Skill_Name': 'testSkill'})
         self.assertEqual(message, "Skill updated successfully.")
 
+    # should never happen given the front end
     def test_updateSkillNotFound(self):
         response = self.client.put('/skill/update', json={'Skill_ID': 100, 'Skill_Name': 'testSkill'})
         self.assertEqual(response.status_code, 500)
@@ -146,6 +148,7 @@ class TestSkillCRUD(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill name cannot be numeric.")
 
+class TestSkillD(TestApp):
     # delete methods
     def test_deactivateSkill(self):
         response = self.client.put('/skill/toggle/1')
@@ -178,8 +181,7 @@ class TestSkillCRUD(TestApp):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(message, "Skill does not exist.")
 
-class TestRoleCRUD(TestApp):
-
+class TestRoleR(TestApp):
     # read methods
     def test_getAllRoles(self):
         response = self.client.get('/role')
@@ -191,6 +193,7 @@ class TestRoleCRUD(TestApp):
             {'Role_Desc': 'Business Analyst','Role_ID': 3,'Role_Is_Active': False,'Role_Name': 'BA'}
         ])
 
+class TestRoleC(TestApp):
     # create methods
     def test_createRole(self):
         response = self.client.post('/role/create', json={'Role_Name': 'testRole', 'Role_Desc': 'testDesc'})
@@ -261,10 +264,93 @@ class TestRoleCRUD(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Role description cannot be numeric.")
 
+# to be implemented next
+class TestRoleU(TestApp):
     # update methods
-    
-    # not implemented
+    def test_updateRole(self):
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 'testRole', 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Role_ID': 1, 'Role_Is_Active': True, 'Role_Name': 'testRole', 'Role_Desc': 'testDesc'})
 
+    def test_updateRoleEmptyName(self):
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': '', 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role name cannot be empty.")
+
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role name cannot be empty.")
+
+    # should never happen with the front end
+    def test_updateRoleEmptyID(self):
+        response = self.client.put('/role/update', json={'Role_Name': 'testRole', 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role ID cannot be empty.")
+    
+    # should never happen given the front end
+    def test_updateRoleIDNotFound(self):
+        response = self.client.put('/role/update', json={'Role_ID': 100, 'Role_Name': 'testRole', 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role ID not found.")
+
+    def test_updateRoleNameBorder50Character(self):
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 't' * 50, 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Role_ID': 1, 'Role_Is_Active': True, 'Role_Name': 't' * 50, 'Role_Desc': 'testDesc'})
+
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 't' * 51, 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role name cannot be more than 50 characters.")
+
+    def test_updateRoleAlreadyExists(self):
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 'BA', 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role already exists.")
+
+    def test_updateRoleEmptyDesc(self):
+        # empty desc is allowed
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 'testRole1', 'Role_Desc': ''})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Role_ID': 1, 'Role_Is_Active': True, 'Role_Name': 'testRole1', 'Role_Desc': ''})
+
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 'testRole2'})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Role_ID': 1, 'Role_Is_Active': True, 'Role_Name': 'testRole2', 'Role_Desc': ''})
+
+    def test_updateRoleDescBorder255Character(self):
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 'testRole1', 'Role_Desc': 't' * 255})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Role_ID': 1, 'Role_Is_Active': True, 'Role_Name': 'testRole1', 'Role_Desc': 't' * 255})
+
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 'testRole2', 'Role_Desc': 't' * 256})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role description cannot be more than 255 characters.")
+
+    def test_updateRoleNumericName(self):
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': '123', 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role name cannot be numeric.")
+    
+    def test_updateRoleNumericDesc(self):
+        response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 'testRole', 'Role_Desc': '123'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role description cannot be numeric.")
+
+class TestRoleD(TestApp):
     # delete methods
     def test_deactivateRole(self):
         response = self.client.put('/role/toggle/1')

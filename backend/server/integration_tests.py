@@ -110,9 +110,30 @@ class TestSkillU(TestApp):
         self.assertEqual(message, "Skill updated successfully.")
 
     # should never happen given the front end
-    def test_updateSkillNotFound(self):
+    def test_updateSkillEmptyID(self):
+        response = self.client.put('/skill/update', json={'Skill_Name': 'testSkill'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID cannot be empty.")
+
+    # should never happen given the front end
+    def test_updateSkillIDNotFound(self):
         response = self.client.put('/skill/update', json={'Skill_ID': 100, 'Skill_Name': 'testSkill'})
-        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill does not exist.")
+
+    # should never happen given the front end
+    def test_updateSkillIDNotInterger(self):
+        response = self.client.put('/skill/update', json={'Skill_ID': 'abc', 'Skill_Name': 'testSkill'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID must be an integer.")
+
+        response = self.client.put('/skill/update', json={'Skill_ID': '', 'Skill_Name': 'testSkill'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID must be an integer.")
 
     def test_updateSkillEmptyName(self):
         response = self.client.put('/skill/update', json={'Skill_ID': 1, 'Skill_Name': ''})

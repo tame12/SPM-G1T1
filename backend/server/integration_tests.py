@@ -298,6 +298,18 @@ class TestRoleU(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Role ID not found.")
 
+    # should never happen given the front end
+    def test_updateRoleIDNotInteger(self):
+        response = self.client.put('/role/update', json={'Role_ID': 'a', 'Role_Name': 'testRole', 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role ID must be an integer.")
+
+        response = self.client.put('/role/update', json={'Role_ID': '', 'Role_Name': 'testRole', 'Role_Desc': 'testDesc'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role ID must be an integer.")
+
     def test_updateRoleNameBorder50Character(self):
         response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 't' * 50, 'Role_Desc': 'testDesc'})
         self.assertEqual(response.status_code, 201)

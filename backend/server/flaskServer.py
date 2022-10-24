@@ -495,6 +495,102 @@ def createRole():
         }), 500
 
 
+@app.route('/role/update', methods=['PUT'])
+def updateRole():
+    """
+    expected json imput:
+    {
+        "Role_ID": 1,
+        "Role_Name": "SWE",
+        "Role_Desc": "Software Engineer"
+    }
+    """
+    try:
+        data = request.get_json()
+
+        # check if data has role id
+        if 'Role_ID' not in data.keys():
+            return jsonify({
+                "code": 400,
+                "message": "Role ID cannot be empty."
+            }), 400
+
+        # check if role id is int
+        if not isinstance(data['Role_ID'], int):
+            return jsonify({
+                "code": 400,
+                "message": "Role ID must be an integer."
+            }), 400
+
+        # check if role id exists
+        role = Role.query.filter_by(Role_ID=data['Role_ID']).first()
+        if not role:
+            return jsonify({
+                "code": 400,
+                "message": "Role ID not found."
+            }), 400
+
+        # check if data has role name
+        if 'Role_Name' not in data.keys() or data['Role_Name'] == "":
+            return jsonify({
+                "code": 400,
+                "message": "Role name cannot be empty."
+            }), 400
+
+        # role name cannot be > 50 characters
+        if len(data['Role_Name']) > 50:
+            return jsonify({
+                "code": 400,
+                "message": "Role name cannot be more than 50 characters."
+            }), 400
+
+        # check if role name already exists
+        role = Role.query.filter_by(Role_Name=data['Role_Name']).first()
+        if role:
+            return jsonify({
+                "code": 400,
+                "message": "Role already exists."
+            }), 400
+
+        # default role description to empty string
+        role_Desc = data['Role_Desc'] if 'Role_Desc' in data.keys() else ""
+
+        # role desc cannot be > 255 characters
+        if len(role_Desc) > 255:
+            return jsonify({
+                "code": 400,
+                "message": "Role description cannot be more than 255 characters."
+            }), 400
+
+        if data['Role_Name'].isnumeric():
+            return jsonify({
+                "code": 400,
+                "message": "Role name cannot be numeric."
+            }), 400
+
+        if role_Desc.isnumeric():
+            return jsonify({
+                "code": 400,
+                "message": "Role description cannot be numeric."
+            }), 400
+
+        # update role
+        role = Role.query.filter_by(Role_ID=data['Role_ID']).first()
+        role.Role_Name = data['Role_Name']
+        role.Role_Desc = role_Desc
+        db.session.commit()
+        return jsonify({
+            "code": 201,
+            "message": "Role updated successfully.",
+            "data": role.to_json()
+        }), 201
+
+    except Exception as e:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to update role. Error message: " + str(e)
+        }), 500
+
 @app.route('/role/<string:role_id>', methods=['GET'])
 def getRole(role_id):
     try:

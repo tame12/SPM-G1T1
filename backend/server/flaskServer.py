@@ -574,6 +574,14 @@ def updateRole():
                 "message": "Role description cannot be numeric."
             }), 400
 
+        # check if role is active
+        # role = Role.query.filter_by(Role_ID=data['Role_ID']).first()
+        # if not role.Role_Is_Active:
+        #     return jsonify({
+        #         "code": 400,
+        #         "message": "Role is deactivated."
+        #     }), 400
+
         # update role
         role = Role.query.filter_by(Role_ID=data['Role_ID']).first()
         role.Role_Name = data['Role_Name']
@@ -786,8 +794,27 @@ def updateSkill():
         data = request.get_json()
         print(data)
 
-        # check if data has skill id?
-        # check if skill id is in database?
+        # check if data has skill id
+        if 'Skill_ID' not in data.keys():
+            return jsonify({
+                "code": 400,
+                "message": "Skill ID cannot be empty."
+            }), 400
+
+        # check if skill id is int
+        if not isinstance(data['Skill_ID'], int):
+            return jsonify({
+                "code": 400,
+                "message": "Skill ID must be an integer."
+            }), 400
+
+        # check if skill id exists
+        skill = Skill.query.filter_by(Skill_ID=data['Skill_ID']).first()
+        if not skill:
+            return jsonify({
+                "code": 400,
+                "message": "Skill does not exist."
+            }), 400
 
         # check if data has skill name
         if 'Skill_Name' not in data.keys() or data['Skill_Name'] == "":
@@ -817,6 +844,14 @@ def updateSkill():
                 "code": 400,
                 "message": "Skill name cannot be numeric."
             }), 400
+
+        # check if skill is active
+        # skill = Skill.query.filter_by(Skill_ID=data['Skill_ID']).first()
+        # if not skill.Skill_Is_Active:
+        #     return jsonify({
+        #         "code": 400,
+        #         "message": "Skill is deactivated."
+        #     }), 400
 
         # update skill
         skill = Skill.query.filter_by(Skill_ID=data['Skill_ID']).first()

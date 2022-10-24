@@ -1,0 +1,182 @@
+{
+	"info": {
+		"_postman_id": "6912032c-1de1-4e94-bf12-c88cae1f8b6e",
+		"name": "sprint 3 endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19186442"
+	},
+	"item": [
+		{
+			"name": "update role",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Role_ID\": 3,\r\n    \"Role_Name\": \"Business Analysts\",\r\n    \"Role_Desc\": \"Business Analysts conduct market analyses, analysing both product lines and the overall profitability of the business src:google\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/role/update",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"role",
+						"update"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "update role",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Role_ID\": 3,\r\n    \"Role_Name\": \"Business Analysts\",\r\n    \"Role_Desc\": \"Business Analysts conduct market analyses, analysing both product lines and the overall profitability of the business src:google\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:456/role/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "456",
+							"path": [
+								"role",
+								"update"
+							]
+						}
+					},
+					"status": "CREATED",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "316"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.8.5"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 24 Oct 2022 04:51:14 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 201,\n    \"data\": {\n        \"Role_Desc\": \"Business Analysts conduct market analyses, analysing both product lines and the overall profitability of the business src:google\",\n        \"Role_ID\": 3,\n        \"Role_Is_Active\": false,\n        \"Role_Name\": \"Business Analysts\"\n    },\n    \"message\": \"Role updated successfully.\"\n}"
+				}
+			]
+		},
+		{
+			"name": "add Course to LJ",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"LJ_ID\": 2, \r\n    \"Course_ID\": \"IS-1\",\r\n    \"Skill_ID\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:456/LJ/addLJ/Course",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "456",
+					"path": [
+						"LJ",
+						"addLJ",
+						"Course"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "add Course to LJ",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"LJ_ID\": 2, \r\n    \"Course_ID\": \"IS-1\",\r\n    \"Skill_ID\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:456/LJ/addLJ/Course",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "456",
+							"path": [
+								"LJ",
+								"addLJ",
+								"Course"
+							]
+						}
+					},
+					"status": "CREATED",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "141"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Server",
+							"value": "Werkzeug/2.0.2 Python/3.8.5"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 24 Oct 2022 04:49:07 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 201,\n    \"data\": {\n        \"Course_ID\": \"IS-1\",\n        \"LJ_ID\": 2,\n        \"Skill_ID\": 2\n    },\n    \"message\": \"Course added successfully.\"\n}"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,13 @@
+New Test=====
+UAT_createLJ
+1 tests
+Learner creates a Learning Journey in under 2 minutes
+at time: 10/26/2022 05:23:48 PM
+
+10/26/2022 05:23:50 PM	INFO:	Start of test 1
+10/26/2022 05:23:53 PM	INFO:	verified LJ is created
+10/26/2022 05:23:53 PM	INFO:	Time taken: 2.96 seconds
+10/26/2022 05:23:53 PM	INFO:	Time taken is under 2 minutes: True
+10/26/2022 05:23:53 PM	INFO:	End of test 1
+Test End=====
+

@@ -1,0 +1,9 @@
+{
+    "log_output": "uat_createLJ.log",
+
+    "test_createLJ": {
+        "url": "http://127.0.0.1:5500/frontend/",
+        "name": "UAT_createLJ",
+        "description": "Learner creates a Learning Journey in under 2 minutes"
+    }
+}

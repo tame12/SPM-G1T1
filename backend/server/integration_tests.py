@@ -448,6 +448,27 @@ class TestRoleD(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Role does not exist.")
 
-    
+    # class TestDeleteLJ(TestApp):
+    # def test_getAllRoles(self):
+    #     response = self.client.get('/role')
+    #     self.assertEqual(response.status_code, 201)
+    #     data = json.loads(response.data)['data']
+    #     self.assertEqual(data, [
+    #         {'Role_Desc': 'Software Engineer','Role_ID': 1,'Role_Is_Active': True,'Role_Name': 'SWE'},
+    #         {'Role_Desc': 'Project Manager','Role_ID': 2,'Role_Is_Active': True,'Role_Name': 'PM'},
+    #         {'Role_Desc': 'Business Analyst','Role_ID': 3,'Role_Is_Active': False,'Role_Name': 'BA'}
+    #     ])
+
+    # class TestDeleteCourse(TestApp):
+    # def test_getAllRoles(self):
+    #     response = self.client.get('/role')
+    #     self.assertEqual(response.status_code, 201)
+    #     data = json.loads(response.data)['data']
+    #     self.assertEqual(data, [
+    #         {'Role_Desc': 'Software Engineer','Role_ID': 1,'Role_Is_Active': True,'Role_Name': 'SWE'},
+    #         {'Role_Desc': 'Project Manager','Role_ID': 2,'Role_Is_Active': True,'Role_Name': 'PM'},
+    #         {'Role_Desc': 'Business Analyst','Role_ID': 3,'Role_Is_Active': False,'Role_Name': 'BA'}
+    #     ])
+
 if __name__ == '__main__':
     unittest.main()

@@ -29,12 +29,12 @@ CORS(app)
 
 class Staff(db.Model):
     __tablename__ = 'staff'
-    staff_ID = db.Column(db.Integer, primary_key=True, nullable=False)
-    staff_FName = db.Column(db.String(50), nullable=False)
-    staff_LName = db.Column(db.String(50), nullable=False)
-    dept = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(50), nullable=False)
-    position_ID = db.Column(db.Integer, nullable=False)
+    Staff_ID = db.Column(db.Integer, primary_key=True, nullable=False)
+    Staff_FName = db.Column(db.String(50), nullable=False)
+    Staff_LName = db.Column(db.String(50), nullable=False)
+    Dept = db.Column(db.String(50), nullable=False)
+    Email = db.Column(db.String(50), nullable=False)
+    Position_ID = db.Column(db.Integer, nullable=False)
 
     def to_json(self):
         return {

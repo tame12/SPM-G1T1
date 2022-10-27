@@ -161,3 +161,4 @@ backend/.env
 !/sprint2testCase/4_4_HR_deactivate_skill/tc4_4.log
 !/sprint2testCase/4_5_HR_activate_skill/tc4_5.log
 !/sprint3testCase/UAT/uat_createLJ.log
+.vscode/settings.json

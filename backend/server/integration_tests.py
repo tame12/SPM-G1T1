@@ -448,27 +448,44 @@ class TestRoleD(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Role does not exist.")
 
-    # class TestDeleteLJ(TestApp):
-    # def test_getAllRoles(self):
-    #     response = self.client.get('/role')
-    #     self.assertEqual(response.status_code, 201)
-    #     data = json.loads(response.data)['data']
-    #     self.assertEqual(data, [
-    #         {'Role_Desc': 'Software Engineer','Role_ID': 1,'Role_Is_Active': True,'Role_Name': 'SWE'},
-    #         {'Role_Desc': 'Project Manager','Role_ID': 2,'Role_Is_Active': True,'Role_Name': 'PM'},
-    #         {'Role_Desc': 'Business Analyst','Role_ID': 3,'Role_Is_Active': False,'Role_Name': 'BA'}
-    #     ])
+class TestDeleteLJ(TestApp):
+    def test_deleteLJ(self):
+        response = self.client.get('/LJ/deleteLJ/1')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['message']
+        self.assertEqual(data, "Learning Journey deleted successfully.")
 
-    # class TestDeleteCourse(TestApp):
-    # def test_getAllRoles(self):
-    #     response = self.client.get('/role')
-    #     self.assertEqual(response.status_code, 201)
-    #     data = json.loads(response.data)['data']
-    #     self.assertEqual(data, [
-    #         {'Role_Desc': 'Software Engineer','Role_ID': 1,'Role_Is_Active': True,'Role_Name': 'SWE'},
-    #         {'Role_Desc': 'Project Manager','Role_ID': 2,'Role_Is_Active': True,'Role_Name': 'PM'},
-    #         {'Role_Desc': 'Business Analyst','Role_ID': 3,'Role_Is_Active': False,'Role_Name': 'BA'}
-    #     ])
+    def test_deleteLJNotFound(self):
+        response = self.client.get('/LJ/deleteLJ/50')
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)['message']
+        self.assertEqual(data, "Learning Journey does not exist.")
+
+class TestDeleteCourse(TestApp):
+    def test_deleteCourse(self):
+        response = self.client.get('/course/delete/IS-1/1')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['message']
+        self.assertEqual(data, "Course deleted successfully.")
+
+    def test_deleteLastCourse(self):
+        response = self.client.get('/course/delete/IS-5/6')
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)['message']
+        self.assertEqual(data, "Cannot delete course. At least one course is required.")
+
+    def test_deleteNullCourse(self):
+        response = self.client.get('/course/delete/IS-10/6')
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)['message']
+        self.assertEqual(data, "Cannot delete course. Learning Journey with Course selected does not exist.")
+
+    def test_deleteNullLJ(self):
+        response = self.client.get('/course/delete/IS-1/6')
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.data)['message']
+        self.assertEqual(data, "Cannot delete course. Learning Journey with Course selected does not exist.")
+
 
 if __name__ == '__main__':
     unittest.main()

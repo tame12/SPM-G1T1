@@ -1227,6 +1227,12 @@ def getAssignedSkill(role_id):
 def deleteLJ(lj_id):
     try:
         data = LJ.query.filter_by(LJ_ID=lj_id).first()
+        if not data:
+            return jsonify({
+                "code": 400,
+                "message": "Learning Journey does not exist."
+            }), 400
+
         if data:
             db.session.delete(data)
             db.session.commit()
@@ -1243,16 +1249,20 @@ def deleteLJ(lj_id):
 @app.route('/course/delete/<string:course_id>/<int:lj_id>')
 def deleteCourse(course_id, lj_id):
     try:
+        course = LJSkillCourse.query.filter_by(LJ_ID=lj_id, Course_ID=course_id).first()
+        if not course:
+            return jsonify({
+                "code": 400,
+                "message": "Cannot delete course. Learning Journey with Course selected does not exist."
+            }), 400
+
         course_count = LJSkillCourse.query.filter_by(LJ_ID=lj_id).count()
-        # print(course_count)
         if course_count == 1:
             return jsonify({
                 "code": 400,
                 "message": "Cannot delete course. At least one course is required."
             }), 400
-        
-        # course = LJSkillCourse.query.filter_by(Course_ID=course_id).first()
-        course = LJSkillCourse.query.filter_by(LJ_ID=lj_id, Course_ID=course_id).first()
+
         if course:
             db.session.delete(course)
             db.session.commit()

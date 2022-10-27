@@ -264,6 +264,7 @@ function createLearningJourney(){
         ).then(response=>{
             console.log(response.data.code)
             if(response.data.code == 201){
+                localStorage.setItem("createLJ", "true")
                 window.location.href = "view_lj.html"
             }
         })

@@ -1,64 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>View Learning Journey</title>
 
-    <title>View Learning Journey</title>
+        <!-- for standard icons (delete button) -->
+        <link
+            rel="stylesheet"
+            href="https://www.w3schools.com/w3css/4/w3.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
 
-    <!-- for standard icons (delete button) -->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <!-- JQuery -->
+        <script
+            src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous"
+        ></script>
 
-    <!-- JQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+        <!-- axios -->
+        <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <!-- axios -->
-    <script defer src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <!-- bootstrap -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT"
+            crossorigin="anonymous"
+        />
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+            crossorigin="anonymous"
+        ></script>
 
-    <!-- bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous" />
-    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
-        crossorigin="anonymous"></script>
+        <!-- jQuery cookie -->
 
-    <!-- jQuery cookie -->
+        <!-- main css -->
+        <link rel="stylesheet" href="main.css" />
+    </head>
 
-    <!-- main css -->
-    <link rel="stylesheet" href="main.css" />
-</head>
+    <body>
+        <!-- navbar placeholder -->
+        <div id="navigation"></div>
 
-<body>
-    <!-- navbar placeholder -->
-    <div id="navigation"></div>
+        <!-- Page starts -->
+        <div class="container">
+            <div id="activeStatus"></div>
+            <!-- Create Skill Modal button -->
+            <div class="d-flex justify-content-between">
+                <h1 id="SkillName">My Learning Journeys 🏠</h1>
 
-    <!-- Page starts -->
-    <div class="container">
-        <div id="activeStatus"></div>
-        <!-- Create Skill Modal button -->
-        <div class="d-flex justify-content-between">
-            <h1 id="SkillName">My Learning Journeys 🏠</h1>
+                <button
+                    class="button button-primary"
+                    id="assignNewRole"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                    onclick="createLearningJourney()"
+                >
+                    <!-- To be completed -->
+                    Create new Learning Journey
+                </button>
+            </div>
+            <!-- <h3>Learning Journeys in Progress</h3> -->
+            <hr />
+            <!-- Create Skill Modal // to be placed in vue template along with other modal -->
+            <div
+                class="accordion accordion-flush pb-3 d-flex flex-column gap-3"
+                id="RoleResults"
+            ></div>
 
-            <button class="button button-primary" id="assignNewRole" data-bs-toggle="modal"
-                data-bs-target="#exampleModal" onclick="createLearningJourney()">
-                <!-- To be completed -->
-                Create new Learning Journey
-            </button>
+            <!-- Error/ Success bar -->
+            <div id="error_success_bar" class="mb-3"></div>
         </div>
-        <!-- <h3>Learning Journeys in Progress</h3> -->
-        <hr>
-        <!-- Create Skill Modal // to be placed in vue template along with other modal -->
-        <div class="accordion accordion-flush pb-3 d-flex flex-column gap-3" id="RoleResults"></div>
-
-        <!-- Error/ Success bar -->
-        <div id="error_success_bar" class="mb-3"></div>
-    </div>
-</body>
-
+    </body>
 </html>
 
 <!-- js file with all functions necessary for this page to load -->
@@ -66,12 +88,13 @@
     $(function () {
         $("#navigation").load("navbar.html");
         // allCookies = document.cookie
-        var all_cookies = document.cookie.split('; ')
-            .map(cookie => cookie.split('='))
+        var all_cookies = document.cookie
+            .split("; ")
+            .map((cookie) => cookie.split("="));
         all_cookies = Object.fromEntries(all_cookies);
         // console.log(all_cookies)
-        staff_id = all_cookies.staff_ID
-        getAllLJ(staff_id)
+        staff_id = all_cookies.staff_ID;
+        getAllLJ(staff_id);
 
         // need to make this look better?
         // skill_is_active = getCookie("targetIsActive") === "true" ? true : false
@@ -82,31 +105,30 @@
         //     $("#assignNewCourse").prop("disabled", true)
         //     $("#assignNewRole").prop("disabled", true)
         // }
-
     });
 
     function createLearningJourney() {
-        window.location.href = "./browse_roles.html"
+        window.location.href = "./browse_roles.html";
     }
 
     function getAllLJ(id) {
-        axios.get("http://localhost:456/LJ/" + id).then(
-            function (response) {
-                // console.log(response.data.data)
-                if (response.data.code == 201) {
-                    html = ``;
-                    for (i = 0; i < response.data.data.length; i++) {
-                        rid = response.data.data[i].Role_ID
-                        ljid = response.data.data[i].LJ_ID
-                        // console.log(ljid)
-                        html +=
-                            `
+        axios.get("http://localhost:456/LJ/" + id).then(function (response) {
+            console.log(response.data.data);
+            if (response.data.code == 201) {
+                html = ``;
+                for (i = 0; i < response.data.data.length; i++) {
+                    rid = response.data.data[i].Role_ID;
+                    ljid = response.data.data[i].LJ_ID;
+                    rname = response.data.role_data[rid - 1]["Role_Desc"]; // role name
+                    // console.log(ljid)
+                    html += `
                             <div class="accordion-item border-box">
                                 <button class="accordion-button collapsed gradient-box text-black m-0 border border-0 rounded" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne${rid}" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne${rid}" data-ljid="${ljid}" onclick="populateSkillModal(this)">
                                     <div class="w-100 d-flex justify-content-between pe-4">
-                                        <p class="m-0">${response.data.role_data[rid - 1]["Role_Desc"]}</p>
+                                        <p class="m-0">${rname}</p>
                                         <img role="button" src="images/delete.svg" alt="" data-ljid="${ljid}" onclick="event.stopPropagation(); delete_lj(this)">
-                                        </div>
+                                    </div>
+                                    <img role="button" src="images/edit.svg" alt="" data-ljid="${ljid}" data-rname="${rname}" data-rid="${rid}" onclick="event.stopPropagation(); modify_lj(this)">
                                     </button>
                                 </h2>
                                 <div id="panelsStayOpen-collapseOne${rid}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne${rid}">
@@ -114,29 +136,29 @@
                                     </div>
                                 </div>
                             </div>
-                        `
-                    }
-                    if (html == '') {
-                        html = 'You have no learning journeys.'
-                    }
-                    $("#RoleResults").html(html)
-                    // console.log("end")
+                        `;
                 }
-                else {
-                    console.log("Error: " + response.data.message)
+                if (html == "") {
+                    html = "You have no learning journeys.";
                 }
+                $("#RoleResults").html(html);
+                // console.log("end")
+            } else {
+                console.log("Error: " + response.data.message);
             }
-        )
+        });
     }
 
     function populateSkillModal(e) {
-        ljid = $(e).data("ljid")
+        ljid = $(e).data("ljid");
 
-        axios.get("http://localhost:456/LJ/getCourseAndSkillByLJ_ID/" + ljid).then(response => {
-            // console.log(ljid, response.data.data)
-            if (response.data.code == 201) {
-                SkillCourse = response.data.data
-                html = `<div class="container text-left">
+        axios
+            .get("http://localhost:456/LJ/getCourseAndSkillByLJ_ID/" + ljid)
+            .then((response) => {
+                // console.log(ljid, response.data.data)
+                if (response.data.code == 201) {
+                    SkillCourse = response.data.data;
+                    html = `<div class="container text-left">
                             <div class="row">
                                 <div class = "col-1 fw-bold text-end">
                                     Delete course
@@ -151,10 +173,10 @@
                                     Skill
                                 </div>
                             </div>
-                    `
-                for (i = 0; i < SkillCourse.length; i++) {
-                    dict = SkillCourse[i]
-                    html += `
+                    `;
+                    for (i = 0; i < SkillCourse.length; i++) {
+                        dict = SkillCourse[i];
+                        html += `
                     <div class="row">
                         <div class = "col-1 d-flex justify-content-end align-items-center">
                             <img role="button" src="images/delete.svg" alt="" data-cid="${dict["Course_ID"]}" data-ljid="${ljid}" onclick="delete_course(this)">
@@ -169,33 +191,33 @@
                             ${dict["Skill_Name"]}
                         </div>
                     </div>
-                    `
+                    `;
+                    }
+                    html += "</div>";
+                    // console.log(html)
+                    $("#Skill_" + ljid).html(html);
                 }
-                html += "</div>"
-                // console.log(html)
-                $("#Skill_" + ljid).html(html)
-
-            }
-        })
+            });
     }
 
     function delete_lj(e) {
-        console.log('deleted')
+        console.log("deleted");
         // console.log($(e).data("ljid"))
-        ljid = $(e).data("ljid")
+        ljid = $(e).data("ljid");
 
-        axios.get('http://localhost:456/LJ/deleteLJ/' + ljid)
+        axios
+            .get("http://localhost:456/LJ/deleteLJ/" + ljid)
             .then(function (response) {
                 // handle success
                 console.log(response.data.code);
 
-                if (response.data.code == "201") { //success
+                if (response.data.code == "201") {
+                    //success
                     $("#error_success_bar").html(`
                     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
                     `);
                     // getAllLJ();
-                    getAllLJ(staff_id)
-
+                    getAllLJ(staff_id);
                 }
             })
             .catch(function (error) {
@@ -211,24 +233,25 @@
             })
             .then(function () {
                 // always executed
-                $('#error_success_bar')[0].scrollIntoView(false);
-
+                $("#error_success_bar")[0].scrollIntoView(false);
             });
     }
 
     function delete_course(e) {
         // console.log('deleted_c')
-        cid = $(e).data("cid")
-        ljid = $(e).data("ljid")
+        cid = $(e).data("cid");
+        ljid = $(e).data("ljid");
         // console.log(ljid)
         // console.log(cid)
 
-        axios.get('http://localhost:456/course/delete/' + cid + '/' + ljid)
+        axios
+            .get("http://localhost:456/course/delete/" + cid + "/" + ljid)
             .then(function (response) {
                 // handle success
                 console.log(response.data.code);
 
-                if (response.data.code == "201") { //success
+                if (response.data.code == "201") {
+                    //success
                     $("#error_success_bar").html(`
                     <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
                     `);
@@ -248,9 +271,21 @@
             })
             .then(function () {
                 // always executed
-                $('#error_success_bar')[0].scrollIntoView(false);
-
+                $("#error_success_bar")[0].scrollIntoView(false);
             });
+    }
 
+    function modify_lj(e) {
+        ljid = $(e).data("ljid"); //correct
+        role_ID = $(e).data("rid"); //wrong, it keeps getting stuck as rid=3
+        // role_name = $(e).data("rolename") // wrong no such thing as role_name that can be gotten without an axios call
+        role_name = $(e).data("rname"); // correct
+        console.log("ljid: ", ljid); //correct
+        console.log("rid: ", role_ID); //correct
+        console.log("role_name: ", role_name); //correct now
+        localStorage.setItem("role_ID", role_ID);
+        localStorage.setItem("role_name", role_name);
+        localStorage.setItem("ljid", ljid);
+        // window.location.href = "modify_lj.html"; //take this out to test the variables first
     }
 </script>

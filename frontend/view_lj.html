@@ -127,7 +127,8 @@
                 for (i = 0; i < response.data.data.length; i++) {
                     rid = response.data.data[i].Role_ID;
                     ljid = response.data.data[i].LJ_ID;
-                    rname = response.data.role_data[rid - 1]["Role_Desc"]; // role name
+                    rdesc = response.data.role_data[rid - 1]["Role_Desc"]; // correct
+                    rname = response.data.role_data[rid - 1]["Role_Name"]; // correct
                     // console.log(ljid)
                     html += `
                             <div class="accordion-item border-box">
@@ -285,14 +286,13 @@
 
     function modify_lj(e) {
         ljid = $(e).data("ljid"); //correct
-        role_ID = $(e).data("rid"); //wrong, it keeps getting stuck as rid=3
-        // role_name = $(e).data("rolename") // wrong no such thing as role_name that can be gotten without an axios call
-        role_name = $(e).data("rname"); // correct
+        role_ID = $(e).data("rid"); //correct
+        role_name = $(e).data("rname"); //correct
         console.log("ljid: ", ljid); //correct
         console.log("rid: ", role_ID); //correct
-        console.log("role_name: ", role_name); //correct now
+        console.log("role_name: ", role_name); //correct
         localStorage.setItem("role_ID", role_ID);
-        localStorage.setItem("role_name", role_name);
+        localStorage.setItem("role_name", role_name); 
         localStorage.setItem("ljid", ljid);
         // window.location.href = "modify_lj.html"; //take this out to test the variables first
     }

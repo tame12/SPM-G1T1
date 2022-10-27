@@ -38,20 +38,20 @@ class Staff(db.Model):
 
     def to_json(self):
         return {
-            'staff_ID': self.staff_ID,
-            'staff_FName': self.staff_FName,
-            'staff_LName': self.staff_LName,
-            'dept': self.dept,
-            'email': self.email,
-            'position_ID': self.position_ID
+            'staff_ID': self.Staff_ID,
+            'staff_FName': self.Staff_FName,
+            'staff_LName': self.Staff_LName,
+            'dept': self.Dept,
+            'email': self.Email,
+            'position_ID': self.Position_ID
         }
 
     def get_login_info(self):
         return {
-            'staff_ID': self.staff_ID,
-            'email': self.email,
-            'position_ID': self.position_ID,
-            'staff_FName': self.staff_FName,
+            'staff_ID': self.Staff_ID,
+            'email': self.Email,
+            'position_ID': self.Position_ID,
+            'staff_FName': self.Staff_FName,
         }
 
 # The Learning Journey Class
@@ -226,7 +226,7 @@ def get_staff():
 
 @app.route('/staff/<int:staff_ID>')
 def get_staff_by_id(staff_ID):
-    staff = Staff.query.filter_by(staff_ID=staff_ID).first()
+    staff = Staff.query.filter_by(Staff_ID=staff_ID).first()
     return jsonify(staff.to_json())
 
 

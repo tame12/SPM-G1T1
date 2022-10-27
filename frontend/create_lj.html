@@ -262,10 +262,16 @@ function createLearningJourney(){
                 "LJ_Skills": skills
             }
         ).then(response=>{
+            console.log("hello")
             console.log(response.data.code)
             if(response.data.code == 201){
+                localStorage.setItem("createLJ", "true")
                 window.location.href = "view_lj.html"
             }
+        }).catch(error=>{
+            $("#error_success_bar").html(`
+                <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
+            `);
         })
     }
 

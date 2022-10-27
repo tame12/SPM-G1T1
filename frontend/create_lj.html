@@ -64,7 +64,7 @@
 </html>
 <!-- js file with all functions necessary for this page to load -->
 <script>
-$(function () {
+$(function () { 
     //navbar
     $("#navigation").load("navbar.html");
 
@@ -75,12 +75,12 @@ $(function () {
     localStorage.setItem("rolesSelected", JSON.stringify({}));
     console.log(role_name, role_id);
 
-    axios
+    axios // this part will populate the role name and description
         .get("http://localhost:456/role/search/" + role_name)
         .then(function (response) {
             console.log(response.data.data[0]);
 
-            if (response.data.code == "201") { //success
+            if (response.data.code == "201") { // success
                 $("#role-selected").text(role_name);
                 $("#role-desc").text(response.data.data[0].Role_Desc);
 
@@ -92,7 +92,7 @@ $(function () {
             console.log(error);
         })
 
-    axios
+    axios // this part will populate get the assigned skills for the role and populate the courses relating to it inside the accordion
         .get("http://localhost:456/role/assigned_skill/" + role_id)
         .then(function (response) {
             console.log(response.data.data);
@@ -228,7 +228,7 @@ function courseButtonSelected(e) {
         rolesSelected[skill_ID] = [id]
     }
     
-    // console.log(rolesSelected)
+    console.log(rolesSelected)
     localStorage.setItem("rolesSelected",JSON.stringify(rolesSelected))
 }
 

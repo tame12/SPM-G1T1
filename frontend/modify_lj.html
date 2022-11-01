@@ -127,7 +127,7 @@ $(function () {
                             //course_html += `<div class=" border-box px-4 py-2 bg-grey border border-0" text-black data-id='${course.Course_ID}'>${course.Course_Name}</div>`
 
                             course_html += `
-                            <div> 
+                            <div data-id='${course.Course_ID}'> 
                                 <input 
                                 type="checkbox"  
                                 class="btn-check"
@@ -169,12 +169,19 @@ $(function () {
 
     // this part will remove the courses that have already been selected 
         // to be completed
-    axios
-        .get("http://localhost:456/LJ/getCourseAndSkillByLJ_ID/" + ljid)
-        .then((response) => {
-            console.log("response for getCourseAndSkillByLJ_ID: ", response.data.data); // correct
-        })
-
+    setTimeout(function() {
+        axios
+            .get("http://localhost:456/LJ/getCourseAndSkillByLJ_ID/" + ljid)
+            .then((response) => {
+                console.log("response for getCourseAndSkillByLJ_ID: ", response.data.data); // correct
+                $("div[data-id='IS-1']").remove()
+                for (i = 0; i < response.data.data.length; i++) {
+                    var course_id = response.data.data[i].Course_ID;
+                    $(`div[data-id='${course_id}']`).remove() 
+                }
+                console.log("courses removed")
+            })
+    }, 1500) // Removing the enrolled courses after the courses are loaded from the initial axios call
 });
 
 

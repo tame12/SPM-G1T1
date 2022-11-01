@@ -946,6 +946,12 @@ def assignSkillToRole():
                 "message": "Skill ID and Role ID cannot be empty or non interger"
             }), 400
 
+        if isinstance(data['Role_ID'], list) and len(data['Role_ID']) == 0:
+            return jsonify({
+                "code": 400,
+                "message": "Role ID cannot be empty list"
+            }), 400
+
         returnMessage = []
         if isinstance(data['Role_ID'], int):
             newSkillRole = SkillRole(

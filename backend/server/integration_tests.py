@@ -1,14 +1,21 @@
 import unittest
 import flask_testing
 import json
+# from sqlalchemy import event
 
 from flaskServer import *
 
 class TestApp(flask_testing.TestCase):
 
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
+   
     app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {}
     app.config['TESTING'] = True
+
+    # https://stackoverflow.com/questions/2614984/sqlite-sqlalchemy-how-to-enforce-foreign-keys
+    # Ensure FOREIGN KEY for sqlite3
+    # not working
+    # event.listen(db.engine, 'connect', lambda c, _: c.execute('pragma foreign_keys=on'))
 
     def create_app(self):
         return app
@@ -486,6 +493,121 @@ class TestDeleteCourse(TestApp):
         data = json.loads(response.data)['message']
         self.assertEqual(data, "Cannot delete course. Learning Journey with Course selected does not exist.")
 
+class TestAssignRoleFromSkill(TestApp):
+    """POST /skill/assign_to_role"""
+
+    def test_assignOneRoleFromSkill(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 3})
+        self.assertEqual(response.status_code, 201)
+        message = json.loads(response.data)['message']
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Skill_ID': 1, 'Role_ID': 3})
+        self.assertEqual(message, "Role(s) assigned to Skill successfully.")
+
+    def test_assignManyRolesFromSkill(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': [3, 2]})
+        self.assertEqual(response.status_code, 201)
+        message = json.loads(response.data)['message']
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, [{'Role_ID': 3, 'Skill_ID': 1}, {'Role_ID': 2, 'Skill_ID': 1}])
+        self.assertEqual(message, "Role(s) assigned to Skill successfully.")
+
+    def test_assignRoleFromSkillMissingSkillKey(self):
+        response = self.client.post('/skill/assign_to_role', json={'Role_ID': 3})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Role ID cannot be empty or non interger")
+
+    def test_assignRoleFromSkillMissingRoleKey(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Role ID cannot be empty or non interger")
+    
+    def test_assignRoleFromSkillSkillIDNotInteger(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 'a', 'Role_ID': 3})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Role ID cannot be empty or non interger")
+
+    def test_assignRoleFromSkillRoleIDNotIntegerOrList(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 'a'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Role ID cannot be empty or non interger")
+
+    def test_assignRoleFromSkillRoleIDEmptyList(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': []})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role ID cannot be empty list")
+
+    # enable of FK constraint on sqllite not working, so this test will fail
+    # works as intended on postman with sql server
+    # def test_assignRoleFromSkillSkillIDOutOfRange(self):
+    #     response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 9999, 'Role_ID': 3})
+    #     self.assertEqual(response.status_code, 500)
+    #     message = json.loads(response.data)['message']
+    #     self.assertIn(message, "Unable to assign skill to role. Error message: ")
+
+    # enable of FK constraint on sqllite not working, so this test will fail
+    # works as intended on postman with sql server
+    # def test_assignRoleFromSkillRoleIDOutOfRange(self):
+    #     response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 9999})
+    #     self.assertEqual(response.status_code, 500)
+    #     message = json.loads(response.data)['message']
+    #     self.assertIn(message, "Unable to assign skill to role. Error message: ")
+
+    # UNIQUE constraint failed on sql lite, so this test will fail
+    # works as intended on postman with sql server
+    # def test_assignRoleFromSkillAlreadyAssigned(self):
+    #     response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 1})
+    #     self.assertEqual(response.status_code, 500)
+    #     message = json.loads(response.data)['message']
+    #     self.assertIn(message, "Unable to assign skill to role. Error message: ")
+
+
+class TestUnassignRoleFromSkill(TestApp):
+    """DELETE /skill/unassign_role_from_skill"""
+    pass
+    # roleID not in table
+    # skillID not in table ect ect
+
+class TestAssignCourseFromSkill(TestApp):
+    """POST /skill/assign_to_courses"""
+    pass
+
+class TestUnassignCourseFromSkill(TestApp):
+    """DELETE /skill/unassign_course_from_skill"""
+    pass
+
+class TestGetAssignedRolesFromSkill(TestApp):
+    """GET /skill/assigned_roles""" # split this into 2 classes?
+    """GET /skill/get_assigned_roles_by_ID/<int:skill_id>"""
+    pass
+
+class TestGetAssignedCoursesFromSkill(TestApp):
+    """GET /skill/assigned_courses"""  # split this into 2 classes?
+    """GET /skill/get_assigned_courses_by_ID/<int:skill_id>"""
+    pass
+
+"""
+WIP
+assign and unassign skills to roles and courses from skill 
+(4 of them, 3 more to do)
+
+get assigned role from skillID
+
+get assigned role from ONE skillID
+
+get assigned course from skillID
+
+get assigned course from ONE skillID
+
+LJ and all its related end points
+
+
+"""
 
 if __name__ == '__main__':
     unittest.main()

@@ -1207,20 +1207,20 @@ def getAssignedCoursesByID(skill_id):
             "message": "Unable to get assigned role from database. Error message: " + str(e)
         }), 500
 
-
-@app.route('/role/assigned_skill/<int:role_id>')
-def getAssignedSkill(role_id):
-    try:
-        skills = SkillRole.getAssignedSkillByRoleID(role_id=role_id)
-        return jsonify({
-            "code": 201,
-            "data": [s.to_json() for s in skills]
-        }), 201
-    except Exception as e:
-        return jsonify({
-            "code": 500,
-            "message": "Unable to get assigned skill from database. Error message: " + str(e)
-        }), 500
+# duplicated code, to remove after testing front end
+# @app.route('/role/assigned_skill/<int:role_id>')
+# def getAssignedSkill(role_id):
+#     try:
+#         skills = SkillRole.getAssignedSkillByRoleID(role_id=role_id)
+#         return jsonify({
+#             "code": 201,
+#             "data": [s.to_json() for s in skills]
+#         }), 201
+#     except Exception as e:
+#         return jsonify({
+#             "code": 500,
+#             "message": "Unable to get assigned skill from database. Error message: " + str(e)
+#         }), 500
 
 
 @app.route('/LJ/deleteLJ/<int:lj_id>')

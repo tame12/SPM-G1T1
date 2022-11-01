@@ -95,7 +95,7 @@ $(function () {
         })
 
     axios // this part will populate get the assigned skills for the role and populate the courses relating to it inside the accordion
-        .get("http://localhost:456/role/assigned_skill/" + role_id)
+        .get("http://localhost:456/role/assigned_skills/" + role_id)
         .then(function (response) {
             console.log(response.data.data);
 

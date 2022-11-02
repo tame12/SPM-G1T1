@@ -1,7 +1,7 @@
 import unittest
 import flask_testing
 import json
-# from sqlalchemy import event
+from sqlalchemy import event
 
 from backend.server.flaskServer import *
 
@@ -13,9 +13,8 @@ class TestApp(flask_testing.TestCase):
     app.config['TESTING'] = True
 
     # https://stackoverflow.com/questions/2614984/sqlite-sqlalchemy-how-to-enforce-foreign-keys
-    # Ensure FOREIGN KEY for sqlite3
-    # not working
-    # event.listen(db.engine, 'connect', lambda c, _: c.execute('pragma foreign_keys=on'))
+    # manually enable FOREIGN KEY constrains for sqlite3
+    event.listen(db.engine, 'connect', lambda c, _: c.execute('pragma foreign_keys=on'))
 
     def create_app(self):
         return app
@@ -61,11 +60,13 @@ class TestApp(flask_testing.TestCase):
 
             Role(Role_ID=1, Role_Name="SWE", Role_Desc= "Software Engineer", Role_Is_Active= 1),
             Role(Role_ID=2, Role_Name="PM", Role_Desc= "Project Manager", Role_Is_Active= 1),
-            Role(Role_ID=3, Role_Name="BA", Role_Desc= "Business Analyst", Role_Is_Active= 0),
+            Role(Role_ID=3, Role_Name="BA", Role_Desc= "Business Analyst", Role_Is_Active= 0)
 
             # Registration(Reg_ID=12345, Course_ID="IS-1", Staff_ID=4, Reg_Status="Registered", Completion_Status="Completed"),
             # Registration(Reg_ID=12346, Course_ID="IS-1", Staff_ID=5, Reg_Status="Registered", Completion_Status="Completed")),
-
+        ])
+        db.session.commit()
+        db.session.add_all([
             SkillCourse(Course_ID="IS-1", Skill_ID=1),
             SkillCourse(Course_ID="IS-1", Skill_ID=2),
             SkillCourse(Course_ID="IS-2", Skill_ID=3),
@@ -73,8 +74,10 @@ class TestApp(flask_testing.TestCase):
 
             SkillRole(Skill_ID=1, Role_ID=1),
             SkillRole(Skill_ID=2, Role_ID=2),
-            SkillRole(Skill_ID=2, Role_ID=1),
-
+            SkillRole(Skill_ID=2, Role_ID=1)
+        ])
+        db.session.commit()
+        db.session.add_all([
             LJ(LJ_ID=1, Staff_ID=1, Role_ID=1, LJ_Number=1),
             LJ(LJ_ID=2, Staff_ID=1, Role_ID=2, LJ_Number=2),
             LJ(LJ_ID=3, Staff_ID=1, Role_ID=3, LJ_Number=3),
@@ -93,7 +96,6 @@ class TestApp(flask_testing.TestCase):
             LJSkillCourse(LJ_ID=5, Course_ID="IS-3", Skill_ID=3),
             LJSkillCourse(LJ_ID=5, Course_ID="IS-4", Skill_ID=4),
             LJSkillCourse(LJ_ID=6, Course_ID="IS-5", Skill_ID=5),
-
         ])
         db.session.commit()
 
@@ -551,19 +553,19 @@ class TestAssignRoleFromSkill(TestApp):
 
     # enable of FK constraint on sqllite not working, so this test will fail
     # works as intended on postman with sql server
-    # def test_assignRoleFromSkillSkillIDOutOfRange(self):
-    #     response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 9999, 'Role_ID': 3})
-    #     self.assertEqual(response.status_code, 500)
-    #     message = json.loads(response.data)['message']
-    #     self.assertIn("Unable to assign skill to role. Error message: ", message)
+    def test_assignRoleFromSkillSkillIDOutOfRange(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 9999, 'Role_ID': 3})
+        self.assertEqual(response.status_code, 500)
+        message = json.loads(response.data)['message']
+        self.assertIn("Unable to assign skill to role. Error message: ", message)
 
     # enable of FK constraint on sqllite not working, so this test will fail
     # works as intended on postman with sql server
-    # def test_assignRoleFromSkillRoleIDOutOfRange(self):
-    #     response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 9999})
-    #     self.assertEqual(response.status_code, 500)
-    #     message = json.loads(response.data)['message']
-    #     self.assertIn("Unable to assign skill to role. Error message: ", message)
+    def test_assignRoleFromSkillRoleIDOutOfRange(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 9999})
+        self.assertEqual(response.status_code, 500)
+        message = json.loads(response.data)['message']
+        self.assertIn("Unable to assign skill to role. Error message: ", message)
 
 class TestUnassignRoleFromSkill(TestApp):
     """DELETE /skill/unassign_role_from_skill"""
@@ -694,27 +696,27 @@ class TestAssignCourseFromSkill(TestApp):
 
     # enable of FK constraint on sqllite not working, so this test will fail
     # works as intended on postman with sql server
-    # def test_assignCourseFromSkillCourseNotFound(self):
-    #     response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 1, 'Course_ID': 'IS-999'})
-    #     self.assertEqual(response.status_code, 500)
-    #     message = json.loads(response.data)['message']
-    #     self.assertIn("Unable to assign course to skill. Error message:", message)
+    def test_assignCourseFromSkillCourseNotFound(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 1, 'Course_ID': 'IS-999'})
+        self.assertEqual(response.status_code, 500)
+        message = json.loads(response.data)['message']
+        self.assertIn("Unable to assign course to skill. Error message:", message)
     
     # enable of FK constraint on sqllite not working, so this test will fail
     # works as intended on postman with sql server
-    # def test_assignCourseFromSkillSkillNotFound(self):
-    #     response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 999, 'Course_ID': 'IS-2'})
-    #     self.assertEqual(response.status_code, 500)
-    #     message = json.loads(response.data)['message']
-    #     self.assertIn("Unable to assign course to skill. Error message:", message)
+    def test_assignCourseFromSkillSkillNotFound(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 999, 'Course_ID': 'IS-2'})
+        self.assertEqual(response.status_code, 500)
+        message = json.loads(response.data)['message']
+        self.assertIn("Unable to assign course to skill. Error message:", message)
 
     # enable of FK constraint on sqllite not working, so this test will fail
     # works as intended on postman with sql server
-    # def test_assignManyCourseFromSkillCourseNotFound(self):
-    #     response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 2, 'Course_ID': ['IS-999']})
-    #     self.assertEqual(response.status_code, 500)
-    #     message = json.loads(response.data)['message']
-    #     self.assertIn("Unable to assign course to skill. Error message:", message)
+    def test_assignManyCourseFromSkillCourseNotFound(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 2, 'Course_ID': ['IS-999']})
+        self.assertEqual(response.status_code, 500)
+        message = json.loads(response.data)['message']
+        self.assertIn("Unable to assign course to skill. Error message:", message)
 
 class TestUnassignCourseFromSkill(TestApp):
     """DELETE /skill/unassign_course_from_skill"""

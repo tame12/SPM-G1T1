@@ -183,7 +183,7 @@ class SkillCourse(db.Model):
 
 class LJSkillCourse(db.Model):
     __tablename__ = 'Learning_Journey_Course'
-    LJ_ID = db.Column(db.Integer, db.ForeignKey(LJ.LJ_ID),
+    LJ_ID = db.Column(db.Integer, db.ForeignKey(LJ.LJ_ID, ondelete="CASCADE"),
                       primary_key=True, nullable=False)
     Course_ID = db.Column(db.String(20), db.ForeignKey(
         Course.Course_ID), primary_key=True, nullable=False)

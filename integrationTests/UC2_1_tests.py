@@ -1,8 +1,9 @@
 import unittest
 import flask_testing
 import json
-
-from backend.server.flask import *
+import sys
+sys.path.append("..")
+from backend.server.flaskServer import *
 
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"

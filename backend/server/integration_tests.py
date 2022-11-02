@@ -778,34 +778,122 @@ class TestUnassignCourseFromSkill(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill and course does not exist.")
 
+# get assigned role from skillID
+class TestGetAssignedRoleFromSkill(TestApp):
+    """GET /skill/assigned_roles"""
+    def test_getAssignedRoleFromSkill(self):
+        response = self.client.get('/skill/assigned_roles', json={'Skill_IDs': [1]})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        expectedResponse = [{
+            "roles": [
+                {
+                    "Role_Desc": "Software Engineer",
+                    "Role_ID": 1,
+                    "Role_Is_Active": True,
+                    "Role_Name": "SWE"
+                }
+            ],
+            "skill": {
+                "Skill_ID": 1,
+                "Skill_Is_Active": True,
+                "Skill_Name": "Basic programming 1"
+            }
+        }]
+        self.assertEqual(data, expectedResponse)
+
+    def test_getAssignedRoleFromManySkill(self):
+        response = self.client.get('/skill/assigned_roles', json={'Skill_IDs': [1, 2]})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        expectedResponse = [
+            {
+                "roles": [
+                    {
+                        "Role_Desc": "Software Engineer",
+                        "Role_ID": 1,
+                        "Role_Is_Active": True,
+                        "Role_Name": "SWE"
+                    }
+                ],
+                "skill": {
+                    "Skill_ID": 1,
+                    "Skill_Is_Active": True,
+                    "Skill_Name": "Basic programming 1"
+                }
+            },
+            {
+                "roles": [
+                    {
+                        "Role_Desc": "Software Engineer",
+                        "Role_ID": 1,
+                        "Role_Is_Active": True,
+                        "Role_Name": "SWE"
+                    },
+                    {
+                        "Role_Desc": "Project Manager",
+                        "Role_ID": 2,
+                        "Role_Is_Active": True,
+                        "Role_Name": "PM"
+                    }
+                ],
+                "skill": {
+                    "Skill_ID": 2,
+                    "Skill_Is_Active": True,
+                    "Skill_Name": "Basic programming 2"
+                }
+            }
+        ]
+        self.assertEqual(data, expectedResponse)
+    
+    def test_getAssignedRoleFromSkillNotFound(self):
+        response = self.client.get('/skill/assigned_roles', json={'Skill_IDs': [999]})
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, [])
+
+    def test_getAssignedRoleFromSkillMissingSkillIDKey(self):
+        response = self.client.get('/skill/assigned_roles', json={})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID cannot be empty.")
+
+    def test_getAssignedRoleFromSkillSkillIDEmptyList(self):
+        response = self.client.get('/skill/assigned_roles', json={'Skill_IDs': []})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID cannot be empty.")
+
+    def test_getAssignedRoleFromSkillSkillIDNotInteger(self):
+        response = self.client.get('/skill/assigned_roles', json={'Skill_ID': 'a'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID cannot be empty.")
+
+"""
+everything below is WIP
+3 (+ LJ) more endpoints
+"""
 
 
 
-
-
-class TestGetAssignedRolesFromSkill(TestApp):
-    """GET /skill/assigned_roles""" # split this into 2 classes?
+# get assigned role from ONE skillID
+class TestGetAssignedRoleFromOneSkill(TestApp):
     """GET /skill/get_assigned_roles_by_ID/<int:skill_id>"""
     pass
 
-class TestGetAssignedCoursesFromSkill(TestApp):
-    """GET /skill/assigned_courses"""  # split this into 2 classes?
+# get assigned course from skillID
+class TestGetAssignedCourseFromSkill(TestApp):
+    """GET /skill/assigned_courses"""
+    pass
+
+# get assigned course from ONE skillID
+class TestGetAssignedCourseFromOneSkill(TestApp):
     """GET /skill/get_assigned_courses_by_ID/<int:skill_id>"""
     pass
 
 """
-WIP
-
-get assigned role from skillID
-
-get assigned role from ONE skillID
-
-get assigned course from skillID
-
-get assigned course from ONE skillID
-
 LJ and all its related end points
-
 
 """
 

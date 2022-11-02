@@ -270,7 +270,23 @@ def getLJsbyStaffID(Staff_ID):
 @app.route('/LJ/get_courses_by_LJ_ID/<string:LJ_ID>')
 def getCoursesByLJ_ID(LJ_ID):
     try:
+        # check if LJ exists
+        lj = LJ.query.filter_by(LJ_ID=LJ_ID).first()
+        if lj is None:
+            return jsonify({
+                "code": 404,
+                "message": "LJ does not exist"
+            }), 404
+        
+
+        # check if there are courses assigned to the LJ
         courses = LJSkillCourse.getCoursesByLJ_ID(LJ_ID)
+        if courses is None: 
+            return jsonify({
+                "code": 404,
+                "message": "No courses assigned to LJ"
+            }), 404
+
         return jsonify({
             "code": 201,
             "data": [c.to_json() for c in courses]
@@ -297,8 +313,9 @@ def createLJ():
                 "code": 400,
                 "message": 'Fields must match "Role_ID","Staff_ID","LJ_Number","LJ_Courses" .'
             }), 400
+        
         # check if the data are all inputted
-        if "" in data.values():
+        if "" in data.values() or [] in data.values():
             return jsonify({
                 "code": 400,
                 "message": 'Fields cannot be empty'
@@ -314,11 +331,13 @@ def createLJ():
         
         # check if the role exists
         role = Role.query.filter_by(Role_ID=data["Role_ID"]).first()
+        print(role)
         if role is None: 
             return jsonify({
                 "code": 404,
                 "message": "Role does not exist"
             }), 404
+    
 
         # check if this user already has an LJ with the same role
         lj = LJ.query.filter_by(
@@ -341,11 +360,6 @@ def createLJ():
                 LJ_ID=new_LJ.LJ_ID, Course_ID=data['LJ_Courses'][i], Skill_ID=data['LJ_Skills'][i])
             db.session.add(new_LJSkillCourse)
         db.session.commit()
-
-        # add courses tagged to newly created learning journey ID
-        # new_LJ_Course = LJSkillCourse(LJ_ID=new_LJ.LJ_ID, Course_ID=data["LJ_Courses"])
-        # db.session.add(new_LJ_Course)
-        # db.session.commit()
         return jsonify({
             "code": 201,
             "message": "LJ created successfully.",
@@ -428,6 +442,15 @@ def addCourseToLJ():
 @app.route('/LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>', methods=["GET"])
 def getCourseAndSkillByLJ_ID(LJ_ID):
     try:
+        #  check if the LJ exists
+        lj = LJ.query.filter_by(LJ_ID=LJ_ID).first()
+        if lj is None:
+            return jsonify({
+                "code": 404,
+                "message": "LJ does not exist"
+            }), 404
+
+
         skill_course = LJSkillCourse.getCourseSkillByLJ_ID(LJ_ID)
         print(skill_course)
         data = []

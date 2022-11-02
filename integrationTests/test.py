@@ -1,12 +1,12 @@
-import sys
+# import sys
   
-# append the path of the
-# parent directory
-sys.path.append("..")
+# # append the path of the
+# # parent directory
+# sys.path.append("..")
   
-# import method from sibling 
-# module
-from backend import hello
+# # import method from sibling 
+# # module
+# from backend import hello
   
-# call method
-hello()
+# # call method
+# hello()

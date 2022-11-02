@@ -64,6 +64,7 @@ class TestApp(flask_testing.TestCase):
 
             SkillCourse(Course_ID="IS-1", Skill_ID=1),
             SkillCourse(Course_ID="IS-1", Skill_ID=2),
+            
 
             SkillRole(Skill_ID=1, Role_ID=1),
             SkillRole(Skill_ID=2, Role_ID=2),
@@ -97,16 +98,8 @@ class TestApp(flask_testing.TestCase):
 
 class TestCreateLJ(TestApp):
     def test_createLJ_success(self):
-        # Create new LJ
-        # {
-            #     "Staff_ID": userID,
-            #     "Role_ID": role_id,
-            #     "LJ_Number": 5,
-            #     "LJ_Courses": courses,
-            #     "LJ_Skills": skills
-            # }
         response = self.client.post('/LJ/addLJ', json={
-            "Role_ID": 4,
+            "Role_ID": 3,
             "Staff_ID": 3,
             "LJ_Number": 4,
             "LJ_Courses": ["IS-6","IS-11","IS-7"],
@@ -116,7 +109,7 @@ class TestCreateLJ(TestApp):
         expected_data_response = {
             "LJ_ID": 7,
             "LJ_Number": 4,
-            "Role_ID": 4,
+            "Role_ID": 3,
             "Staff_ID": 3
         }
 
@@ -124,13 +117,25 @@ class TestCreateLJ(TestApp):
         self.assertEqual(response.json['message'], 'LJ created successfully.')
         self.assertEqual(response.json['data'], expected_data_response)
 
-    def test_createLJ_fail_invalid_params(self):
+    def test_createLJ_fail_invalid_keys(self):
         response = self.client.post('/LJ/addLJ', json={
             "Role_ID": 4,
             "Staff_ID": 999
         })
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json['message'], 'Fields must match "Role_ID","Staff_ID","LJ_Number","LJ_Courses" .')
+
+    def test_createLJ_fail_empty_keys(self):
+        response = self.client.post('/LJ/addLJ', json={
+            "Role_ID": 3,
+            "Staff_ID": 3,
+            "LJ_Number": 4,
+            "LJ_Courses": [],
+            "LJ_Skills":[]
+        })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message'], 'Fields cannot be empty')
+
     
     def test_createLJ_fail_invalid_staffID(self):
         response = self.client.post('/LJ/addLJ', json={
@@ -157,18 +162,129 @@ class TestCreateLJ(TestApp):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json['message'], 'Role does not exist')
 
-    def test_createLJ_fail_invalid_LJCourse_and_LJSkills_not_matching(self):
+    # Unsure of whether I should be doing this or not
+    # def test_createLJ_fail_invalid_LJCourse_and_LJSkills_not_matching(self):
+    #     response = self.client.post('/LJ/addLJ', json={
+    #         "Role_ID": 99999,
+    #         "Staff_ID": 3,
+    #         "LJ_Number": 4,
+    #         "LJ_Courses": ["IS-6","IS-11","IS-7"],
+    #         "LJ_Skills":[1,2,3]
+    #     })
+
+    #     self.assertEqual(response.status_code, 404)
+    #     self.assertEqual(response.json['message'], 'Role does not exist')
+
+    # test create LJ fail because LJ already exists
+    def test_createLJ_fail_LJ_already_exists(self):
         response = self.client.post('/LJ/addLJ', json={
-            "Role_ID": 99999,
-            "Staff_ID": 3,
-            "LJ_Number": 4,
-            "LJ_Courses": ["IS-6","IS-11","IS-7"],
-            "LJ_Skills":[1,2,3]
+            "Role_ID": 1,
+            "Staff_ID": 1,
+            "LJ_Number": 1,
+            "LJ_Courses": ["IS-1","IS-2"],
+            "LJ_Skills":[1,2]
         })
 
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json['message'], 'Role does not exist')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message'], 'LJ already exists.')
 
+class TestViewLJ_Learner(TestApp):
+    def test_view_LJ_learner(self):
+        # Tests if "John Smith", a learner, is able to view his courses
+        response = self.client.get('/LJ/1')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        expected_data_response = [{'LJ_ID': 1, 'LJ_Number': 1, 'Role_ID': 1, 'Staff_ID': 1}, {'LJ_ID': 2, 'LJ_Number': 2, 'Role_ID': 2, 'Staff_ID': 1}, {'LJ_ID': 3, 'LJ_Number': 3, 'Role_ID': 3, 'Staff_ID': 1}]
+
+        self.assertEqual(data, expected_data_response)
+
+        expected_role_data_response = [{'Role_ID': 1, 'Role_Name': 'SWE', 'Role_Desc': 'Software Engineer', 'Role_Is_Active': 1}, {'Role_ID': 2, 'Role_Name': 'PM', 'Role_Desc': 'Project Manager', 'Role_Is_Active': 1}, {'Role_ID': 3, 'Role_Name': 'BA', 'Role_Desc': 'Business Analyst', 'Role_Is_Active': 0}]
+        self.assertEqual(json.loads(response.data)['role_data'], expected_role_data_response)
+
+    def test_view_LJ_learner_invalid(self):
+        # Tests a learner that does not exist
+        response = self.client.get('/LJ/999')
+        self.assertEqual(response.status_code, 404)
+
+class TestGetCoursesByLJ_ID(TestApp):
+    def test_get_courses_by_lj_id_success(self):
+        response = self.client.get('LJ/get_courses_by_LJ_ID/1')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json['data'], [
+        {
+            "Course_Category": "Technical",
+            "Course_Desc": "case aborum.",
+            "Course_ID": "IS-1",
+            "Course_Is_Active": True,
+            "Course_Name": "Information Systems & Innovation",
+            "Course_Type": "Internal"
+        },
+        {
+            "Course_Category": "Technical",
+            "Course_Desc": "modeling, lorem ipsum doloraborum.",
+            "Course_ID": "IS-2",
+            "Course_Is_Active": True,
+            "Course_Name": "Business Process Analysis and Solutioning",
+            "Course_Type": "External"
+        }
+    ])
+
+    def test_get_courses_by_lj_id_fail_invalid_lj_id(self):
+        response = self.client.get('LJ/get_courses_by_LJ_ID/999')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json['message'], 'LJ does not exist')
+
+class TestGetAllLJ(TestApp):
+    def test_get_all_LJ(self):
+        response = self.client.get('/LJ')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json['data'], [{'LJ_ID': 1, 'LJ_Number': 1, 'Role_ID': 1, 'Staff_ID': 1}, {'LJ_ID': 2, 'LJ_Number': 2, 'Role_ID': 2, 'Staff_ID': 1}, {'LJ_ID': 3, 'LJ_Number': 3, 'Role_ID': 3, 'Staff_ID': 1}, {'LJ_ID': 4, 'LJ_Number': 1, 'Role_ID': 1, 'Staff_ID': 4}, {'LJ_ID': 5, 'LJ_Number': 2, 'Role_ID': 2, 'Staff_ID': 4}, {'LJ_ID': 6, 'LJ_Number': 3, 'Role_ID': 3, 'Staff_ID': 4}])
+
+class TestAddCourseToLJ(TestApp):
+    def test_add_course_to_lj_fail_skill_unmapped(self):
+        response = self.client.post('/LJ/addLJ/Course', json={
+            "LJ_ID": 1,
+            "Course_ID": "IS-3",
+            "Skill_ID": 3
+        })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message'], 'Skill is not mapped to course.')
+
+
+    def test_add_course_to_lj_fail_invalid_keys(self):
+        response = self.client.post('/LJ/addLJ/Course', json={
+            "LJ_IDa": 1,
+            "Course_IDa": "IS-1",
+            "Skill_IDa": 2
+        })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message'], 'Fields must match "LJ_ID","Course_ID","Skill_ID"')
+
+    def test_add_course_to_lj_fail_empty_values(self):
+        response = self.client.post('/LJ/addLJ/Course', json={
+            "LJ_ID": "",
+            "Course_ID": "IS-1",
+            "Skill_ID": 2
+        })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message'], 'Fields cannot be empty')
+
+
+class TestgetCoursesAndSkillByLLJID(TestApp):
+    def test_get_courses_and_skill_by_LJ_ID_success(self):
+        response = self.client.get('/LJ/getCourseAndSkillByLJ_ID/1')
+
+
+        print(response.json['data'])
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json['data'], [{'Course_ID': 'IS-1', 'Course_Name': 'Information Systems & Innovation', 'Skill_ID': 1, 'Skill_Name': 'Basic programming 1'}, {'Course_ID': 'IS-2', 'Course_Name': 'Business Process Analysis and Solutioning', 'Skill_ID': 2, 'Skill_Name': 'Basic programming 2'}])
+
+    def test_get_courses_and_skill_by_LJ_ID_fail_invalid_lj_id(self):
+        response = self.client.get('/LJ/getCourseAndSkillByLJ_ID/999')
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json['message'], 'LJ does not exist')
+    
+    
 
 if __name__ == '__main__':
     unittest.main()

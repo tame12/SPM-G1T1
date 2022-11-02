@@ -2,6 +2,8 @@ import unittest
 import flask_testing
 import json
 from sqlalchemy import event
+import sys
+sys.path.append("..")
 
 from backend.server.flaskServer import *
 

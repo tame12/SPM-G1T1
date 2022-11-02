@@ -332,7 +332,7 @@ def createLJ():
         # db.session.commit()
         return jsonify({
             "code": 201,
-            "message": "Role created successfully.",
+            "message": "LJ created successfully.",
             "data": new_LJ.to_json()
         }), 201
 

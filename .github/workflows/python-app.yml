@@ -40,4 +40,4 @@ jobs:
       run: |
         export PYTHONPATH="${PYTHONPATH}:."
         python integrationTests/integration_tests.py
-        python integrationTests/UC2_1_tests.py
+        python integrationTests/LearningJourney_tests.py

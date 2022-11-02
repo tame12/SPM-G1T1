@@ -145,7 +145,7 @@
                                         <p class="m-0">${rname}</p>
                                         <img role="button" src="images/delete.svg" alt="" data-ljid="${ljid}" onclick="event.stopPropagation(); delete_lj(this)">
                                     </div>
-                                    <img class="pe-5" role="button" src="images/edit.svg" alt="" data-ljid="${ljid}" data-rname="${rname}" data-rid="${rid}" onclick="event.stopPropagation(); modify_lj(this)">
+                                    <img class="pe-5" role="button" src="images/edit.svg" alt="" data-ljid="${ljid}" data-rname="${rname}" data-rid="${rid}" data-rdesc="${rdesc}" onclick="event.stopPropagation(); modify_lj(this)">
                                     </button>
                                 </h2>
                                 <div id="panelsStayOpen-collapseOne${rid}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne${rid}">
@@ -296,11 +296,13 @@
         ljid = $(e).data("ljid"); //correct
         role_ID = $(e).data("rid"); //correct
         role_name = $(e).data("rname"); //correct
+        role_desc = $(e).data("rdesc");
         console.log("ljid: ", ljid); //correct
         console.log("rid: ", role_ID); //correct
         console.log("role_name: ", role_name); //correct
         localStorage.setItem("role_ID", role_ID); //correct
         localStorage.setItem("role_name", role_name); //correct
+        localStorage.setItem("role_desc", role_desc) 
         localStorage.setItem("ljid", ljid); //correct
         window.location.href = "modify_lj.html"; 
     }

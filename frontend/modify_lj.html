@@ -74,26 +74,34 @@ $(function () {
     var role_name = localStorage.getItem("role_name");
     var role_id = localStorage.getItem("role_ID");
     var ljid = localStorage.getItem("ljid");
+    var role_desc = localStorage.getItem("role_desc");
     localStorage.setItem("checked",JSON.stringify([]))
     localStorage.setItem("coursesSelected", JSON.stringify({}));
     // console.log(role_name, role_id);
 
-    axios // this part will populate the role name and description
-        .get("http://localhost:456/role/search/" + role_name)
-        .then(function (response) {
-            console.log(response.data.data[0]);
+    // axios // this part will populate the role name and description
+    //     .get("http://localhost:456/role/search/" + role_name)
+    //     .then(function (response) {
+    //         console.log(response.data.data[0]);
 
-            if (response.data.code == "201") { // success
-                $("#role-selected").text(role_name);
-                $("#role-desc").text(response.data.data[0].Role_Desc);
+    //         if (response.data.code == "201") { // success
+    //             $("#role-selected").text(role_name);
+    //             // $("#role-desc").text(response.data.data[0].Role_Desc);
+    //             // console.log("Role desc: ", response.data.data[0].Role_Desc);
+    //             $('#role-desc').text(role_desc);
+    //             console.log("role_desc: ", role_desc);
 
-                // nested axios - get skills
+    //             // nested axios - get skills
 
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
+    //         }
+    //     })
+    //     .catch(function (error) {
+    //         console.log(error);
+    //     })
+
+    $('#role-desc').text(role_desc);
+    $("#role-selected").text(role_name);
+    
 
     axios // this part will populate get the assigned skills for the role and populate the courses relating to it inside the accordion
         .get("http://localhost:456/role/assigned_skills/" + role_id)
@@ -122,7 +130,7 @@ $(function () {
                         courses = get_courses[i].data.message[0].courses
                         course_html = ''
 
-                      
+
                         for (course of courses) {
                             // original
                             //course_html += `<div class=" border-box px-4 py-2 bg-grey border border-0" text-black data-id='${course.Course_ID}'>${course.Course_Name}</div>`

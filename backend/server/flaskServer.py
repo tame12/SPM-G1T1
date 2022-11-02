@@ -1,27 +1,23 @@
-# import json
-from calendar import c
-from time import sleep
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-DB_USERNAME = os.getenv('DB_USERNAME')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-
-if DB_USERNAME is None or DB_PASSWORD is None:
-    print('DB_USERNAME or DB_PASSWORD not set')
-    exit(1)
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@localhost:3306/is212_g1t1'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
-                                           'pool_recycle': 280}
+
+if __name__ == '__main__':
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    DB_USERNAME = os.getenv('DB_USERNAME')
+    DB_PASSWORD = os.getenv('DB_PASSWORD')
+    if DB_USERNAME is None or DB_PASSWORD is None:
+        print('DB_USERNAME or DB_PASSWORD not set')
+        exit(1)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@localhost:3306/is212_g1t1'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
+                                            'pool_recycle': 280}
 
 db = SQLAlchemy(app)
 CORS(app)
@@ -187,7 +183,7 @@ class SkillCourse(db.Model):
 
 class LJSkillCourse(db.Model):
     __tablename__ = 'Learning_Journey_Course'
-    LJ_ID = db.Column(db.Integer, db.ForeignKey(LJ.LJ_ID),
+    LJ_ID = db.Column(db.Integer, db.ForeignKey(LJ.LJ_ID, ondelete="CASCADE"),
                       primary_key=True, nullable=False)
     Course_ID = db.Column(db.String(20), db.ForeignKey(
         Course.Course_ID), primary_key=True, nullable=False)
@@ -250,6 +246,13 @@ def getAllLJ():
 @app.route('/LJ/<string:Staff_ID>')
 def getLJsbyStaffID(Staff_ID):
     try:
+        ljs = LJ.query.filter_by(Staff_ID=Staff_ID).first()
+        # this should be triggered all the time
+        if ljs is None: 
+            return jsonify({
+                "code": 404,
+                "message": "LJ does not exist"
+            }), 404
         ljs = LJ.query.filter_by(Staff_ID=Staff_ID)
         roles = Role.query.all()
         return jsonify({
@@ -329,7 +332,7 @@ def createLJ():
         # db.session.commit()
         return jsonify({
             "code": 201,
-            "message": "Role created successfully.",
+            "message": "LJ created successfully.",
             "data": new_LJ.to_json()
         }), 201
 
@@ -456,25 +459,25 @@ def getAllRole():
 # get role by role name
 
 # not in use
-@app.route('/role/search/<string:role_name>', methods=['GET'])
-def getRoleByName(role_name):
-    try:
-        role = Role.query.filter(Role.Role_Name.like(f'%{role_name}%')).all()
-        if role:
-            return jsonify({
-                "code": 201,
-                "data": [r.to_json() for r in role]
-            }), 201
-        else:
-            return jsonify({
-                "code": 400,
-                "message": "Role not found."
-            }), 400
-    except Exception:
-        return jsonify({
-            "code": 500,
-            "message": "Unable to get role from database."
-        }), 500
+# @app.route('/role/search/<string:role_name>', methods=['GET'])
+# def getRoleByName(role_name):
+#     try:
+#         role = Role.query.filter(Role.Role_Name.like(f'%{role_name}%')).all()
+#         if role:
+#             return jsonify({
+#                 "code": 201,
+#                 "data": [r.to_json() for r in role]
+#             }), 201
+#         else:
+#             return jsonify({
+#                 "code": 400,
+#                 "message": "Role not found."
+#             }), 400
+#     except Exception:
+#         return jsonify({
+#             "code": 500,
+#             "message": "Unable to get role from database."
+#         }), 500
 
 
 @app.route('/course')
@@ -946,6 +949,12 @@ def assignSkillToRole():
                 "message": "Skill ID and Role ID cannot be empty or non interger"
             }), 400
 
+        if isinstance(data['Role_ID'], list) and len(data['Role_ID']) == 0:
+            return jsonify({
+                "code": 400,
+                "message": "Role ID cannot be empty list"
+            }), 400
+
         returnMessage = []
         if isinstance(data['Role_ID'], int):
             newSkillRole = SkillRole(
@@ -988,6 +997,12 @@ def unassignRoleFromSkill():
             return jsonify({
                 "code": 400,
                 "message": "Skill ID and Role ID cannot be empty or non interger"
+            }), 400
+
+        if isinstance(data['Role_ID'], list) and len(data['Role_ID']) == 0:
+            return jsonify({
+                "code": 400,
+                "message": "Role ID cannot be empty list"
             }), 400
 
         if isinstance(data['Role_ID'], int):
@@ -1042,6 +1057,13 @@ def assignSkillToCourses():
                 "message": "Skill ID and Course ID must be an integer and string respectively"
             }), 400
 
+        if isinstance(data['Course_ID'], list) and len(data['Course_ID']) == 0:
+            return jsonify({
+                "code": 400,
+                "message": "Course ID cannot be empty list"
+            }), 400
+
+
         returnMessage = []
         if isinstance(data['Course_ID'], str):
             newSkillCourse = SkillCourse(
@@ -1084,6 +1106,12 @@ def unassignCourseFromSkill():
             return jsonify({
                 "code": 400,
                 "message": "Skill ID and Course ID must be an integer and string respectively"
+            }), 400
+
+        if isinstance(data['Course_ID'], list) and len(data['Course_ID']) == 0:
+            return jsonify({
+                "code": 400,
+                "message": "Course ID cannot be empty list"
             }), 400
 
         if isinstance(data['Course_ID'], str):
@@ -1131,7 +1159,7 @@ def unassignCourseFromSkill():
 def getAssignedCourses():
     try:
         data = request.get_json()
-        if 'Skill_IDs' not in data.keys() or data['Skill_IDs'] == []:
+        if 'Skill_IDs' not in data.keys() or not isinstance(data['Skill_IDs'], list) or data['Skill_IDs'] == []:
             return jsonify({
                 "code": 400,
                 "message": "Skill ID cannot be empty."
@@ -1156,7 +1184,7 @@ def getAssignedCourses():
 def getAssignedRoles():
     try:
         data = request.get_json()
-        if 'Skill_IDs' not in data.keys() or data['Skill_IDs'] == []:
+        if 'Skill_IDs' not in data.keys() or not isinstance(data['Skill_IDs'], list) or data['Skill_IDs'] == []:
             return jsonify({
                 "code": 400,
                 "message": "Skill ID cannot be empty."

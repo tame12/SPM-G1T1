@@ -1163,7 +1163,7 @@ def unassignCourseFromSkill():
 def getAssignedCourses():
     try:
         data = request.get_json()
-        if 'Skill_IDs' not in data.keys() or data['Skill_IDs'] == []:
+        if 'Skill_IDs' not in data.keys() or not isinstance(data['Skill_IDs'], list) or data['Skill_IDs'] == []:
             return jsonify({
                 "code": 400,
                 "message": "Skill ID cannot be empty."

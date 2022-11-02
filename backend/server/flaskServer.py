@@ -304,6 +304,22 @@ def createLJ():
                 "message": 'Fields cannot be empty'
             }), 400
 
+        # check if the user exists
+        staff = Staff.query.filter_by(Staff_ID=data["Staff_ID"]).first()
+        if staff is None:
+            return jsonify({
+                "code": 404,
+                "message": "Staff does not exist"
+            }), 404
+        
+        # check if the role exists
+        role = Role.query.filter_by(Role_ID=data["Role_ID"]).first()
+        if role is None: 
+            return jsonify({
+                "code": 404,
+                "message": "Role does not exist"
+            }), 404
+
         # check if this user already has an LJ with the same role
         lj = LJ.query.filter_by(
             Role_ID=data['Role_ID'], Staff_ID=data['Staff_ID']).first()

@@ -124,26 +124,51 @@ class TestCreateLJ(TestApp):
         self.assertEqual(response.json['message'], 'LJ created successfully.')
         self.assertEqual(response.json['data'], expected_data_response)
 
-    def test_createLJ_fail(self):
+    def test_createLJ_fail_invalid_params(self):
         response = self.client.post('/LJ/addLJ', json={
             "Role_ID": 4,
+            "Staff_ID": 999
+        })
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message'], 'Fields must match "Role_ID","Staff_ID","LJ_Number","LJ_Courses" .')
+    
+    def test_createLJ_fail_invalid_staffID(self):
+        response = self.client.post('/LJ/addLJ', json={
+            "Role_ID": 4,
+            "Staff_ID": 9999,
+            "LJ_Number": 4,
+            "LJ_Courses": ["IS-6","IS-11","IS-7"],
+            "LJ_Skills":[1,2,3]
+        })
+
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json['message'], 'Staff does not exist')
+
+    def test_createLJ_fail_invalid_roleID(self):
+        response = self.client.post('/LJ/addLJ', json={
+            "Role_ID": 99999,
             "Staff_ID": 3,
             "LJ_Number": 4,
             "LJ_Courses": ["IS-6","IS-11","IS-7"],
             "LJ_Skills":[1,2,3]
         })
 
-        expected_data_response = {
-            "LJ_ID": 7,
-            "LJ_Number": 4,
-            "Role_ID": 4,
-            "Staff_ID": 3
-        }
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json['message'], 'Role does not exist')
 
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json['message'], 'LJ creation failed.')
-        self.assertEqual(response.json['data'], expected_data_response)
-    
+    def test_createLJ_fail_invalid_LJCourse_and_LJSkills_not_matching(self):
+        response = self.client.post('/LJ/addLJ', json={
+            "Role_ID": 99999,
+            "Staff_ID": 3,
+            "LJ_Number": 4,
+            "LJ_Courses": ["IS-6","IS-11","IS-7"],
+            "LJ_Skills":[1,2,3]
+        })
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json['message'], 'Role does not exist')
+
 
 if __name__ == '__main__':
     unittest.main()

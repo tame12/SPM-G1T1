@@ -38,4 +38,5 @@ jobs:
 
     - name: Test with unittest
       run: |
+        export PYTHONPATH="${PYTHONPATH}:."
         python integrationTests/integration_tests.py

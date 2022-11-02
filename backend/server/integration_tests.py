@@ -68,6 +68,8 @@ class TestApp(flask_testing.TestCase):
 
             SkillCourse(Course_ID="IS-1", Skill_ID=1),
             SkillCourse(Course_ID="IS-1", Skill_ID=2),
+            SkillCourse(Course_ID="IS-2", Skill_ID=3),
+            SkillCourse(Course_ID="IS-3", Skill_ID=3),
 
             SkillRole(Skill_ID=1, Role_ID=1),
             SkillRole(Skill_ID=2, Role_ID=2),
@@ -716,7 +718,70 @@ class TestAssignCourseFromSkill(TestApp):
 
 class TestUnassignCourseFromSkill(TestApp):
     """DELETE /skill/unassign_course_from_skill"""
-    pass
+    def test_unassignCourseFromSkill(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 1, 'Course_ID': 'IS-1'})
+        self.assertEqual(response.status_code, 201)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Course unassigned from skill successfully.")
+
+    def test_unassignManyCourseFromSkill(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 3, 'Course_ID': ['IS-2', 'IS-3']})
+        self.assertEqual(response.status_code, 201)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Course unassigned from skill successfully.")
+
+    def test_unassignCourseFromSkillMissingSkillKey(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Course_ID': 'IS-2'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Course ID must be an integer and string respectively")
+
+    def test_unassignCourseFromSkillMissingCourseKey(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 1})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Course ID must be an integer and string respectively")
+
+    def test_unassignCourseFromSkillSkillIDNotInteger(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 'a', 'Course_ID': 'IS-2'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Course ID must be an integer and string respectively")
+
+    def test_unassignCourseFromSkillCourseIDNotInteger(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 1, 'Course_ID': 2})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Course ID must be an integer and string respectively")
+
+    def test_unassignCourseFromSkillCourseIDEmptyList(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 1, 'Course_ID': []})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Course ID cannot be empty list")
+    
+    def test_unassignCourseFromSkillSkillNotFound(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 999, 'Course_ID': 'IS-2'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill and course does not exist.")
+    
+    def test_unassignCourseFromSkillCourseNotFound(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 1, 'Course_ID': 'IS-999'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill and course does not exist.")
+
+    def test_unassignManyCourseFromSkillCourseNotFound(self):
+        response = self.client.delete('/skill/unassign_course_from_skill', json={'Skill_ID': 3, 'Course_ID': ['IS-2', 'IS-999']})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill and course does not exist.")
+
+
+
+
+
 
 class TestGetAssignedRolesFromSkill(TestApp):
     """GET /skill/assigned_roles""" # split this into 2 classes?
@@ -730,8 +795,6 @@ class TestGetAssignedCoursesFromSkill(TestApp):
 
 """
 WIP
-assign and unassign skills to roles and courses from skill 
-(4 of them, 1 more to do)
 
 get assigned role from skillID
 

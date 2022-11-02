@@ -1059,7 +1059,7 @@ def assignSkillToCourses():
                 "code": 400,
                 "message": "Course ID cannot be empty list"
             }), 400
-            
+
 
         returnMessage = []
         if isinstance(data['Course_ID'], str):
@@ -1103,6 +1103,12 @@ def unassignCourseFromSkill():
             return jsonify({
                 "code": 400,
                 "message": "Skill ID and Course ID must be an integer and string respectively"
+            }), 400
+
+        if isinstance(data['Course_ID'], list) and len(data['Course_ID']) == 0:
+            return jsonify({
+                "code": 400,
+                "message": "Course ID cannot be empty list"
             }), 400
 
         if isinstance(data['Course_ID'], str):

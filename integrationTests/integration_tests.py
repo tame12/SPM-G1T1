@@ -1036,6 +1036,37 @@ class TestGetAssignedCourseFromOneSkill(TestApp):
         response = self.client.get('/skill/get_assigned_courses_by_ID/a')
         self.assertEqual(response.status_code, 404)
 
+    
+class TestAssignedSkillFromRole(TestApp):
+    """GET /role/assigned_skills/<int:role_id>"""
+
+    def test_getAssignedSkillFromRole(self):
+        response = self.client.get('/role/assigned_skills/1')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        expectedResponse = [
+            {
+                "Skill_ID": 1,
+                "Skill_Is_Active": True,
+                "Skill_Name": "Basic programming 1"
+            },
+            {
+                "Skill_ID": 2,
+                "Skill_Is_Active": True,
+                "Skill_Name": "Basic programming 2"
+            }
+        ]
+        self.assertEqual(data, expectedResponse)
+
+    def test_getAssignedSkillFromRoleNotFound(self):
+        response = self.client.get('/role/assigned_skills/999')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, [])
+
+    def test_getAssignedSkillFromRoleRoleIDNotInteger(self):
+        response = self.client.get('/role/assigned_skills/a')
+        self.assertEqual(response.status_code, 404)
 
 """
 TO DO:
@@ -1047,10 +1078,6 @@ GET /LJ/get_courses_by_LJ_ID/<string:LJ_ID>
 POST /LJ/addLJ
 POST /LJ/addLJ/Course
 GET /LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>
-
-GET /role/assigned_skills/<int:role_id>
-
-
 """
 
 if __name__ == '__main__':

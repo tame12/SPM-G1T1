@@ -1040,6 +1040,17 @@ class TestGetAssignedCourseFromOneSkill(TestApp):
 """
 TO DO:
 LJ and all its related end points
+
+GET /LJ
+GET /LJ/<int:lj_id>
+GET /LJ/get_courses_by_LJ_ID/<string:LJ_ID>
+POST /LJ/addLJ
+POST /LJ/addLJ/Course
+GET /LJ/getCourseAndSkillByLJ_ID/<string:LJ_ID>
+
+GET /role/assigned_skills/<int:role_id>
+
+
 """
 
 if __name__ == '__main__':

@@ -569,6 +569,76 @@ class TestAssignRoleFromSkill(TestApp):
 
 class TestUnassignRoleFromSkill(TestApp):
     """DELETE /skill/unassign_role_from_skill"""
+    def test_unassignRoleFromSkill(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 1, 'Role_ID': 1})
+        self.assertEqual(response.status_code, 201)
+        message = json.loads(response.data)['message']
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Skill_ID': 1, 'Role_ID': 1})
+        self.assertEqual(message, "Role unassigned from skill successfully.")
+
+    def test_unassignManyRoleFromSkill(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 2, 'Role_ID': [1, 2]})
+        self.assertEqual(response.status_code, 201)
+        message = json.loads(response.data)['message']
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, [{'Skill_ID': 2, 'Role_ID': 1}, {'Skill_ID': 2, 'Role_ID': 2}])
+        self.assertEqual(message, "Role unassigned from skill successfully.")
+
+    def test_unassignRoleFromSkillMissingSkillKey(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Role_ID': 1})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Role ID cannot be empty or non interger")
+
+    def test_unassignRoleFromSkillMissingRoleKey(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 1})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Role ID cannot be empty or non interger")
+
+    def test_unassignRoleFromSkillSkillIDNotInteger(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 'a', 'Role_ID': 1})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Role ID cannot be empty or non interger")
+
+    def test_unassignRoleFromSkillRoleIDNotInteger(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 1, 'Role_ID': 'a'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Role ID cannot be empty or non interger")
+
+    def test_unassignRoleFromSkillRoleIDEmptyList(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 1, 'Role_ID': []})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Role ID cannot be empty list")
+
+    def test_unassignRoleFromSkillRoleNotFound(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 1, 'Role_ID': 9999})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill and role does not exist.")
+
+    def test_unassignRoleFromSkillSkillNotFound(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 9999, 'Role_ID': 1})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill and role does not exist.")
+
+    def test_unassignManyRoleFromSkillRoleNotFound(self):
+        response = self.client.delete('/skill/unassign_role_from_skill', json={'Skill_ID': 2, 'Role_ID': [999]})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill and role does not exist.")
+
+
+
+    
+
+
+
     pass
     # roleID not in table
     # skillID not in table ect ect

@@ -996,6 +996,12 @@ def unassignRoleFromSkill():
                 "message": "Skill ID and Role ID cannot be empty or non interger"
             }), 400
 
+        if isinstance(data['Role_ID'], list) and len(data['Role_ID']) == 0:
+            return jsonify({
+                "code": 400,
+                "message": "Role ID cannot be empty list"
+            }), 400
+
         if isinstance(data['Role_ID'], int):
             skillRole = SkillRole.query.filter_by(
                 Skill_ID=data['Skill_ID'], Role_ID=data['Role_ID']).first()

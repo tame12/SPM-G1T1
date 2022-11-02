@@ -250,6 +250,13 @@ def getAllLJ():
 @app.route('/LJ/<string:Staff_ID>')
 def getLJsbyStaffID(Staff_ID):
     try:
+        ljs = LJ.query.filter_by(Staff_ID=Staff_ID).first()
+        # this should be triggered all the time
+        if ljs is None: 
+            return jsonify({
+                "code": 404,
+                "message": "LJ does not exist"
+            }), 404
         ljs = LJ.query.filter_by(Staff_ID=Staff_ID)
         roles = Role.query.all()
         return jsonify({

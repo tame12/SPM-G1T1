@@ -1,27 +1,23 @@
-# import json
-from calendar import c
-from time import sleep
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-DB_USERNAME = os.getenv('DB_USERNAME')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-
-if DB_USERNAME is None or DB_PASSWORD is None:
-    print('DB_USERNAME or DB_PASSWORD not set')
-    exit(1)
-
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@localhost:3306/is212_g1t1'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
-                                           'pool_recycle': 280}
+
+if __name__ == '__main__':
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    DB_USERNAME = os.getenv('DB_USERNAME')
+    DB_PASSWORD = os.getenv('DB_PASSWORD')
+    if DB_USERNAME is None or DB_PASSWORD is None:
+        print('DB_USERNAME or DB_PASSWORD not set')
+        exit(1)
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+mysqlconnector://{DB_USERNAME}:{DB_PASSWORD}@localhost:3306/is212_g1t1'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_size': 100,
+                                            'pool_recycle': 280}
 
 db = SQLAlchemy(app)
 CORS(app)

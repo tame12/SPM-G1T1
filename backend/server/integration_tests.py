@@ -870,17 +870,46 @@ class TestGetAssignedRoleFromSkill(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill ID cannot be empty.")
 
-"""
-everything below is WIP
-3 (+ LJ) more endpoints
-"""
-
-
-
 # get assigned role from ONE skillID
 class TestGetAssignedRoleFromOneSkill(TestApp):
     """GET /skill/get_assigned_roles_by_ID/<int:skill_id>"""
-    pass
+    def test_getAssignedRoleFromOneSkill(self):
+        response = self.client.get('/skill/get_assigned_roles_by_ID/1')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['message']
+        expectedResponse = [
+        {
+            "roles": [
+                {
+                    "Role_Desc": "Software Engineer",
+                    "Role_ID": 1,
+                    "Role_Is_Active": True,
+                    "Role_Name": "SWE"
+                }
+            ],
+            "skill": {
+                "Skill_ID": 1,
+                "Skill_Is_Active": True,
+                "Skill_Name": "Basic programming 1"
+            }
+        }
+    ]
+        self.assertEqual(data, expectedResponse)
+
+    def test_getAssignedRoleFromOneSkillNotFound(self):
+        response = self.client.get('/skill/get_assigned_roles_by_ID/999')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['message']
+        self.assertEqual(data, [])
+
+    def test_getAssignedRoleFromOneSkillSkillIDNotInteger(self):
+        response = self.client.get('/skill/get_assigned_roles_by_ID/a')
+        self.assertEqual(response.status_code, 404)
+
+"""
+everything below is WIP
+2 (+ LJ) more endpoints
+"""
 
 # get assigned course from skillID
 class TestGetAssignedCourseFromSkill(TestApp):

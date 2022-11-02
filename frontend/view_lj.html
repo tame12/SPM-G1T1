@@ -104,6 +104,14 @@
             displaySuccess = localStorage.setItem("createLJ", "false")
         }
 
+        displayModifySuccess = localStorage.getItem("modifyLJ")
+        if (displayModifySuccess == "true") {
+            $("#error_success_bar").html(`
+                <div class="p-4 text-white fw-bold bg-success">Learning Journey successfully modified</div>
+            `);
+            displayModifySuccess = localStorage.setItem("modifyLJ", "false")
+        }
+
         // need to make this look better?
         // skill_is_active = getCookie("targetIsActive") === "true" ? true : false
         // toggle_button = `<button type="button" ${skill_is_active ? 'checked ' : ''} class="${skill_is_active ? 'btn-success' : 'btn-danger'} btn">${skill_is_active ? "Activated" : "Deactivated"}</button>`

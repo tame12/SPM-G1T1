@@ -3,7 +3,7 @@ import flask_testing
 import json
 # from sqlalchemy import event
 
-from flaskServer import *
+from backend.server.flaskServer import *
 
 class TestApp(flask_testing.TestCase):
 

@@ -338,7 +338,6 @@ class TestRoleC(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Role description cannot be numeric.")
 
-# to be implemented next
 class TestRoleU(TestApp):
     # update methods
     def test_updateRole(self):
@@ -541,6 +540,12 @@ class TestAssignRoleFromSkill(TestApp):
         self.assertEqual(response.status_code, 400)
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Role ID cannot be empty list")
+        
+    def test_assignRoleFromSkillAlreadyAssigned(self):
+        response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 1})
+        self.assertEqual(response.status_code, 500)
+        message = json.loads(response.data)['message']
+        self.assertIn("Unable to assign skill to role. Error message: ", message)
 
     # enable of FK constraint on sqllite not working, so this test will fail
     # works as intended on postman with sql server
@@ -548,7 +553,7 @@ class TestAssignRoleFromSkill(TestApp):
     #     response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 9999, 'Role_ID': 3})
     #     self.assertEqual(response.status_code, 500)
     #     message = json.loads(response.data)['message']
-    #     self.assertIn(message, "Unable to assign skill to role. Error message: ")
+    #     self.assertIn("Unable to assign skill to role. Error message: ", message)
 
     # enable of FK constraint on sqllite not working, so this test will fail
     # works as intended on postman with sql server
@@ -556,16 +561,7 @@ class TestAssignRoleFromSkill(TestApp):
     #     response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 9999})
     #     self.assertEqual(response.status_code, 500)
     #     message = json.loads(response.data)['message']
-    #     self.assertIn(message, "Unable to assign skill to role. Error message: ")
-
-    # UNIQUE constraint failed on sql lite, so this test will fail
-    # works as intended on postman with sql server
-    # def test_assignRoleFromSkillAlreadyAssigned(self):
-    #     response = self.client.post('/skill/assign_to_role', json={'Skill_ID': 1, 'Role_ID': 1})
-    #     self.assertEqual(response.status_code, 500)
-    #     message = json.loads(response.data)['message']
-    #     self.assertIn(message, "Unable to assign skill to role. Error message: ")
-
+    #     self.assertIn("Unable to assign skill to role. Error message: ", message)
 
 class TestUnassignRoleFromSkill(TestApp):
     """DELETE /skill/unassign_role_from_skill"""
@@ -633,19 +629,90 @@ class TestUnassignRoleFromSkill(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill and role does not exist.")
 
-
-
-    
-
-
-
-    pass
-    # roleID not in table
-    # skillID not in table ect ect
-
 class TestAssignCourseFromSkill(TestApp):
     """POST /skill/assign_to_courses"""
-    pass
+    def test_assignCourseFromSkill(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 1, 'Course_ID': 'IS-2'})
+        self.assertEqual(response.status_code, 201)
+        message = json.loads(response.data)['message']
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, {'Skill_ID': 1, 'Course_ID': 'IS-2'})
+        self.assertEqual(message, "Course assigned to course successfully.")
+
+    def test_assignManyCourseFromSkill(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 2, 'Course_ID': ['IS-2', 'IS-3']})
+        self.assertEqual(response.status_code, 201)
+        message = json.loads(response.data)['message']
+        data = json.loads(response.data)['data']
+        self.assertEqual(data, [{'Skill_ID': 2, 'Course_ID': 'IS-2'}, {'Skill_ID': 2, 'Course_ID': 'IS-3'}])
+        self.assertEqual(message, "Course(s) assigned to skill successfully.")
+
+    def test_assignCourseFromSkillMissingSkillKey(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Course_ID': 'IS-2'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(
+            message, "Skill ID and Course ID must be an integer and string respectively")
+
+    def test_assignCourseFromSkillMissingCourseKey(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 1})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Course ID must be an integer and string respectively")
+
+    def test_assignCourseFromSkillSkillIDNotInteger(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 'a', 'Course_ID': 'IS-2'})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Course ID must be an integer and string respectively")
+
+    def test_assignCourseFromSkillCourseIDNotInteger(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 1, 'Course_ID': 2})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Skill ID and Course ID must be an integer and string respectively")
+
+    def test_assignCourseFromSkillCourseIDEmptyList(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 1, 'Course_ID': []})
+        self.assertEqual(response.status_code, 400)
+        message = json.loads(response.data)['message']
+        self.assertEqual(message, "Course ID cannot be empty list")
+
+    def test_assignCousrseFromSkillCourseAlreadyAssigned(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 1, 'Course_ID': 'IS-1'})
+        self.assertEqual(response.status_code, 500)
+        message = json.loads(response.data)['message']
+        self.assertIn("Unable to assign course to skill. Error message:", message)
+
+    def test_assignManyCourseFromSkillCourseAlreadyAssigned(self):
+        response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 2, 'Course_ID': ['IS-1', 'IS-2']})
+        self.assertEqual(response.status_code, 500)
+        message = json.loads(response.data)['message']
+        self.assertIn("Unable to assign course to skill. Error message:", message)
+
+    # enable of FK constraint on sqllite not working, so this test will fail
+    # works as intended on postman with sql server
+    # def test_assignCourseFromSkillCourseNotFound(self):
+    #     response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 1, 'Course_ID': 'IS-999'})
+    #     self.assertEqual(response.status_code, 500)
+    #     message = json.loads(response.data)['message']
+    #     self.assertIn("Unable to assign course to skill. Error message:", message)
+    
+    # enable of FK constraint on sqllite not working, so this test will fail
+    # works as intended on postman with sql server
+    # def test_assignCourseFromSkillSkillNotFound(self):
+    #     response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 999, 'Course_ID': 'IS-2'})
+    #     self.assertEqual(response.status_code, 500)
+    #     message = json.loads(response.data)['message']
+    #     self.assertIn("Unable to assign course to skill. Error message:", message)
+
+    # enable of FK constraint on sqllite not working, so this test will fail
+    # works as intended on postman with sql server
+    # def test_assignManyCourseFromSkillCourseNotFound(self):
+    #     response = self.client.post('/skill/assign_to_courses', json={'Skill_ID': 2, 'Course_ID': ['IS-999']})
+    #     self.assertEqual(response.status_code, 500)
+    #     message = json.loads(response.data)['message']
+    #     self.assertIn("Unable to assign course to skill. Error message:", message)
 
 class TestUnassignCourseFromSkill(TestApp):
     """DELETE /skill/unassign_course_from_skill"""
@@ -664,7 +731,7 @@ class TestGetAssignedCoursesFromSkill(TestApp):
 """
 WIP
 assign and unassign skills to roles and courses from skill 
-(4 of them, 3 more to do)
+(4 of them, 1 more to do)
 
 get assigned role from skillID
 

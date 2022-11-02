@@ -998,19 +998,48 @@ class TestGetAssignedCourseFromSkill(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Skill ID cannot be empty.")
 
-"""
-everything below is WIP
-1 (+ LJ) more endpoints
-"""
-
 # get assigned course from ONE skillID
 class TestGetAssignedCourseFromOneSkill(TestApp):
     """GET /skill/get_assigned_courses_by_ID/<int:skill_id>"""
-    pass
+    def test_getAssignedCourseFromOneSkill(self):
+        response = self.client.get('/skill/get_assigned_courses_by_ID/1')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['message']
+        expectedResponse = [
+        {
+            "courses": [
+                {
+                    "Course_Category": "Technical",
+                    "Course_Desc": "case aborum.",
+                    "Course_ID": "IS-1",
+                    "Course_Is_Active": True,
+                    "Course_Name": "Information Systems & Innovation",
+                    "Course_Type": "Internal"
+                }
+            ],
+            "skill": {
+                "Skill_ID": 1,
+                "Skill_Is_Active": True,
+                "Skill_Name": "Basic programming 1"
+            }
+        }
+    ]
+        self.assertEqual(data, expectedResponse)
+
+    def test_getAssignedCourseFromOneSkillNotFound(self):
+        response = self.client.get('/skill/get_assigned_courses_by_ID/999')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.data)['message']
+        self.assertEqual(data, [])
+
+    def test_getAssignedCourseFromOneSkillSkillIDNotInteger(self):
+        response = self.client.get('/skill/get_assigned_courses_by_ID/a')
+        self.assertEqual(response.status_code, 404)
+
 
 """
+TO DO:
 LJ and all its related end points
-
 """
 
 if __name__ == '__main__':

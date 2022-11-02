@@ -1,8 +1,9 @@
 import unittest
 import flask_testing
 import json
-
-from backend.server.flask import *
+import sys
+from . import backend.server.flaskServer.* as flaskServer
+# from backend.server.flaskServer import *
 
 class TestApp(flask_testing.TestCase):
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite://"
@@ -91,25 +92,54 @@ class TestApp(flask_testing.TestCase):
         db.session.remove()
         db.drop_all()
 
-class TestViewLJ_Learner(TestApp):
-    def test_view_LJ_learner(self):
-        # Tests if "John Smith", a learner, is able to view his courses
-        response = self.client.get('/LJ/1')
+class TestCreateLJ(TestApp):
+    def test_createLJ_success(self):
+        # Create new LJ
+        # {
+            #     "Staff_ID": userID,
+            #     "Role_ID": role_id,
+            #     "LJ_Number": 5,
+            #     "LJ_Courses": courses,
+            #     "LJ_Skills": skills
+            # }
+        response = self.client.post('/LJ/addLJ', json={
+            "Role_ID": 4,
+            "Staff_ID": 3,
+            "LJ_Number": 4,
+            "LJ_Courses": ["IS-6","IS-11","IS-7"],
+            "LJ_Skills":[1,2,3]
+        })
+
+        expected_data_response = {
+            "LJ_ID": 7,
+            "LJ_Number": 4,
+            "Role_ID": 4,
+            "Staff_ID": 3
+        }
+
         self.assertEqual(response.status_code, 201)
-        data = json.loads(response.data)['data']
-        expected_data_response = [{'LJ_ID': 1, 'LJ_Number': 1, 'Role_ID': 1, 'Staff_ID': 1}, {'LJ_ID': 2, 'LJ_Number': 2, 'Role_ID': 2, 'Staff_ID': 1}, {'LJ_ID': 3, 'LJ_Number': 3, 'Role_ID': 3, 'Staff_ID': 1}]
+        self.assertEqual(response.json['message'], 'LJ created successfully.')
+        self.assertEqual(response.json['data'], expected_data_response)
 
-        self.assertEqual(data, expected_data_response)
+    def test_createLJ_fail(self):
+        response = self.client.post('/LJ/addLJ', json={
+            "Role_ID": 4,
+            "Staff_ID": 3,
+            "LJ_Number": 4,
+            "LJ_Courses": ["IS-6","IS-11","IS-7"],
+            "LJ_Skills":[1,2,3]
+        })
 
-        expected_role_data_response = [{'Role_ID': 1, 'Role_Name': 'SWE', 'Role_Desc': 'Software Engineer', 'Role_Is_Active': 1}, {'Role_ID': 2, 'Role_Name': 'PM', 'Role_Desc': 'Project Manager', 'Role_Is_Active': 1}, {'Role_ID': 3, 'Role_Name': 'BA', 'Role_Desc': 'Business Analyst', 'Role_Is_Active': 0}]
-        self.assertEqual(json.loads(response.data)['role_data'], expected_role_data_response)
+        expected_data_response = {
+            "LJ_ID": 7,
+            "LJ_Number": 4,
+            "Role_ID": 4,
+            "Staff_ID": 3
+        }
 
-    def test_view_LJ_learner_invalid(self):
-        # Tests a learner that does not exist
-        response = self.client.get('/LJ/999')
-        print(json.loads(response.data))
-        self.assertEqual(response.status_code, 404)
-
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json['message'], 'LJ creation failed.')
+        self.assertEqual(response.json['data'], expected_data_response)
     
 
 if __name__ == '__main__':

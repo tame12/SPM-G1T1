@@ -52,7 +52,7 @@
                         <input type="text" id="create_roleDesc_input" class="w-100 modal-input" placeholder="Role Description" style="height:120px" required minlength="0" maxlength="50"/>
                     </div>
                     <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
-                        <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                        <button type="button" class="button button-primary" data-bs-dismiss="modal">
                             Cancel
                         </button>
                         <!-- not sure if should dismiss after creating, block error/success msg if dont -->
@@ -129,24 +129,25 @@
                             
                         </div>
                         
-                        <!-- Edit skill Modal-->
-                        <div class="modal fade" id="editModalPopUp${response[i].Skill_ID}" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
+                        <!-- Edit role Modal-->
+                        <div class="modal fade" id="editModalPopUp${response[i].Role_ID}" tabindex="-1" aria-labelledby="editModalPopUp" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="px-3 pt-3">
-                                        <h1 class="modal-title fs-4" id="exampleModalLabel">Update ${response[i].Skill_Name}</h1>
+                                        <h1 class="modal-title fs-4" id="exampleModalLabel">Update ${response[i].Role_Name}</h1>
                                     </div>
                                     <div class="modal-body">
-                                        <input type="text" data-id="edit_skill_input" class="w-100 modal-input" placeholder="Skill name" />
+                                        <input type="text" data-id="edit_roleName" class="w-100 modal-input" placeholder="Role name" />
+                                        <input type="text" data-id="edit_roleDesc" class="w-100 modal-input" placeholder="Role description" />
                                     </div>
                                     <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
-                                        <button type="button" class="button button-grey" data-bs-dismiss="modal">
+                                        <button type="button" class="button button-primary" data-bs-dismiss="modal">
                                             Cancel
                                         </button>
-                                        <!-- not sure if should dismiss after creating, block error/success msg if dont -->
+
                                         <button type="button" class="button button-primary" data-bs-dismiss="modal"
-                                            data-id="edit_skill_button"
-                                            data-skill-id="${response[i].Skill_ID}">
+                                            data-id="edit_role_button"
+                                            data-role-id="${response[i].Role_ID}">
                                             Save
                                         </button>
                                     </div>
@@ -238,6 +239,54 @@
         // window.location.href = "assign_skill.html";
 
 
+
+
+
+    // edit role
+    $(document).on("click", "button[data-id='edit_role_button']", function (e) {
+        // alert("GO");
+        var edit_roleName = $(this).closest('.modal-content').find('input').val();
+        var edit_role_id = $(this).data('role-id');
+        // console.log(edit_roleName)
+        // console.log(edit_role_id)
+
+        axios
+            .put("http://localhost:456/role/update", {
+                Role_ID: edit_role_id,
+                Role_Name: edit_roleName,
+                Role_Desc: edit_roleDesc,
+            })
+            .then(function (response) {
+                // console.log(response);
+
+                if (response.data.code == "201") {
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
+                    `);
+                    populate_roles();
+                }
+            })
+            .catch(function (error) {
+                // console.log(error);
+
+                if (error.response.data.code == "400") {
+                    console.log("error");
+                    $("#error_success_bar").html(`
+                    <div class="p-4 text-white fw-bold bg-danger">${error.response.data.message}</div>
+                    `);
+                }
+            }).then(function () {
+                // always executed
+                $('#error_success_bar')[0].scrollIntoView(false);
+            });
+    });
+
+
+
+    // delete role - future feature
+    // $("#delete_role_button").click(function () {
+    //     console.log('delete')
+    // });
 
 
 </script>

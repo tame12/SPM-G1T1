@@ -121,9 +121,9 @@
                             <div class="my-auto d-flex gap-3 align-items-center">
                                 <!-- Role Edit Buttons -->
                                 <button type="button" class="btn btn-primary" id="${response[i].Role_ID}" name="${response[i].Role_Name}" onclick="viewSkills(this)">&nbsp; &nbsp; Skills &nbsp; &nbsp;</button>
-                                <!-- Edit skill modal button -->
+                                <!-- Edit role modal button -->
                                 <img role="button" src="images/edit.svg" alt="" data-bs-toggle="modal" onclick="event.stopPropagation();"
-                                data-bs-target="#editModalPopUp${response[i].Skill_ID}">
+                                data-bs-target="#editModalPopUp${response[i].Role_ID}">
                                 ${toggle_button}
                             </div>
                             
@@ -247,14 +247,15 @@
         // alert("GO");
         var edit_role_id = $(this).data('role-id');
 
-        var group = $('div[class="modal-body"]');
-        var edit_roleName = $('[data-id="edit_roleName"]',group);
-        var edit_roleDesc = $('[data-id="edit_roleDesc"]',group);
-        //var edit_roleName = $(this).closest('.modal-content').find('input').val();
+        // var group = $('div[class="modal-body"]');
+        // var edit_roleName = $('input[data-id="edit_roleName"]'),group);
+        // var edit_roleDesc = $('input[data-id="edit_roleDesc"]',group);
+
+       // var edit_roleName = $(this).closest('.modal-content').find('input').val();
 
         // var edit_roleName = $(this).closest('.modal-body').find('data-id="edit_roleName"').val();
         // var edit_roleDesc = $(this).closest('.modal-body').find('data-id="edit_roleDesc"').val();
-        
+
         // console.log(edit_roleName)
         // console.log(edit_role_id)
 

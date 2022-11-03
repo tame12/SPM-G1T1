@@ -137,8 +137,12 @@
                                         <h1 class="modal-title fs-4" id="exampleModalLabel">Update ${response[i].Role_Name}</h1>
                                     </div>
                                     <div class="modal-body">
-                                        <input type="text" data-id="edit_roleName" class="w-100 modal-input" placeholder="Role name" />
-                                        <input type="text" data-id="edit_roleDesc" class="w-100 modal-input" placeholder="Role description" />
+                                        <input type="text" data-id="edit_roleName" class="w-100 modal-input" placeholder="Role Name (Max 50 characters)" minlength="1" maxlength="50" />
+
+                                        <hr>
+
+                                        <input type="text" data-id="edit_roleDesc" class="w-100 modal-input" placeholder="Role description" style="height:120px" minlength="0" maxlength="50" />
+
                                     </div>
                                     <div class="d-flex flex-row-reverse mb-3 me-4 gap-3">
                                         <button type="button" class="button button-primary" data-bs-dismiss="modal">

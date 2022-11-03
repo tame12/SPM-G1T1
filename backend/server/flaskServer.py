@@ -331,7 +331,7 @@ def createLJ():
         
         # check if the role exists
         role = Role.query.filter_by(Role_ID=data["Role_ID"]).first()
-        print(role)
+        # print(role)
         if role is None: 
             return jsonify({
                 "code": 404,
@@ -353,7 +353,7 @@ def createLJ():
             Staff_ID=data['Staff_ID'], Role_ID=data["Role_ID"], LJ_Number=data["LJ_Number"])
         db.session.add(new_LJ)
         db.session.commit()
-        print(new_LJ.LJ_ID)
+        # print(new_LJ.LJ_ID)
         # add LJ to the LJSkillCourse table
         for i in range(len(data['LJ_Skills'])):
             new_LJSkillCourse = LJSkillCourse(
@@ -452,7 +452,7 @@ def getCourseAndSkillByLJ_ID(LJ_ID):
 
 
         skill_course = LJSkillCourse.getCourseSkillByLJ_ID(LJ_ID)
-        print(skill_course)
+        # print(skill_course)
         data = []
         entries = []
         for tple in skill_course:
@@ -468,7 +468,7 @@ def getCourseAndSkillByLJ_ID(LJ_ID):
                     entries['Course_ID'] = entry.to_json().get('Course_ID')
                     entries['Course_Name'] = entry.to_json().get('Course_Name')
             data.append(entries)
-        print(data)
+        # print(data)
         return jsonify({
             "code": 201,
             "data": data
@@ -540,7 +540,7 @@ def createRole():
         data = request.get_json()
 
         # check if data has role name
-        print(data.keys())
+        # print(data.keys())
         if 'Role_Name' not in data.keys() or data['Role_Name'] == "":
             return jsonify({
                 "code": 400,
@@ -899,7 +899,7 @@ def toggleSkill(skill_id):
 def updateSkill():
     try:
         data = request.get_json()
-        print(data)
+        # print(data)
 
         # check if data has skill id
         if 'Skill_ID' not in data.keys():
@@ -981,7 +981,7 @@ def updateSkill():
 def assignSkillToRole():
     try:
         data = request.get_json()
-        print(data)
+        # print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int, list)):
             return jsonify({
                 "code": 400,
@@ -1031,7 +1031,7 @@ def assignSkillToRole():
 def unassignRoleFromSkill():
     try:
         data = request.get_json()
-        print(data)
+        # print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int, list)):
             return jsonify({
                 "code": 400,
@@ -1089,7 +1089,7 @@ def unassignRoleFromSkill():
 def assignSkillToCourses():
     try:
         data = request.get_json()
-        print(data)
+        # print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str, list)):
             return jsonify({
                 "code": 400,
@@ -1140,7 +1140,7 @@ def assignSkillToCourses():
 def unassignCourseFromSkill():
     try:
         data = request.get_json()
-        print(data)
+        # print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str, list)):
             return jsonify({
                 "code": 400,

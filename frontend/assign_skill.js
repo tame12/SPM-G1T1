@@ -3,7 +3,7 @@
 $(function () {
     $("#navigation").load("navbar.html");
     allCookies = document.cookie
-    console.log("targetID: ",getCookie("targetID"))
+    // console.log("targetID: ",getCookie("targetID"))
 
     // need to make this look better?
     skill_is_active = getCookie("targetIsActive") === "true"? true : false
@@ -28,7 +28,7 @@ function getCookie(name) {
 }
 
 function populatePage(targetArr){
-    console.log("======populatePage Loading=====")
+    // console.log("======populatePage Loading=====")
     skill_is_active = getCookie("targetIsActive") === "true" ? true : false
     var html = ``
     if (targetArr.length == 0){
@@ -38,9 +38,9 @@ function populatePage(targetArr){
     for (let i=0 ; i<targetArr.length ; i++){
         cookieAssignedRoles+=`,${targetArr[i].Role_ID}`
         hehe = targetArr[i].Role_ID
-        console.log("hehe from cookie populatePage: ",hehe)
+        // console.log("hehe from cookie populatePage: ",hehe)
         haha = targetArr[i].Role_Desc
-        console.log("haha from cookie populatePage: ",haha)
+        // console.log("haha from cookie populatePage: ",haha)
         html += 
         `
         <div class="gradient-box d-flex justify-content-between">
@@ -58,7 +58,7 @@ function populatePage(targetArr){
 }
 
 function populatePageCourses(targetArr){
-    console.log("======populatePageCourses Loading=====")
+    // console.log("======populatePageCourses Loading=====")
     skill_is_active = getCookie("targetIsActive") === "true" ? true : false
     var html = ``
     if (targetArr.length == 0){
@@ -69,8 +69,8 @@ function populatePageCourses(targetArr){
         cookieAssignedCourses+=`,${targetArr[i].Course_ID}`
         courseID = targetArr[i].Course_ID
         courseName = targetArr[i].Course_Name
-        console.log("courseID from cookie: ",courseID)
-        console.log("courseName from cookie: ",courseName)
+        // console.log("courseID from cookie: ",courseID)
+        // console.log("courseName from cookie: ",courseName)
         html += 
         `
         <div class="gradient-box d-flex justify-content-between">
@@ -118,11 +118,11 @@ function populateModal(){
         }
         for (let i=0; i<targetArr.length; i++){
             if (targetArr[i].Role_Is_Active){
-                console.log("assignedRoles:",assignedRoles)
-                console.log("targetArr[i].Role_ID: ",typeof targetArr[i].Role_ID)
+                // console.log("assignedRoles:",assignedRoles)
+                // console.log("targetArr[i].Role_ID: ",typeof targetArr[i].Role_ID)
                 if (assignedRoles.includes(String(targetArr[i].Role_ID))){
                 // if (targetArr[i].Role_ID in assignedRoles){
-                    console.log("already assigned assignedRoles:",assignedRoles)
+                    // console.log("already assigned assignedRoles:",assignedRoles)
                     html += `
                     <div class="gradient-box d-flex justify-content-between disabled text-secondary box-secondary" id=${targetArr[i].Role_ID}">
                         <p class="my-auto">${targetArr[i].Role_Desc}</p>
@@ -207,12 +207,12 @@ function select(e){
         }
 
     }
-    console.log("updated cookie", getCookie("selected"))
+    // console.log("updated cookie", getCookie("selected"))
 }
 
 function assignSkillToRole(){
     $("#error_success_bar").html("")
-    console.log("hello")
+    // console.log("hello")
     var selectedRoles = getCookie("selected").split(",")
     var assignedRoles = getCookie("assignedRoles").split(",")
     var toBackEnd = selectedRoles.filter(function(value){
@@ -221,8 +221,8 @@ function assignSkillToRole(){
         }
     })
     var targetID = getCookie('targetID')
-    console.log(targetID)
-    console.log(toBackEnd)
+    // console.log(targetID)
+    // console.log(toBackEnd)
     axios.post(
     "http://localhost:456/skill/assign_to_role",
     {
@@ -230,7 +230,7 @@ function assignSkillToRole(){
         Role_ID : toBackEnd,
     }
     ).then(function(response){
-        console.log("response: ",response)
+        // console.log("response: ",response)
         getAssignedRoles()
         populateModal()
         if(getCookie("selected") != "''"){
@@ -246,20 +246,20 @@ function assignSkillToRole(){
 
 function assignSkillToCourse(){
     $("#error_success_bar").html("")
-    console.log("hello, assignSkillToCourse")
+    // console.log("hello, assignSkillToCourse")
     var selectedCourses = getCookie("selected").split(",")
     var assignedCourses = getCookie("assignedCourse").split(",")
-    console.log("selectedCourses: ",selectedCourses)
-    console.log("assignedCourses", assignedCourses)
+    // console.log("selectedCourses: ",selectedCourses)
+    // console.log("assignedCourses", assignedCourses)
     var toBackEnd = selectedCourses.filter(function(value){
         if (!assignedCourses.includes(value) && value != "''"){
             return value
         }
     })
     var targetID = getCookie('targetID')
-    console.log("The target ID: ", targetID)
-    console.log("the backend: ")
-    console.log(toBackEnd)
+    // console.log("The target ID: ", targetID)
+    // console.log("the backend: ")
+    // console.log(toBackEnd)
     axios.post(
     "http://localhost:456/skill/assign_to_courses",
     {
@@ -267,10 +267,10 @@ function assignSkillToCourse(){
         Course_ID : toBackEnd,
     }
     ).then(function(response){
-        console.log("response: ",response)
+        // console.log("response: ",response)
         getAssignedCourses()
         populateCourseModal()
-        console.log("cookie: ",getCookie("selected"))
+        // console.log("cookie: ",getCookie("selected"))
         if(getCookie("selected") != "''"){
             document.cookie = "selected=''"
             $("#error_success_bar").html(`
@@ -284,15 +284,15 @@ function assignSkillToCourse(){
 }
 
 function selectDeleteRole(e){
-    console.log(e)
-    console.log(e.getAttribute('name'))
-    console.log("======selectDeleteRole loading======")
+    // console.log(e)
+    // console.log(e.getAttribute('name'))
+    // console.log("======selectDeleteRole loading======")
     skillID = getCookie("targetID")
     skillName = getCookie("targetName")
-    console.log(e.id)
-    console.log(e.getAttribute('name'))
-    console.log("hehe roleID: ",e.id)
-    console.log("haha roleName: ",e.getAttribute('name'))
+    // console.log(e.id)
+    // console.log(e.getAttribute('name'))
+    // console.log("hehe roleID: ",e.id)
+    // console.log("haha roleName: ",e.getAttribute('name'))
     html = 
     `
         Unassign ${e.getAttribute('name')} from ${skillName}?
@@ -307,14 +307,14 @@ function selectDeleteRole(e){
 }
 
 function selectDeleteCourse(e){
-    console.log("selectDeleteCourse")
+    // console.log("selectDeleteCourse")
     skillID = getCookie("targetID")
     skillName = getCookie("targetName")
-    console.log("======selectDeleteCourse running======")
-    console.log("courseID: ",e.id)
-    console.log("courseName: ",e.getAttribute('name'))
-    console.log("skillID: ",skillID)
-    console.log("skillName: ", skillName)
+    // console.log("======selectDeleteCourse running======")
+    // console.log("courseID: ",e.id)
+    // console.log("courseName: ",e.getAttribute('name'))
+    // console.log("skillID: ",skillID)
+    // console.log("skillName: ", skillName)
     html = 
     `
         Unassign ${e.getAttribute('name')} from ${skillName}?
@@ -333,8 +333,8 @@ function unassignRoleFromSkill(roleIDToUnassign){
     $("#unassignRoleFromSkill").html(html2)
     skillID = getCookie("targetID")
     roleID = getCookie("selected")
-    console.log("skillID: ", parseInt(skillID))
-    console.log("roleID: ",parseInt(roleIDToUnassign))
+    // console.log("skillID: ", parseInt(skillID))
+    // console.log("roleID: ",parseInt(roleIDToUnassign))
     axios.delete(
         "http://localhost:456/skill/unassign_role_from_skill", { data: {
             "Skill_ID" : parseInt(skillID),
@@ -342,25 +342,25 @@ function unassignRoleFromSkill(roleIDToUnassign){
         } }
         
     ).then(function(response){
-        console.log(response)
+        // console.log(response)
         getAssignedRoles()
         populateModal()
         $("#error_success_bar").html(`
             <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
         `);
     }).catch(function(error){
-        console.log(error.message)
+        // console.log(error.message)
     })
 }
 
 function unassignCourseFromSkill(e){
-    console.log("Shaan: ",e.getAttribute('name'))
+    // console.log("Shaan: ",e.getAttribute('name'))
     html2 = ''
     $("#unassignCourseFromSkill").html(html2)
-    console.log("======unassignCourseFromSkill running: course is being unassigned from database======")
+    // console.log("======unassignCourseFromSkill running: course is being unassigned from database======")
     skillID = getCookie("targetID")
-    console.log("parseInt(skillID): ", parseInt(skillID))
-    console.log("courseIDToUnassign: ",e.getAttribute('name'))
+    // console.log("parseInt(skillID): ", parseInt(skillID))
+    // console.log("courseIDToUnassign: ",e.getAttribute('name'))
     axios.delete(
         "http://localhost:456/skill/unassign_course_from_skill", { data: {
             "Skill_ID" : parseInt(skillID),
@@ -369,14 +369,14 @@ function unassignCourseFromSkill(e){
         } }
         
     ).then(function(response){
-        console.log(response)
+        // console.log(response)
         getAssignedCourses()
         populateCourseModal()
         $("#error_success_bar").html(`
             <div class="p-4 text-white fw-bold bg-success">${response.data.message}</div>
         `);
     }).catch(function(error){
-        console.log(error.message)
+        // console.log(error.message)
     })
 }
 

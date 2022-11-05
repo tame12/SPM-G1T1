@@ -468,7 +468,6 @@ def getCourseAndSkillByLJ_ID(LJ_ID):
                     entries['Course_ID'] = entry.to_json().get('Course_ID')
                     entries['Course_Name'] = entry.to_json().get('Course_Name')
             data.append(entries)
-        # print(data)
         return jsonify({
             "code": 201,
             "data": data
@@ -899,8 +898,6 @@ def toggleSkill(skill_id):
 def updateSkill():
     try:
         data = request.get_json()
-        # print(data)
-
         # check if data has skill id
         if 'Skill_ID' not in data.keys():
             return jsonify({
@@ -981,7 +978,6 @@ def updateSkill():
 def assignSkillToRole():
     try:
         data = request.get_json()
-        # print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int, list)):
             return jsonify({
                 "code": 400,
@@ -1031,7 +1027,6 @@ def assignSkillToRole():
 def unassignRoleFromSkill():
     try:
         data = request.get_json()
-        # print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Role_ID' not in data.keys() or not isinstance(data['Role_ID'], (int, list)):
             return jsonify({
                 "code": 400,
@@ -1089,7 +1084,6 @@ def unassignRoleFromSkill():
 def assignSkillToCourses():
     try:
         data = request.get_json()
-        # print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str, list)):
             return jsonify({
                 "code": 400,
@@ -1140,7 +1134,6 @@ def assignSkillToCourses():
 def unassignCourseFromSkill():
     try:
         data = request.get_json()
-        # print(data)
         if 'Skill_ID' not in data.keys() or not isinstance(data['Skill_ID'], int) or 'Course_ID' not in data.keys() or not isinstance(data['Course_ID'], (str, list)):
             return jsonify({
                 "code": 400,

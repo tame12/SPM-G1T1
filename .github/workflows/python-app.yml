@@ -6,8 +6,14 @@ name: Python application
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'backend/server/**'
+      - 'integrationTests/**'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - 'backend/server/**'
+      - 'integrationTests/**'
 
 permissions:
   contents: read

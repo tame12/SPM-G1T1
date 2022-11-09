@@ -39,7 +39,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <img src="readme_img/pair_programming.jpg" alt="Logo">
+  <img src="readme_img/pair_programming.jpg" alt="Logo" height="300px">
 
   <p align="center">
     <b><i>A software project managed by scrum</b>, IS212 Software Project Management G1T1</i>

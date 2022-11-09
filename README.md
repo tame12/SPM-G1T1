@@ -7,7 +7,6 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
-        <li><a href="#our-motivation">Our Motivation</a></li>
         <li><a href="#project-management">Project Management</a></li>
       </ul>
     </li>

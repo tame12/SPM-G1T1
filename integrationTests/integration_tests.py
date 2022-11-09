@@ -406,6 +406,7 @@ class TestRoleU(TestApp):
         message = json.loads(response.data)['message']
         self.assertEqual(message, "Role already exists.")
 
+
     def test_updateRoleEmptyDesc(self):
         # empty desc is allowed
         response = self.client.put('/role/update', json={'Role_ID': 1, 'Role_Name': 'testRole1', 'Role_Desc': ''})

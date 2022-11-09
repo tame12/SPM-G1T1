@@ -2,7 +2,7 @@
  
 <!-- TABLE OF CONTENTS -->
 <details id="contents" >
-  <summary>Table of Contents</summary>
+  <summary>Table of Contents :flags:</summary>
   <ol>
     <li>
       <a href="#about-the-project">About The Project</a>
@@ -34,6 +34,7 @@
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
+<p>^ Open me to access the Table of Contents! :see_no_evil:</p>
 
 <!-- PROJECT LOGO -->
 <br />

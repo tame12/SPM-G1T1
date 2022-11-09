@@ -496,27 +496,25 @@ def getAllRole():
 
 # get role by role name
 
-# not in use
-# @app.route('/role/search/<string:role_name>', methods=['GET'])
-# def getRoleByName(role_name):
-#     try:
-#         role = Role.query.filter(Role.Role_Name.like(f'%{role_name}%')).all()
-#         if role:
-#             return jsonify({
-#                 "code": 201,
-#                 "data": [r.to_json() for r in role]
-#             }), 201
-#         else:
-#             return jsonify({
-#                 "code": 400,
-#                 "message": "Role not found."
-#             }), 400
-#     except Exception:
-#         return jsonify({
-#             "code": 500,
-#             "message": "Unable to get role from database."
-#         }), 500
-
+@app.route('/role/search/<string:role_name>', methods=['GET'])
+def getRoleByName(role_name):
+    try:
+        role = Role.query.filter(Role.Role_Name.like(f'%{role_name}%')).all()
+        if role:
+            return jsonify({
+                "code": 201,
+                "data": [r.to_json() for r in role]
+            }), 201
+        else:
+            return jsonify({
+                "code": 400,
+                "message": "Role not found."
+            }), 400
+    except Exception:
+        return jsonify({
+            "code": 500,
+            "message": "Unable to get role from database."
+        }), 500
 
 @app.route('/course')
 def getAllCourse():

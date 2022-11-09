@@ -26,7 +26,7 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#create-the-.env-file">Prerequisites</a></li>
+        <li><a href="#create-the-env-file">Prerequisites</a></li>
 	    <li><a href="#to-start-our-application-locally">Start our App locally</a></li>
         <li><a href="#additional-notes-from-first-release">Additional Notes From First Release</a></li>
       </ul>

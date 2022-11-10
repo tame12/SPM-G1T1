@@ -314,6 +314,5 @@ class TestgetCoursesAndSkillByLLJID(TestApp):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.json['message'], 'LJ does not exist')
         
-
 if __name__ == '__main__':
     unittest.main()
